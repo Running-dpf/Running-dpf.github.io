@@ -1,99 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>对这个 jekyll 博客主题的改版和重构</title>
-    <url>/2016/03/12/2016/03/jekyll-theme-version-2.0/</url>
-    <content><![CDATA[<p>本文主要说明对这个博客主题的改版和代码重构的过程。这个简洁高雅的博客主题受到了很多朋友的喜欢。在写第一版界面时，我对前端并不是很熟悉，对<code>Jekyll</code>也不熟悉。现在距离当时也一年了，对自己当时写的代码也不太满意了，同时<code>Jekyll</code>如今也已经升级了，目前最新版为3.1.2。因此我在临近毕业尚未入职前做一下博客主题的代码重构和改版吧。</p>
+    <title>Ubuntu16.04设置Pycharm桌面快捷键</title>
+    <url>/2021/05/08/2017/12/Ubuntu16.04-pycharm-icon-setting/</url>
+    <content><![CDATA[<h2 id="Ubuntu下所有的快捷方式都在："><a href="#Ubuntu下所有的快捷方式都在：" class="headerlink" title="Ubuntu下所有的快捷方式都在："></a>Ubuntu下所有的快捷方式都在：</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">/usr/share/applications</span><br></pre></td></tr></table></figure>
+
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>这里我将pycharm下载并解压到了/home/snakeson/developer文件夹下</p>
+<p>这里的pycharm.sh是批处理执行文件，prcharm.png是快捷方式图标</p>
 <span id="more"></span>
-<p>主要想做这些事情有：添加归档，添加标签，添加分类页面，主页显示文章摘要，代码去除 jQuery 和 BootStrap，优化移动端显示，将所有变量写入配置文件<code>_config.yml</code>中等。再优化一些细节吧。希望更多人会喜欢。</p>
-<h2 id="改版重构说明"><a href="#改版重构说明" class="headerlink" title="改版重构说明"></a>改版重构说明</h2><ul>
-<li><p><strong>使用 GitHub 风格的代码块 Markdown 写法 (Fenced code blocks)。</strong></p>
-<p>  即 GFM(github flavored markdown) 的方式。</p>
-<p>  Jekyll 已经升级至 3.1.2（2016-03），其中有一些新的要注意的地方，比如官网上说使用了 <code>Rouge</code> 去做代码高亮而不是默认的 <code>Pygments</code>，因为 <code>Jekyll</code> 本身是基于 Ruby 的，因此我看到官方说希望不再使用基于 Python 的 <code>Pygments</code> 了，而是都使用基于 Ruby 的代码。详情见官网升级说明 <a href="https://jekyllrb.com/docs/upgrading/2-to-3/#syntax-highlighter-changed">syntax-highlighter-changed</a>。</p>
-</li>
-<li><p><strong>首页中添加摘要</strong></p>
-<p>  摘要可以在每一篇 md 文件头中使用 excerpt 属性写出来。也可以在正文中，4个换行符来分割，这个设置见配置文件<code>_config.yml</code>。</p>
-</li>
-<li><p><strong>添加归档</strong></p>
-<p>  上一版中没有归档，现在专门做了一个归档页面，当文章很多时方便根据年份快速查阅。</p>
-</li>
-<li><p><strong>添加标签</strong></p>
-<p>  标签还是很有必要添加的，上一版中也没有这个功能。现在也可以根据标签查找文章了。同时标签还有一个重要的作用是，用来获取相似文章的。</p>
-</li>
-<li><p><strong>添加分类页</strong></p>
-<p>  之前的分类就是在首页中直接完成的，现在和标签和归档类似，我将分类单独制作为一页，方便查阅。</p>
-</li>
-<li><p><strong>去掉 jQuery 和 BootStrap</strong></p>
-<p>  我觉得太重了，没必要使用这两个库，使用原生 JavaScript 和 CSS就可以做到一样的效果，代码量大大减轻，载入速度略有提高。</p>
-</li>
-<li><p><strong>重写了demo页的瀑布流布局</strong></p>
-<p>  改变数据写死的方式，将数据用 json 格式录入，由 JavaScript 拼接为 HTML 代码。同时，使用 <a href="http://masonry.desandro.com/">Masonry</a>，重写了瀑布流布局。</p>
-</li>
-<li><p><strong>简化评论配置，支持 多说 和 disqus</strong></p>
-<p>  在<code>_config.yml</code>中评论配置直接添加自己的<code>short_name</code>，评论就能正常使用了。</p>
-</li>
-</ul>
-<p>下面列举一些可能遇到的问题，至少我是遇到了：</p>
-<h2 id="RubyGems-无法访问，SSL-证书问题"><a href="#RubyGems-无法访问，SSL-证书问题" class="headerlink" title="RubyGems 无法访问，SSL 证书问题"></a>RubyGems 无法访问，SSL 证书问题</h2><p>以前我使用的是 RubyGems 的淘宝镜像<a href="https://ruby.taobao.org/">https://ruby.taobao.org/</a>。现在这个镜像已经不再维护了，作者 <a href="https://ruby-china.org/huacnlee">huacnlee (李华顺)</a> 转到 <a href="https://ruby-china.org/">Ruby China</a> 中继续维护了，详情见 <a href="https://gems.ruby-china.org/">RubyGems 镜像- Ruby China</a>。</p>
-<h3 id="错误呈现"><a href="#错误呈现" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在执行任何<code>gem</code>命令的时候出现以下错误：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ERROR:  While executing gem ... (Gem::RemoteFetcher::FetchError)</span><br><span class="line">    SSL_connect returned&#x3D;1 errno&#x3D;0 state&#x3D;SSLv3 read server certificate B: certificate verify failed (https:&#x2F;&#x2F;gems.ruby-china.org&#x2F;specs.4.8.gz)</span><br></pre></td></tr></table></figure>
+<h2 id="终端打开"><a href="#终端打开" class="headerlink" title="终端打开"></a>终端打开</h2><p>使用Ubuntu终端进行打开：<br>方法一（使用vim）：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo vi  /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
 
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>根据 <a href="https://gems.ruby-china.org/">https://gems.ruby-china.org/</a> 页面最下方提供的 GitHub Issue 地址。</p>
-<p>可以进入这个 issue：<a href="https://github.com/ruby-china/rubygems-mirror/issues/3">https://github.com/ruby-china/rubygems-mirror/issues/3</a></p>
-<p>其中 sanlengjingvv 给出了一个链接地址 <a href="https://gist.github.com/fnichol/867550">https://gist.github.com/fnichol/867550</a> 里面提供了方法。我就是采用这里面的方法解决的。</p>
-<p>我使用的是 <a href="https://gist.github.com/fnichol/867550#the-manual-way-boring">The Manual Way</a>，因为 <a href="https://gist.github.com/fnichol/867550#the-ruby-way-fun">The Ruby Way</a> 我没有成功，不知道什么原因，有兴趣的朋友可以试试。下面说说我的具体操作吧。</p>
-<p>首先从 <a href="https://curl.haxx.se/ca/cacert.pem">https://curl.haxx.se/ca/cacert.pem</a> 将文件<code>cacert.pem</code>下载至 <code>C:\RailsInstaller\cacert.pem</code></p>
-<p>然后执行</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set SSL_CERT_FILE&#x3D;C:\RailsInstaller\cacert.pem</span><br></pre></td></tr></table></figure>
+<p>方法二（使用gedit）：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo gedit  /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
 
-<p>就成功了，不会再出现 SSL 错误了。</p>
-<p>最后原文中说，为了长久设置，将这个目录存入控制面板中。我没理解是什么意思，是指环境变量吗？有朋友知道的话，欢迎留言告知我。</p>
-<p>我存入环境变量后，还是会出现 SSL 错误，这时再次执行上面那条命令即可。</p>
-<h2 id="jekyll-paginate-依赖缺失"><a href="#jekyll-paginate-依赖缺失" class="headerlink" title="jekyll-paginate 依赖缺失"></a>jekyll-paginate 依赖缺失</h2><p>因为 jekyll 3 中默认安装已经没有这个分页组件了，官方把这个分页组件插件化了，因此要独立安装。详情见 <a href="https://jekyllrb.com/docs/pagination/">https://jekyllrb.com/docs/pagination/</a>。</p>
-<h3 id="错误呈现-1"><a href="#错误呈现-1" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在启动 jekyll 服务的时候出现以下错误：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br><span class="line">Configuration file: c:&#x2F;gitWorkSpace&#x2F;blog-based-on-jekyll-3&#x2F;_config.yml</span><br><span class="line">  Dependency Error: Yikes! It looks like you don&#39;t have jekyll-paginate or one of its dependencies installed. In order to use Jekyll as currently configured, you&#39;ll need to install this gem. The full error message from Ruby is: &#39;cannot load such file -- jekyll-paginate&#39; If you run into trouble, you can find helpful resources at http:&#x2F;&#x2F;jekyllrb.com&#x2F;help&#x2F;!</span><br><span class="line">jekyll 3.1.2 | Error:  jekyll-paginate</span><br></pre></td></tr></table></figure>
 
-<h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><p>我们安装这个插件到本地即可。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gem install jekyll-paginate</span><br><span class="line">Fetching: jekyll-paginate-1.1.0.gem (100%)</span><br><span class="line">Successfully installed jekyll-paginate-1.1.0</span><br><span class="line">Parsing documentation for jekyll-paginate-1.1.0</span><br><span class="line">Installing ri documentation for jekyll-paginate-1.1.0</span><br><span class="line">Done installing documentation for jekyll-paginate after 3 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
 
-<h2 id="被-Foxit-pdf-reader-占用4000端口"><a href="#被-Foxit-pdf-reader-占用4000端口" class="headerlink" title="被 Foxit pdf reader 占用4000端口"></a>被 Foxit pdf reader 占用4000端口</h2><h3 id="错误呈现-2"><a href="#错误呈现-2" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在本地使用命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br></pre></td></tr></table></figure>
 
-<p>出现错误，如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br><span class="line">Configuration file: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_config.yml</span><br><span class="line">           Source: E:&#x2F;GitWorkSpace&#x2F;blog</span><br><span class="line">      Destination: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_site</span><br><span class="line">Incremental build: disabled. Enable with --incremental</span><br><span class="line">     Generating...</span><br><span class="line">                   done in 0.547 seconds.</span><br><span class="line"> Please add the following to your Gemfile to avoid polling for changes:</span><br><span class="line">   gem &#39;wdm&#39;, &#39;&gt;&#x3D; 0.1.0&#39; if Gem.win_platform?</span><br><span class="line">Auto-regeneration: enabled for &#39;E:&#x2F;GitWorkSpace&#x2F;blog&#39;</span><br><span class="line">Configuration file: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_config.yml</span><br><span class="line">jekyll 3.1.1 | Error:  Permission denied - bind(2) for 127.0.0.1:4000</span><br></pre></td></tr></table></figure>
 
-<p>网上查阅后，这篇博文解决了我的问题。<a href="http://lxconan.github.io/2016/01/07/who-is-using-my-port/">谁占了我的端口 for Windows –By Liu Xia, ThoughtWorks Senior Consultant. .NET Expert</a></p>
-<p>上述报错主要原因是，jekyll 启动使用的4000端口被福昕pdf阅读器的自动更新进程占用了，关掉这个进程，jekyll在本地调试启动服务时就没有问题了。</p>
-<h3 id="解决方法-2"><a href="#解决方法-2" class="headerlink" title="解决方法"></a>解决方法</h3><p>简单的解决方法是：</p>
-<p>输入命令，查看各端口被占用情况</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -ano</span><br></pre></td></tr></table></figure>
+<p>然后就会弹出一个新框：</p>
+<h2 id="张贴"><a href="#张贴" class="headerlink" title="张贴"></a>张贴</h2><p>我们将下面的内容贴上去：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[Desktop Entry]</span><br><span class="line">Type=Application</span><br><span class="line">Name=Pycharm</span><br><span class="line">GenericName=Pycharm3</span><br><span class="line">Comment=Pycharm3:The Python IDE</span><br><span class="line">Exec=<span class="string">&quot;/home/snakeson/developer/pycharm-community-2017.2.3/bin/pycharm.sh&quot;</span> %f</span><br><span class="line">Icon=<span class="regexp">/home/</span>snakeson/developer/pycharm-community-<span class="number">2017.2</span><span class="number">.3</span>/bin/pycharm.png</span><br><span class="line">Terminal=pycharm</span><br><span class="line">Categories=Pycharm;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>注意一定要将Desktop Entry复制进去，也就是上面的全部都要复制进去，这里我们需要替换掉两个地方：<strong>Exec=”xx”<strong>和</strong>Icon=</strong>,这里要替换掉我们的pycharm解压的目录，当然了，我已经替换好了，如果你的目录跟我的目录不一样的话，你得把路径给换了，不管你是pycharm2017还是pycharm2016,，例如Comment什么的都不要改变，只变上面提到的两个路径就可以了。</p>
+<h2 id="添加可执行权限"><a href="#添加可执行权限" class="headerlink" title="添加可执行权限"></a>添加可执行权限</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo chmod +x /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
 
-<p>找到4000端口被占用的<code>PID</code></p>
-<p>我的结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">协议  本地地址          外部地址          状态           PID</span><br><span class="line">TCP  0.0.0.0:80        0.0.0.0:0         LISTENING     4</span><br><span class="line">TCP  0.0.0.0:135       0.0.0.0:0         LISTENING     836</span><br><span class="line">TCP  0.0.0.0:445       0.0.0.0:0         LISTENING     4</span><br><span class="line">TCP  0.0.0.0:1801      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2103      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2105      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2107      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:3306      0.0.0.0:0         LISTENING     2404</span><br><span class="line">TCP  0.0.0.0:3389      0.0.0.0:0         LISTENING     1172</span><br><span class="line">TCP  0.0.0.0:49664     0.0.0.0:0         LISTENING     584</span><br><span class="line">TCP  0.0.0.0:49665     0.0.0.0:0         LISTENING     1072</span><br><span class="line">TCP  0.0.0.0:49666     0.0.0.0:0         LISTENING     460</span><br><span class="line">TCP  0.0.0.0:49667     0.0.0.0:0         LISTENING     1000</span><br><span class="line">TCP  0.0.0.0:49670     0.0.0.0:0         LISTENING     696</span><br><span class="line">TCP  0.0.0.0:49678     0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:49692     0.0.0.0:0         LISTENING     688</span><br><span class="line">TCP  127.0.0.1:4000    0.0.0.0:0         LISTENING     2476</span><br><span class="line">TCP  127.0.0.1:4000    127.0.0.1:55160   ESTABLISHED   2476</span><br><span class="line">TCP  127.0.0.1:4012    0.0.0.0:0         LISTENING     12724</span><br></pre></td></tr></table></figure>
-
-<p>可以看到4000端口的PID是2476。下面查看是什么进程，命令行中输入：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tasklist &#x2F;svc &#x2F;FI &quot;PID eq 2476&quot;</span><br></pre></td></tr></table></figure>
-
-<p>得到结果：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">映像名称                       PID 服务</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">FoxitProtect.exe              2476 FxService</span><br></pre></td></tr></table></figure>
-
-<p>可以看到正是福昕阅读器。下面关掉这个服务就好了。在 win10 中进入任务管理器，选择服务选项卡，关闭这个服务就好了，如下图：</p>
-<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f1ty28wwj4j20g00aiju7.jpg"></p>
-<p>当然也可以在启动jekyll服务的时候指定端口号，如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve --port 3000</span><br></pre></td></tr></table></figure>
-
-<p>这样在浏览器中输入 <a href="http://localhost:3000/">http://localhost:3000/</a> 就可以访问了。</p>
-<p>还可以在配置文件<code>_config.yml</code>中添加端口号设置（参考<a href="https://jekyllrb.com/docs/configuration/#serve-command-options">官网文档-Serve Command OptionsPermalink</a>），如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># port</span><br><span class="line">port: 1234</span><br></pre></td></tr></table></figure>
-
-<p>此时，启动jekyll服务后，访问 <a href="http://localhost:1234/">http://localhost:1234/</a> 即可</p>
+<h2 id="拷贝到桌面"><a href="#拷贝到桌面" class="headerlink" title="拷贝到桌面"></a>拷贝到桌面</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">将/usr/share/applications/pycharm.desktop文件拷贝到桌面，双击即可运行。</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>jekyll</category>
+        <category>python</category>
       </categories>
       <tags>
-        <tag>jekyll</tag>
+        <tag>Ubuntu Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>win10 关闭更新</title>
+    <url>/2021/05/08/2018/01/close-win10-update/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
+<span id="more"></span>
+<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>2 在运行处输入 “services.msc”   点击确定。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>3 在弹出来的服务中，找到“Windows Update”</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>4 选择禁用</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>会多出这两个位置，这样子就设置成功了。</p>
+]]></content>
+      <categories>
+        <category>win10</category>
+      </categories>
+      <tags>
+        <tag>win10 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>News_scrapy_redis 框架系统</title>
+    <url>/2021/05/08/2018/01/python_crawl_words/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该文档针对爬虫系统设计目标中相应的场景给出技术方案</p>
+<span id="more"></span>
+<h2 id="设计目标"><a href="#设计目标" class="headerlink" title="设计目标"></a>设计目标</h2><p>1、代码复用，功能模块化。可以支持上千个网站的数据爬取；</p>
+<p>2、易扩展。爬虫框架易扩展，爬取规则、解析规则、入库规则易扩展，支持框架切换；</p>
+<p>3、健壮性、可维护性。对数据爬取过程中的各种异常，例如：断网、反爬升级、爬“脏数据”等，需要实时的监控，以及给出准确的定位。异常处理以及降级措施需要完善；</p>
+<p>4、后续扩展为分布式结构；</p>
+<p>5、支持功能模块的易调整；</p>
+<h2 id="框架使用说明"><a href="#框架使用说明" class="headerlink" title="框架使用说明"></a>框架使用说明</h2><p><strong>News_scrapy_redis4. <a href="https://github.com/xudailong/News_scrapy_redis.git">github地址</a></strong></p>
+<ol>
+<li><p><code>News_scrapy_redis</code> 基于<code>scrapy_redis</code>实现数据的增量爬取（含去重），支持分布式，支持异常日志等输出，功能模块化。</p>
+</li>
+<li><p>树结构：</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">├─.idea</span><br><span class="line">├─Daily_crawler</span><br><span class="line">├─ETL</span><br><span class="line">├─log</span><br><span class="line">├─News_scrapy</span><br><span class="line">│  ├─spiders</span><br><span class="line">│  │  └─__pycache__</span><br><span class="line">│  └─__pycache__</span><br><span class="line">├─News_simhash</span><br><span class="line">└─News_statistics</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>各模块说明：<blockquote>
+<p>Daily_crawler：    </p>
+</blockquote>
+<ul>
+<li><code>daily_crawler.cron crontab</code>的定时文件, 定时运行<code>start_crawl.sh</code>脚本</li>
+<li><code>start_crawl.sh</code> 启动爬虫模块，并将每次爬取所花费的时间 写入 log/run_time.txt</li>
+<li><code>push_urls.py</code> 每次在爬虫之前运行，清空调度队列，并将start_url push到调度队列中</li>
+<li><code>news_crawl.sh</code> 执行爬虫模块（增量爬取）， 并自动进行相似文档去重，ETL, 存入mongodb</li>
+</ul>
+<blockquote>
+<p>ETL:（暂时用不到）</p>
+</blockquote>
+<ul>
+<li><code>/Model</code> 存放训练好的词典，语料，TF-IDF，LDA， word2vec模型</li>
+<li><code>auto_embedding.py</code> 新闻语料的清洗，以及自动化生成新闻的标题和内容embedding</li>
+<li><code>auto_embedding_simhash.py</code> 增加了自动化相似文档的去重</li>
+<li><code>stop_words</code> 常用的中文停留词</li>
+<li><code>train_step1</code> 训练LDA模型</li>
+<li><code>train_step2</code> 训练LDA模型</li>
+</ul>
+<blockquote>
+<p>log:</p>
+</blockquote>
+<ul>
+<li><code>auto_embedding_simhash.log</code> 执行auto_embedding_simhash.py的日志文件</li>
+<li><code>crawler.log</code> 执行scrapy-redis爬虫模块的日志文件</li>
+<li><code>news_count.log</code> 执行news_statistics.py的日志文件</li>
+<li><code>run_time.txt</code> 每次执行爬虫脚本的运行时间</li>
+</ul>
+<blockquote>
+<p>News_data:</p>
+</blockquote>
+<ul>
+<li>每个文件夹是抓每天从各个网站抓取到的新闻</li>
+</ul>
+<blockquote>
+<p>News_scrapy:</p>
+</blockquote>
+<ul>
+<li>基于scrapy-redis的爬虫模块，在scrapy的基础上修改得到</li>
+<li>各大网站数据的爬取解析工作主要在该文件中进行</li>
+</ul>
+<blockquote>
+<p>News_simhash（此处只需要进行title的去重）:</p>
+</blockquote>
+<ul>
+<li>实现相似文档的去重</li>
+<li>automatic_simhash.py 自动实现相似文档的去重（仅基于新闻内容）</li>
+<li><code>near_duplicates.py</code> 对初始化的Simhash_index进行相似新闻内容的去重</li>
+</ul>
+<blockquote>
+<p>News_statistics:</p>
+</blockquote>
+<ul>
+<li><code>news_count.json</code> 每天从各个网站抓取的新闻数量</li>
+<li><code>news_statistics.py</code> 统计新闻增量的脚本</li>
+</ul>
+</li>
+</ol>
+<h2 id="框架环境"><a href="#框架环境" class="headerlink" title="框架环境"></a>框架环境</h2><ol>
+<li>Redis环境环境</li>
+<li>scrapy框架环境</li>
+<li>python3环境环境</li>
+</ol>
+<h2 id="框架完善"><a href="#框架完善" class="headerlink" title="框架完善"></a>框架完善</h2><ol>
+<li>IP代理池</li>
+<li>cookies池 </li>
+<li>其他</li>
+</ol>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>scrapy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>window下python3环境安装scrapy</title>
+    <url>/2021/05/08/2018/01/scrapy-setup-in-win/</url>
+    <content><![CDATA[<p>目录：</p>
+<h2 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h2><blockquote>
+<p>python3  3.6.4， win7 64位  </p>
+</blockquote>
+<span id="more"></span>
+<h2 id="初次安装："><a href="#初次安装：" class="headerlink" title="初次安装："></a>初次安装：</h2><blockquote>
+<p><code> pip install scrapy</code></p>
+</blockquote>
+<p>使用这个命令，在win7 64位是怎么也安装不上去的，因为这已经是第二次了，</p>
+<p>当这个命令输出完后，会出现一系列的问题。当然了，不用怕，这不是需要解决问题的方法来了嘛。</p>
+<p>可能出现需要下载版本对应的visual studio,但是也太大了，或也可以说下载慢。。。。。。但是，我们可以不用去进行下载，只要进行下面几个文件的安装就可以了。</p>
+<h2 id="打开网站"><a href="#打开网站" class="headerlink" title="打开网站"></a>打开网站</h2><p>首先你打开这个网站（里面包含了各种编译好的库）：</p>
+<blockquote>
+<p><a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml">http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml</a></p>
+</blockquote>
+<h2 id="安装wheel"><a href="#安装wheel" class="headerlink" title="安装wheel"></a>安装wheel</h2><blockquote>
+<p><code> pip install wheel</code></p>
+</blockquote>
+<p>安装成功的界面</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-93cab0d529ca1dba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="wheel—success.png"></p>
+<h2 id="安装-whl文件"><a href="#安装-whl文件" class="headerlink" title="安装.whl文件"></a>安装.whl文件</h2><p>这里需要安装三个.whl文件，而且是全名的安装，</p>
+<p>以下三个文件：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-eaf16a31171cd6ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=".whl文件.png"></p>
+<p>中途可能会出现<code>Failed to build XXXX </code> 或者是<code> twisted</code>等相关的内容</p>
+<p>因为scrapy是基于twisted框架的，所以，twisted框架也需要进行安装</p>
+<p>当上面三个文件安装好了：</p>
+<p>再次运行：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">scrapy startproject pyjy</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了scrapy在win下python3下的安装</p>
+<h2 id="end"><a href="#end" class="headerlink" title="end"></a>end</h2>]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>scrapy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu 16.04 下MySQL的安装</title>
+    <url>/2021/05/08/2018/01/setup-mysql-inubuntu/</url>
+    <content><![CDATA[<p>1， 打开终端：</p>
+<blockquote>
+<p> sudo apt-get install mysql-server</p>
+</blockquote>
+<span id="more"></span>
+<p>2 ，接下来会让你选择y/n, 这里你选择y,</p>
+<p>3 ，这里会出现一个让你输入mysql-server的密码，输入完后如果鼠标点击不了，可以使用Tab键+enter键继续下一步</p>
+<p>4 ，接下来，会继续让我们输入一次密码</p>
+<p>5， 密码输入完后，我们这里的mysql-server的用户名是：root ，密码是我们刚刚设置过的密码，</p>
+<p>6， 这时候已经安装完成了，我们需要验证一下是否安装上了mysql-server</p>
+<blockquote>
+<p> mysql -u root -p</p>
+</blockquote>
+<p>按enter键后会让我们输入密码，当我们输入密码后，会出现：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">snakeson@snakeson-Inspiron-<span class="number">5421</span>:~$ mysql -u root -p</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end <span class="keyword">with</span> ; or \g.</span><br><span class="line">Your MySQL connection id is <span class="number">5</span></span><br><span class="line">Server version: <span class="number">5.7</span><span class="number">.20</span>-0ubuntu0<span class="number">.16</span><span class="number">.04</span><span class="number">.1</span> (Ubuntu)</span><br><span class="line"></span><br><span class="line">Copyright (c) <span class="number">2000</span>, <span class="number">2017</span>, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark <span class="keyword">of</span> Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks <span class="keyword">of</span> their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> help. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt; </span><br></pre></td></tr></table></figure>
+
+<p>7 ， 这样我们就在Ubuntu下安装好了mysql-server。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux ubuntu16.04 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>工作填坑之内网与外网</title>
+    <url>/2021/05/08/2018/02/about-inner-outer-ip/</url>
+    <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>内网：</p>
+<blockquote>
+<p>内网也就是局域网，内网的计算机以NAT（<a href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2">网络地址转换</a>）协议，通过一个公共的<a href="https://baike.baidu.com/item/%E7%BD%91%E5%85%B3">网关</a>访问Internet。内网的计算机可向Internet上的其他计算机发送连接请求，但Internet上其他的计算机无法向内网的计算机发送连接请求。</p>
+</blockquote>
+<blockquote>
+<p>最直观的就是像网吧，公司内部的电脑用交换机，HUB，路由连起来的</p>
+</blockquote>
+<span id="more"></span>
+
+
+
+
+
+
+
+
+
+<p>外网：</p>
+<blockquote>
+<p>外网IP包括：ADSL拨号的动态IP用动态<a href="https://baike.baidu.com/item/%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D">解析域名</a>来绑定IP，又叫<a href="https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E5%9F%9F%E5%90%8D">动态域名</a>；固定的外网IP(这种多半为网吧的IP)即，整个网吧的那个主IP。外网IP指的是：打开ADSL<a href="https://baike.baidu.com/item/%E8%B7%AF%E7%94%B1">路由</a>功能的用户你的外网IP就应该是ADSL设备的IP，网吧里的外网IP是指整个网吧的主IP，校园网的外网IP就是整个校园网的那个主IP，小区网的外网IP与校园网同理，长宽的用户就要试下了，可以上论坛，看看你的IP是多少，那么那个IP就是你要绑定的，所有的内网用户都可以这样查的，论坛<br>上的IP就是你要绑定的IP</p>
+</blockquote>
+<h2 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h2><p>第一次搭建服务器相关项目，因为第一次直接使用的是一台服务器，外网的ip，在自己的windows 是可以用mongodb 客户端与redis 客户端进行服务器上的mongodb服务端与redis服务端相连接的，并没有遇到什么困难</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>因为后台与爬虫用的同一个mongodb与redis，而那台服务器又是单核的，2g运行内存。导致mongodb老是因为连接池开得过多而被挂掉，后来就买了内网的mongodb与redis服务，一开始啥都不懂，也不知道这是一个坑，在自己本机上进行mongodb，redis测试，一直连接不上去，代码是改了又改，</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>后来老大过来了，你这是内网的，外网的当然连接不上去了，你得在腾讯云服务器上进行连接</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>后来就直接在腾讯云服务器上测试连接，然后就连好了。这个问题搞到我们三到晚上12点，确实菜，然后预料到的确实少，回过头来看下代码，一点毛病都没有啊！不知道有句mmp，该不该讲。</p>
+]]></content>
+      <categories>
+        <category>工具软件</category>
+      </categories>
+      <tags>
+        <tag>MongoDB Redis 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CentOS7定时任务详解</title>
+    <url>/2018/02/10/2018/02/centos-crontab/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作中需要开启一个定时任务：每天晚上2点进行爬虫代码的运行，这不得不去学习一下linux 下的定时任务crontab</p>
+<span id="more"></span>
+<h2 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h2><p>yum install crontabs</p>
+<p>说明：<br>/sbin/service crond start //启动服务<br>/sbin/service crond stop //关闭服务<br>/sbin/service crond restart //重启服务<br>/sbin/service crond reload //重新载入配置<br>查看crontab服务状态：service crond status<br>手动启动crontab服务：service crond start<br>查看crontab服务是否已设置为开机启动，执行命令：ntsysv<br>加入开机自动启动:<br>chkconfig crond on</p>
+<h2 id="1，crontab命令"><a href="#1，crontab命令" class="headerlink" title="1，crontab命令"></a>1，crontab命令</h2><p>功能说明：设置计时器。<br>语　　法：crontab [-u &lt;用户名称&gt;][配置文件] 或 crontab [-u &lt;用户名称&gt;][-elr]</p>
+<p>补充说明：cron是一个常驻服务，它提供计时器的功能，让用户在特定的时间得以执行预设的指令或程序。只要用户会编辑计时器的配置文件，就可以使 用计时器的功能。</p>
+<p>其配置文件格式如下：<br>Minute Hour Day Month DayOFWeek Command</p>
+<p>参　　数：<br>-e 　编辑该用户的计时器设置。<br>-l 　列出该用户的计时器设置。<br>-r 　删除该用户的计时器设置。<br>-u&lt;用户名称&gt; 　指定要设定计时器的用户名称。</p>
+<h2 id="2，crontab-格式"><a href="#2，crontab-格式" class="headerlink" title="2，crontab 格式"></a>2，crontab 格式</h2><p>基本格式 :</p>
+<ul>
+<li>*　 *　 *　 *　　command<br>分　时　日　月　周　 命令<br>第1列表示分钟1～59 每分钟用*或者 */1表示<br>第2列表示小时1～23（0表示0点）<br>第3列表示日期1～31<br>第4列 表示月份1～12<br>第5列标识号星期0～6（0表示星期天）<br>第6列要运行的命令<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># Use the hash sign to prefix a comment</span><br><span class="line"># +—————- minute (0 – 59)</span><br><span class="line"># | +————- hour (0 – 23)</span><br><span class="line"># | | +———- day of month (1 – 31)</span><br><span class="line"># | | | +——- month (1 – 12)</span><br><span class="line"># | | | | +—- day of week (0 – 7) (Sunday=0 or 7)</span><br><span class="line"># | | | | |</span><br><span class="line"># * * * * * command to be executed</span><br></pre></td></tr></table></figure>
+<h2 id="3，crontab文件的一些例子："><a href="#3，crontab文件的一些例子：" class="headerlink" title="3，crontab文件的一些例子："></a>3，crontab文件的一些例子：</h2></li>
+</ul>
+<blockquote>
+<p>1 简单打印</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">每天早上<span class="number">6</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">6</span> * * * echo <span class="string">&quot;Good morning.&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt <span class="comment">//注意单纯echo，从屏幕上看不到任何输出，因为cron把任何输出都email到root的信箱了。</span></span><br><span class="line"></span><br><span class="line">每两个小时 </span><br><span class="line"><span class="number">0</span> *<span class="regexp">/2 * * * echo &quot;Have a break now.&quot; &gt;&gt; /</span>tmp/test.txt  </span><br><span class="line"></span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">8</span>点之间每两个小时和早上八点 </span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">2</span>，<span class="number">8</span> * * * echo <span class="string">&quot;Have a good dream&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt</span><br><span class="line"></span><br><span class="line">每个月的<span class="number">4</span>号和每个礼拜的礼拜一到礼拜三的早上<span class="number">11</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * <span class="number">1</span>-<span class="number">3</span> command line</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>月<span class="number">1</span>日早上<span class="number">4</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> <span class="number">1</span> * command line SHELL=<span class="regexp">/bin/</span>bash PATH=<span class="regexp">/sbin:/</span>bin:<span class="regexp">/usr/</span>sbin:<span class="regexp">/usr/</span>bin MAILTO=root <span class="comment">//如果出现错误，或者有数据输出，数据作为邮件发给这个帐号 HOME=/ </span></span><br><span class="line"></span><br><span class="line">每小时执行/etc/cron.hourly内的脚本</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br><span class="line"></span><br><span class="line">每天执行/etc/cron.daily内的脚本</span><br><span class="line"><span class="number">02</span> <span class="number">4</span> * * * root run-parts /etc/cron.daily </span><br><span class="line"></span><br><span class="line">每星期执行/etc/cron.weekly内的脚本</span><br><span class="line"><span class="number">22</span> <span class="number">4</span> * * <span class="number">0</span> root run-parts /etc/cron.weekly </span><br><span class="line"></span><br><span class="line">每月去执行/etc/cron.monthly内的脚本 </span><br><span class="line"><span class="number">42</span> <span class="number">4</span> <span class="number">1</span> * * root run-parts /etc/cron.monthly </span><br><span class="line"></span><br><span class="line">注意: <span class="string">&quot;run-parts&quot;</span>这个参数了，如果去掉这个参数的话，后面就可以写要运行的某个脚本名，而不是文件夹名。 　 </span><br><span class="line"></span><br><span class="line">每天的下午<span class="number">4</span>点、<span class="number">5</span>点、<span class="number">6</span>点的<span class="number">5</span> min、<span class="number">15</span> min、<span class="number">25</span> min、<span class="number">35</span> min、<span class="number">45</span> min、<span class="number">55</span> min时执行命令。 </span><br><span class="line"><span class="number">5</span>，<span class="number">15</span>，<span class="number">25</span>，<span class="number">35</span>，<span class="number">45</span>，<span class="number">55</span> <span class="number">16</span>，<span class="number">17</span>，<span class="number">18</span> * * * command</span><br><span class="line"></span><br><span class="line">每周一，三，五的下午<span class="number">3</span>：<span class="number">00</span>系统进入维护状态，重新启动系统。</span><br><span class="line"><span class="number">00</span> <span class="number">15</span> * * <span class="number">1</span>，<span class="number">3</span>，<span class="number">5</span> shutdown -r +<span class="number">5</span></span><br><span class="line"></span><br><span class="line">每小时的<span class="number">10</span>分，<span class="number">40</span>分执行用户目录下的innd/bbslin这个指令： </span><br><span class="line"><span class="number">10</span>，<span class="number">40</span> * * * * innd/bbslink </span><br><span class="line"></span><br><span class="line">每小时的<span class="number">1</span>分执行用户目录下的bin/account这个指令： </span><br><span class="line"><span class="number">1</span> * * * * bin/account</span><br><span class="line"></span><br><span class="line">每天早晨三点二十分执行用户目录下如下所示的两个指令（每个指令以;分隔）： </span><br><span class="line">20 3 * * * （/bin/rm -f expire.ls logins.bad;bin/expire$#@62;expire.1st）　　</span><br><span class="line"></span><br><span class="line">每年的一月和四月，<span class="number">4</span>号到<span class="number">9</span>号的<span class="number">3</span>点<span class="number">12</span>分和<span class="number">3</span>点<span class="number">55</span>分执行/bin/rm -f expire.1st这个指令，并把结果添加在mm.txt这个文件之后（mm.txt文件位于用户自己的目录位置）。 </span><br><span class="line">12,55 3 4-9 1,4 * /bin/rm -f expire.1st$#@62;$#@62;mm.txt </span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>2 nginx示例</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每晚的<span class="number">21</span>:<span class="number">30</span>重启 nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每月<span class="number">1</span>、 <span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span> : <span class="number">45</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /etc/init.d/nginx restart</span><br><span class="line">每周六、周日的<span class="number">1</span> : <span class="number">10</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每天<span class="number">18</span> : <span class="number">00</span>至<span class="number">23</span> : <span class="number">00</span>之间每隔<span class="number">30</span>分钟重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /etc/init.d/nginx restart</span><br><span class="line">每星期六的<span class="number">11</span> : <span class="number">00</span> pm重启nginx。</span><br><span class="line"></span><br><span class="line">* *<span class="regexp">/1 * * * /</span>etc/init.d/nginx restart</span><br><span class="line">每一小时重启nginx</span><br><span class="line"></span><br><span class="line">* <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">7</span>点之间，每 隔一小时重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /etc/init.d/nginx restart</span><br><span class="line">每月的<span class="number">4</span>号与每周一到周三 的<span class="number">11</span>点重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">一月一号的<span class="number">4</span>点重启nginx</span><br><span class="line"></span><br><span class="line">*<span class="regexp">/30 * * * * /u</span>sr/sbin/ntpdate <span class="number">210.72</span><span class="number">.145</span><span class="number">.20</span></span><br><span class="line">每半小时同步一下时间</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-创建cron脚本"><a href="#4-创建cron脚本" class="headerlink" title="4 创建cron脚本"></a>4 创建cron脚本</h2><ol>
+<li><p>第一步：写cron脚本文件,命名为crontest.cron。<br>15,30,45,59 * * * * echo “xgmtest…..” &gt;&gt; xgmtest.txt  表示，每隔15分钟，执行打印一次命令 </p>
+</li>
+<li><p>第二步：添加定时任务。执行命令 “crontab crontest.cron”。搞定 </p>
+</li>
+<li><p>第三步：”crontab -l” 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</p>
+</li>
+</ol>
+<h2 id="将脚本改为可执行（针对shell，-sh文件）"><a href="#将脚本改为可执行（针对shell，-sh文件）" class="headerlink" title="将脚本改为可执行（针对shell，.sh文件）"></a>将脚本改为可执行（针对shell，.sh文件）</h2><blockquote>
+<p>chmod +x filename</p>
+</blockquote>
+<p>引用：</p>
+<p><a href="http://blog.csdn.net/u012402276/article/details/51063269">http://blog.csdn.net/u012402276/article/details/51063269</a><br><a href="https://www.cnblogs.com/longjshz/p/5779215.html">https://www.cnblogs.com/longjshz/p/5779215.html</a><br><a href="http://blog.csdn.net/edgdvcyz/article/details/53348832">http://blog.csdn.net/edgdvcyz/article/details/53348832</a></p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>centos7 crontab linux 工具软件</tag>
       </tags>
   </entry>
   <entry>
@@ -298,6 +510,102 @@
       </categories>
       <tags>
         <tag>对象 函数 this 闭包 面向对象 作用域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>对这个 jekyll 博客主题的改版和重构</title>
+    <url>/2016/03/12/2016/03/jekyll-theme-version-2.0/</url>
+    <content><![CDATA[<p>本文主要说明对这个博客主题的改版和代码重构的过程。这个简洁高雅的博客主题受到了很多朋友的喜欢。在写第一版界面时，我对前端并不是很熟悉，对<code>Jekyll</code>也不熟悉。现在距离当时也一年了，对自己当时写的代码也不太满意了，同时<code>Jekyll</code>如今也已经升级了，目前最新版为3.1.2。因此我在临近毕业尚未入职前做一下博客主题的代码重构和改版吧。</p>
+<span id="more"></span>
+<p>主要想做这些事情有：添加归档，添加标签，添加分类页面，主页显示文章摘要，代码去除 jQuery 和 BootStrap，优化移动端显示，将所有变量写入配置文件<code>_config.yml</code>中等。再优化一些细节吧。希望更多人会喜欢。</p>
+<h2 id="改版重构说明"><a href="#改版重构说明" class="headerlink" title="改版重构说明"></a>改版重构说明</h2><ul>
+<li><p><strong>使用 GitHub 风格的代码块 Markdown 写法 (Fenced code blocks)。</strong></p>
+<p>  即 GFM(github flavored markdown) 的方式。</p>
+<p>  Jekyll 已经升级至 3.1.2（2016-03），其中有一些新的要注意的地方，比如官网上说使用了 <code>Rouge</code> 去做代码高亮而不是默认的 <code>Pygments</code>，因为 <code>Jekyll</code> 本身是基于 Ruby 的，因此我看到官方说希望不再使用基于 Python 的 <code>Pygments</code> 了，而是都使用基于 Ruby 的代码。详情见官网升级说明 <a href="https://jekyllrb.com/docs/upgrading/2-to-3/#syntax-highlighter-changed">syntax-highlighter-changed</a>。</p>
+</li>
+<li><p><strong>首页中添加摘要</strong></p>
+<p>  摘要可以在每一篇 md 文件头中使用 excerpt 属性写出来。也可以在正文中，4个换行符来分割，这个设置见配置文件<code>_config.yml</code>。</p>
+</li>
+<li><p><strong>添加归档</strong></p>
+<p>  上一版中没有归档，现在专门做了一个归档页面，当文章很多时方便根据年份快速查阅。</p>
+</li>
+<li><p><strong>添加标签</strong></p>
+<p>  标签还是很有必要添加的，上一版中也没有这个功能。现在也可以根据标签查找文章了。同时标签还有一个重要的作用是，用来获取相似文章的。</p>
+</li>
+<li><p><strong>添加分类页</strong></p>
+<p>  之前的分类就是在首页中直接完成的，现在和标签和归档类似，我将分类单独制作为一页，方便查阅。</p>
+</li>
+<li><p><strong>去掉 jQuery 和 BootStrap</strong></p>
+<p>  我觉得太重了，没必要使用这两个库，使用原生 JavaScript 和 CSS就可以做到一样的效果，代码量大大减轻，载入速度略有提高。</p>
+</li>
+<li><p><strong>重写了demo页的瀑布流布局</strong></p>
+<p>  改变数据写死的方式，将数据用 json 格式录入，由 JavaScript 拼接为 HTML 代码。同时，使用 <a href="http://masonry.desandro.com/">Masonry</a>，重写了瀑布流布局。</p>
+</li>
+<li><p><strong>简化评论配置，支持 多说 和 disqus</strong></p>
+<p>  在<code>_config.yml</code>中评论配置直接添加自己的<code>short_name</code>，评论就能正常使用了。</p>
+</li>
+</ul>
+<p>下面列举一些可能遇到的问题，至少我是遇到了：</p>
+<h2 id="RubyGems-无法访问，SSL-证书问题"><a href="#RubyGems-无法访问，SSL-证书问题" class="headerlink" title="RubyGems 无法访问，SSL 证书问题"></a>RubyGems 无法访问，SSL 证书问题</h2><p>以前我使用的是 RubyGems 的淘宝镜像<a href="https://ruby.taobao.org/">https://ruby.taobao.org/</a>。现在这个镜像已经不再维护了，作者 <a href="https://ruby-china.org/huacnlee">huacnlee (李华顺)</a> 转到 <a href="https://ruby-china.org/">Ruby China</a> 中继续维护了，详情见 <a href="https://gems.ruby-china.org/">RubyGems 镜像- Ruby China</a>。</p>
+<h3 id="错误呈现"><a href="#错误呈现" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在执行任何<code>gem</code>命令的时候出现以下错误：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ERROR:  While executing gem ... (Gem::RemoteFetcher::FetchError)</span><br><span class="line">    SSL_connect returned&#x3D;1 errno&#x3D;0 state&#x3D;SSLv3 read server certificate B: certificate verify failed (https:&#x2F;&#x2F;gems.ruby-china.org&#x2F;specs.4.8.gz)</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>根据 <a href="https://gems.ruby-china.org/">https://gems.ruby-china.org/</a> 页面最下方提供的 GitHub Issue 地址。</p>
+<p>可以进入这个 issue：<a href="https://github.com/ruby-china/rubygems-mirror/issues/3">https://github.com/ruby-china/rubygems-mirror/issues/3</a></p>
+<p>其中 sanlengjingvv 给出了一个链接地址 <a href="https://gist.github.com/fnichol/867550">https://gist.github.com/fnichol/867550</a> 里面提供了方法。我就是采用这里面的方法解决的。</p>
+<p>我使用的是 <a href="https://gist.github.com/fnichol/867550#the-manual-way-boring">The Manual Way</a>，因为 <a href="https://gist.github.com/fnichol/867550#the-ruby-way-fun">The Ruby Way</a> 我没有成功，不知道什么原因，有兴趣的朋友可以试试。下面说说我的具体操作吧。</p>
+<p>首先从 <a href="https://curl.haxx.se/ca/cacert.pem">https://curl.haxx.se/ca/cacert.pem</a> 将文件<code>cacert.pem</code>下载至 <code>C:\RailsInstaller\cacert.pem</code></p>
+<p>然后执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set SSL_CERT_FILE&#x3D;C:\RailsInstaller\cacert.pem</span><br></pre></td></tr></table></figure>
+
+<p>就成功了，不会再出现 SSL 错误了。</p>
+<p>最后原文中说，为了长久设置，将这个目录存入控制面板中。我没理解是什么意思，是指环境变量吗？有朋友知道的话，欢迎留言告知我。</p>
+<p>我存入环境变量后，还是会出现 SSL 错误，这时再次执行上面那条命令即可。</p>
+<h2 id="jekyll-paginate-依赖缺失"><a href="#jekyll-paginate-依赖缺失" class="headerlink" title="jekyll-paginate 依赖缺失"></a>jekyll-paginate 依赖缺失</h2><p>因为 jekyll 3 中默认安装已经没有这个分页组件了，官方把这个分页组件插件化了，因此要独立安装。详情见 <a href="https://jekyllrb.com/docs/pagination/">https://jekyllrb.com/docs/pagination/</a>。</p>
+<h3 id="错误呈现-1"><a href="#错误呈现-1" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在启动 jekyll 服务的时候出现以下错误：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br><span class="line">Configuration file: c:&#x2F;gitWorkSpace&#x2F;blog-based-on-jekyll-3&#x2F;_config.yml</span><br><span class="line">  Dependency Error: Yikes! It looks like you don&#39;t have jekyll-paginate or one of its dependencies installed. In order to use Jekyll as currently configured, you&#39;ll need to install this gem. The full error message from Ruby is: &#39;cannot load such file -- jekyll-paginate&#39; If you run into trouble, you can find helpful resources at http:&#x2F;&#x2F;jekyllrb.com&#x2F;help&#x2F;!</span><br><span class="line">jekyll 3.1.2 | Error:  jekyll-paginate</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><p>我们安装这个插件到本地即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gem install jekyll-paginate</span><br><span class="line">Fetching: jekyll-paginate-1.1.0.gem (100%)</span><br><span class="line">Successfully installed jekyll-paginate-1.1.0</span><br><span class="line">Parsing documentation for jekyll-paginate-1.1.0</span><br><span class="line">Installing ri documentation for jekyll-paginate-1.1.0</span><br><span class="line">Done installing documentation for jekyll-paginate after 3 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
+
+<h2 id="被-Foxit-pdf-reader-占用4000端口"><a href="#被-Foxit-pdf-reader-占用4000端口" class="headerlink" title="被 Foxit pdf reader 占用4000端口"></a>被 Foxit pdf reader 占用4000端口</h2><h3 id="错误呈现-2"><a href="#错误呈现-2" class="headerlink" title="错误呈现"></a>错误呈现</h3><p>在本地使用命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br></pre></td></tr></table></figure>
+
+<p>出现错误，如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve</span><br><span class="line">Configuration file: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_config.yml</span><br><span class="line">           Source: E:&#x2F;GitWorkSpace&#x2F;blog</span><br><span class="line">      Destination: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_site</span><br><span class="line">Incremental build: disabled. Enable with --incremental</span><br><span class="line">     Generating...</span><br><span class="line">                   done in 0.547 seconds.</span><br><span class="line"> Please add the following to your Gemfile to avoid polling for changes:</span><br><span class="line">   gem &#39;wdm&#39;, &#39;&gt;&#x3D; 0.1.0&#39; if Gem.win_platform?</span><br><span class="line">Auto-regeneration: enabled for &#39;E:&#x2F;GitWorkSpace&#x2F;blog&#39;</span><br><span class="line">Configuration file: E:&#x2F;GitWorkSpace&#x2F;blog&#x2F;_config.yml</span><br><span class="line">jekyll 3.1.1 | Error:  Permission denied - bind(2) for 127.0.0.1:4000</span><br></pre></td></tr></table></figure>
+
+<p>网上查阅后，这篇博文解决了我的问题。<a href="http://lxconan.github.io/2016/01/07/who-is-using-my-port/">谁占了我的端口 for Windows –By Liu Xia, ThoughtWorks Senior Consultant. .NET Expert</a></p>
+<p>上述报错主要原因是，jekyll 启动使用的4000端口被福昕pdf阅读器的自动更新进程占用了，关掉这个进程，jekyll在本地调试启动服务时就没有问题了。</p>
+<h3 id="解决方法-2"><a href="#解决方法-2" class="headerlink" title="解决方法"></a>解决方法</h3><p>简单的解决方法是：</p>
+<p>输入命令，查看各端口被占用情况</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">netstat -ano</span><br></pre></td></tr></table></figure>
+
+<p>找到4000端口被占用的<code>PID</code></p>
+<p>我的结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">协议  本地地址          外部地址          状态           PID</span><br><span class="line">TCP  0.0.0.0:80        0.0.0.0:0         LISTENING     4</span><br><span class="line">TCP  0.0.0.0:135       0.0.0.0:0         LISTENING     836</span><br><span class="line">TCP  0.0.0.0:445       0.0.0.0:0         LISTENING     4</span><br><span class="line">TCP  0.0.0.0:1801      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2103      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2105      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:2107      0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:3306      0.0.0.0:0         LISTENING     2404</span><br><span class="line">TCP  0.0.0.0:3389      0.0.0.0:0         LISTENING     1172</span><br><span class="line">TCP  0.0.0.0:49664     0.0.0.0:0         LISTENING     584</span><br><span class="line">TCP  0.0.0.0:49665     0.0.0.0:0         LISTENING     1072</span><br><span class="line">TCP  0.0.0.0:49666     0.0.0.0:0         LISTENING     460</span><br><span class="line">TCP  0.0.0.0:49667     0.0.0.0:0         LISTENING     1000</span><br><span class="line">TCP  0.0.0.0:49670     0.0.0.0:0         LISTENING     696</span><br><span class="line">TCP  0.0.0.0:49678     0.0.0.0:0         LISTENING     2312</span><br><span class="line">TCP  0.0.0.0:49692     0.0.0.0:0         LISTENING     688</span><br><span class="line">TCP  127.0.0.1:4000    0.0.0.0:0         LISTENING     2476</span><br><span class="line">TCP  127.0.0.1:4000    127.0.0.1:55160   ESTABLISHED   2476</span><br><span class="line">TCP  127.0.0.1:4012    0.0.0.0:0         LISTENING     12724</span><br></pre></td></tr></table></figure>
+
+<p>可以看到4000端口的PID是2476。下面查看是什么进程，命令行中输入：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tasklist &#x2F;svc &#x2F;FI &quot;PID eq 2476&quot;</span><br></pre></td></tr></table></figure>
+
+<p>得到结果：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">映像名称                       PID 服务</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">FoxitProtect.exe              2476 FxService</span><br></pre></td></tr></table></figure>
+
+<p>可以看到正是福昕阅读器。下面关掉这个服务就好了。在 win10 中进入任务管理器，选择服务选项卡，关闭这个服务就好了，如下图：</p>
+<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f1ty28wwj4j20g00aiju7.jpg"></p>
+<p>当然也可以在启动jekyll服务的时候指定端口号，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jekyll serve --port 3000</span><br></pre></td></tr></table></figure>
+
+<p>这样在浏览器中输入 <a href="http://localhost:3000/">http://localhost:3000/</a> 就可以访问了。</p>
+<p>还可以在配置文件<code>_config.yml</code>中添加端口号设置（参考<a href="https://jekyllrb.com/docs/configuration/#serve-command-options">官网文档-Serve Command OptionsPermalink</a>），如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># port</span><br><span class="line">port: 1234</span><br></pre></td></tr></table></figure>
+
+<p>此时，启动jekyll服务后，访问 <a href="http://localhost:1234/">http://localhost:1234/</a> 即可</p>
+]]></content>
+      <categories>
+        <category>jekyll</category>
+      </categories>
+      <tags>
+        <tag>jekyll</tag>
       </tags>
   </entry>
   <entry>
@@ -726,380 +1034,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu16.04设置Pycharm桌面快捷键</title>
-    <url>/2021/05/08/2017/12/Ubuntu16.04-pycharm-icon-setting/</url>
-    <content><![CDATA[<h2 id="Ubuntu下所有的快捷方式都在："><a href="#Ubuntu下所有的快捷方式都在：" class="headerlink" title="Ubuntu下所有的快捷方式都在："></a>Ubuntu下所有的快捷方式都在：</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">/usr/share/applications</span><br></pre></td></tr></table></figure>
-
-<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>这里我将pycharm下载并解压到了/home/snakeson/developer文件夹下</p>
-<p>这里的pycharm.sh是批处理执行文件，prcharm.png是快捷方式图标</p>
-<span id="more"></span>
-<h2 id="终端打开"><a href="#终端打开" class="headerlink" title="终端打开"></a>终端打开</h2><p>使用Ubuntu终端进行打开：<br>方法一（使用vim）：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo vi  /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
-
-<p>方法二（使用gedit）：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo gedit  /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>然后就会弹出一个新框：</p>
-<h2 id="张贴"><a href="#张贴" class="headerlink" title="张贴"></a>张贴</h2><p>我们将下面的内容贴上去：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[Desktop Entry]</span><br><span class="line">Type=Application</span><br><span class="line">Name=Pycharm</span><br><span class="line">GenericName=Pycharm3</span><br><span class="line">Comment=Pycharm3:The Python IDE</span><br><span class="line">Exec=<span class="string">&quot;/home/snakeson/developer/pycharm-community-2017.2.3/bin/pycharm.sh&quot;</span> %f</span><br><span class="line">Icon=<span class="regexp">/home/</span>snakeson/developer/pycharm-community-<span class="number">2017.2</span><span class="number">.3</span>/bin/pycharm.png</span><br><span class="line">Terminal=pycharm</span><br><span class="line">Categories=Pycharm;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<hr>
-<p>注意一定要将Desktop Entry复制进去，也就是上面的全部都要复制进去，这里我们需要替换掉两个地方：<strong>Exec=”xx”<strong>和</strong>Icon=</strong>,这里要替换掉我们的pycharm解压的目录，当然了，我已经替换好了，如果你的目录跟我的目录不一样的话，你得把路径给换了，不管你是pycharm2017还是pycharm2016,，例如Comment什么的都不要改变，只变上面提到的两个路径就可以了。</p>
-<h2 id="添加可执行权限"><a href="#添加可执行权限" class="headerlink" title="添加可执行权限"></a>添加可执行权限</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">sudo chmod +x /usr/share/applications/pycharm.desktop</span><br></pre></td></tr></table></figure>
-
-<h2 id="拷贝到桌面"><a href="#拷贝到桌面" class="headerlink" title="拷贝到桌面"></a>拷贝到桌面</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">将/usr/share/applications/pycharm.desktop文件拷贝到桌面，双击即可运行。</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-      <tags>
-        <tag>Ubuntu Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>win10 关闭更新</title>
-    <url>/2021/05/08/2018/01/close-win10-update/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
-<span id="more"></span>
-<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>2 在运行处输入 “services.msc”   点击确定。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>3 在弹出来的服务中，找到“Windows Update”</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>4 选择禁用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>会多出这两个位置，这样子就设置成功了。</p>
-]]></content>
-      <categories>
-        <category>win10</category>
-      </categories>
-      <tags>
-        <tag>win10 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>News_scrapy_redis 框架系统</title>
-    <url>/2021/05/08/2018/01/python_crawl_words/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该文档针对爬虫系统设计目标中相应的场景给出技术方案</p>
-<span id="more"></span>
-<h2 id="设计目标"><a href="#设计目标" class="headerlink" title="设计目标"></a>设计目标</h2><p>1、代码复用，功能模块化。可以支持上千个网站的数据爬取；</p>
-<p>2、易扩展。爬虫框架易扩展，爬取规则、解析规则、入库规则易扩展，支持框架切换；</p>
-<p>3、健壮性、可维护性。对数据爬取过程中的各种异常，例如：断网、反爬升级、爬“脏数据”等，需要实时的监控，以及给出准确的定位。异常处理以及降级措施需要完善；</p>
-<p>4、后续扩展为分布式结构；</p>
-<p>5、支持功能模块的易调整；</p>
-<h2 id="框架使用说明"><a href="#框架使用说明" class="headerlink" title="框架使用说明"></a>框架使用说明</h2><p><strong>News_scrapy_redis4. <a href="https://github.com/xudailong/News_scrapy_redis.git">github地址</a></strong></p>
-<ol>
-<li><p><code>News_scrapy_redis</code> 基于<code>scrapy_redis</code>实现数据的增量爬取（含去重），支持分布式，支持异常日志等输出，功能模块化。</p>
-</li>
-<li><p>树结构：</p>
-</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">├─.idea</span><br><span class="line">├─Daily_crawler</span><br><span class="line">├─ETL</span><br><span class="line">├─log</span><br><span class="line">├─News_scrapy</span><br><span class="line">│  ├─spiders</span><br><span class="line">│  │  └─__pycache__</span><br><span class="line">│  └─__pycache__</span><br><span class="line">├─News_simhash</span><br><span class="line">└─News_statistics</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>各模块说明：<blockquote>
-<p>Daily_crawler：    </p>
-</blockquote>
-<ul>
-<li><code>daily_crawler.cron crontab</code>的定时文件, 定时运行<code>start_crawl.sh</code>脚本</li>
-<li><code>start_crawl.sh</code> 启动爬虫模块，并将每次爬取所花费的时间 写入 log/run_time.txt</li>
-<li><code>push_urls.py</code> 每次在爬虫之前运行，清空调度队列，并将start_url push到调度队列中</li>
-<li><code>news_crawl.sh</code> 执行爬虫模块（增量爬取）， 并自动进行相似文档去重，ETL, 存入mongodb</li>
-</ul>
-<blockquote>
-<p>ETL:（暂时用不到）</p>
-</blockquote>
-<ul>
-<li><code>/Model</code> 存放训练好的词典，语料，TF-IDF，LDA， word2vec模型</li>
-<li><code>auto_embedding.py</code> 新闻语料的清洗，以及自动化生成新闻的标题和内容embedding</li>
-<li><code>auto_embedding_simhash.py</code> 增加了自动化相似文档的去重</li>
-<li><code>stop_words</code> 常用的中文停留词</li>
-<li><code>train_step1</code> 训练LDA模型</li>
-<li><code>train_step2</code> 训练LDA模型</li>
-</ul>
-<blockquote>
-<p>log:</p>
-</blockquote>
-<ul>
-<li><code>auto_embedding_simhash.log</code> 执行auto_embedding_simhash.py的日志文件</li>
-<li><code>crawler.log</code> 执行scrapy-redis爬虫模块的日志文件</li>
-<li><code>news_count.log</code> 执行news_statistics.py的日志文件</li>
-<li><code>run_time.txt</code> 每次执行爬虫脚本的运行时间</li>
-</ul>
-<blockquote>
-<p>News_data:</p>
-</blockquote>
-<ul>
-<li>每个文件夹是抓每天从各个网站抓取到的新闻</li>
-</ul>
-<blockquote>
-<p>News_scrapy:</p>
-</blockquote>
-<ul>
-<li>基于scrapy-redis的爬虫模块，在scrapy的基础上修改得到</li>
-<li>各大网站数据的爬取解析工作主要在该文件中进行</li>
-</ul>
-<blockquote>
-<p>News_simhash（此处只需要进行title的去重）:</p>
-</blockquote>
-<ul>
-<li>实现相似文档的去重</li>
-<li>automatic_simhash.py 自动实现相似文档的去重（仅基于新闻内容）</li>
-<li><code>near_duplicates.py</code> 对初始化的Simhash_index进行相似新闻内容的去重</li>
-</ul>
-<blockquote>
-<p>News_statistics:</p>
-</blockquote>
-<ul>
-<li><code>news_count.json</code> 每天从各个网站抓取的新闻数量</li>
-<li><code>news_statistics.py</code> 统计新闻增量的脚本</li>
-</ul>
-</li>
-</ol>
-<h2 id="框架环境"><a href="#框架环境" class="headerlink" title="框架环境"></a>框架环境</h2><ol>
-<li>Redis环境环境</li>
-<li>scrapy框架环境</li>
-<li>python3环境环境</li>
-</ol>
-<h2 id="框架完善"><a href="#框架完善" class="headerlink" title="框架完善"></a>框架完善</h2><ol>
-<li>IP代理池</li>
-<li>cookies池 </li>
-<li>其他</li>
-</ol>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-      <tags>
-        <tag>scrapy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>window下python3环境安装scrapy</title>
-    <url>/2021/05/08/2018/01/scrapy-setup-in-win/</url>
-    <content><![CDATA[<p>目录：</p>
-<h2 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h2><blockquote>
-<p>python3  3.6.4， win7 64位  </p>
-</blockquote>
-<span id="more"></span>
-<h2 id="初次安装："><a href="#初次安装：" class="headerlink" title="初次安装："></a>初次安装：</h2><blockquote>
-<p><code> pip install scrapy</code></p>
-</blockquote>
-<p>使用这个命令，在win7 64位是怎么也安装不上去的，因为这已经是第二次了，</p>
-<p>当这个命令输出完后，会出现一系列的问题。当然了，不用怕，这不是需要解决问题的方法来了嘛。</p>
-<p>可能出现需要下载版本对应的visual studio,但是也太大了，或也可以说下载慢。。。。。。但是，我们可以不用去进行下载，只要进行下面几个文件的安装就可以了。</p>
-<h2 id="打开网站"><a href="#打开网站" class="headerlink" title="打开网站"></a>打开网站</h2><p>首先你打开这个网站（里面包含了各种编译好的库）：</p>
-<blockquote>
-<p><a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml">http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml</a></p>
-</blockquote>
-<h2 id="安装wheel"><a href="#安装wheel" class="headerlink" title="安装wheel"></a>安装wheel</h2><blockquote>
-<p><code> pip install wheel</code></p>
-</blockquote>
-<p>安装成功的界面</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-93cab0d529ca1dba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="wheel—success.png"></p>
-<h2 id="安装-whl文件"><a href="#安装-whl文件" class="headerlink" title="安装.whl文件"></a>安装.whl文件</h2><p>这里需要安装三个.whl文件，而且是全名的安装，</p>
-<p>以下三个文件：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-eaf16a31171cd6ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=".whl文件.png"></p>
-<p>中途可能会出现<code>Failed to build XXXX </code> 或者是<code> twisted</code>等相关的内容</p>
-<p>因为scrapy是基于twisted框架的，所以，twisted框架也需要进行安装</p>
-<p>当上面三个文件安装好了：</p>
-<p>再次运行：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">scrapy startproject pyjy</span><br></pre></td></tr></table></figure>
-
-<p>这样就完成了scrapy在win下python3下的安装</p>
-<h2 id="end"><a href="#end" class="headerlink" title="end"></a>end</h2>]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-      <tags>
-        <tag>scrapy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Ubuntu 16.04 下MySQL的安装</title>
-    <url>/2021/05/08/2018/01/setup-mysql-inubuntu/</url>
-    <content><![CDATA[<p>1， 打开终端：</p>
-<blockquote>
-<p> sudo apt-get install mysql-server</p>
-</blockquote>
-<span id="more"></span>
-<p>2 ，接下来会让你选择y/n, 这里你选择y,</p>
-<p>3 ，这里会出现一个让你输入mysql-server的密码，输入完后如果鼠标点击不了，可以使用Tab键+enter键继续下一步</p>
-<p>4 ，接下来，会继续让我们输入一次密码</p>
-<p>5， 密码输入完后，我们这里的mysql-server的用户名是：root ，密码是我们刚刚设置过的密码，</p>
-<p>6， 这时候已经安装完成了，我们需要验证一下是否安装上了mysql-server</p>
-<blockquote>
-<p> mysql -u root -p</p>
-</blockquote>
-<p>按enter键后会让我们输入密码，当我们输入密码后，会出现：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">snakeson@snakeson-Inspiron-<span class="number">5421</span>:~$ mysql -u root -p</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end <span class="keyword">with</span> ; or \g.</span><br><span class="line">Your MySQL connection id is <span class="number">5</span></span><br><span class="line">Server version: <span class="number">5.7</span><span class="number">.20</span>-0ubuntu0<span class="number">.16</span><span class="number">.04</span><span class="number">.1</span> (Ubuntu)</span><br><span class="line"></span><br><span class="line">Copyright (c) <span class="number">2000</span>, <span class="number">2017</span>, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark <span class="keyword">of</span> Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks <span class="keyword">of</span> their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> help. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt; </span><br></pre></td></tr></table></figure>
-
-<p>7 ， 这样我们就在Ubuntu下安装好了mysql-server。</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux ubuntu16.04 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>工作填坑之内网与外网</title>
-    <url>/2021/05/08/2018/02/about-inner-outer-ip/</url>
-    <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>内网：</p>
-<blockquote>
-<p>内网也就是局域网，内网的计算机以NAT（<a href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2">网络地址转换</a>）协议，通过一个公共的<a href="https://baike.baidu.com/item/%E7%BD%91%E5%85%B3">网关</a>访问Internet。内网的计算机可向Internet上的其他计算机发送连接请求，但Internet上其他的计算机无法向内网的计算机发送连接请求。</p>
-</blockquote>
-<blockquote>
-<p>最直观的就是像网吧，公司内部的电脑用交换机，HUB，路由连起来的</p>
-</blockquote>
-<span id="more"></span>
-
-
-
-
-
-
-
-
-
-<p>外网：</p>
-<blockquote>
-<p>外网IP包括：ADSL拨号的动态IP用动态<a href="https://baike.baidu.com/item/%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D">解析域名</a>来绑定IP，又叫<a href="https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E5%9F%9F%E5%90%8D">动态域名</a>；固定的外网IP(这种多半为网吧的IP)即，整个网吧的那个主IP。外网IP指的是：打开ADSL<a href="https://baike.baidu.com/item/%E8%B7%AF%E7%94%B1">路由</a>功能的用户你的外网IP就应该是ADSL设备的IP，网吧里的外网IP是指整个网吧的主IP，校园网的外网IP就是整个校园网的那个主IP，小区网的外网IP与校园网同理，长宽的用户就要试下了，可以上论坛，看看你的IP是多少，那么那个IP就是你要绑定的，所有的内网用户都可以这样查的，论坛<br>上的IP就是你要绑定的IP</p>
-</blockquote>
-<h2 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h2><p>第一次搭建服务器相关项目，因为第一次直接使用的是一台服务器，外网的ip，在自己的windows 是可以用mongodb 客户端与redis 客户端进行服务器上的mongodb服务端与redis服务端相连接的，并没有遇到什么困难</p>
-<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>因为后台与爬虫用的同一个mongodb与redis，而那台服务器又是单核的，2g运行内存。导致mongodb老是因为连接池开得过多而被挂掉，后来就买了内网的mongodb与redis服务，一开始啥都不懂，也不知道这是一个坑，在自己本机上进行mongodb，redis测试，一直连接不上去，代码是改了又改，</p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>后来老大过来了，你这是内网的，外网的当然连接不上去了，你得在腾讯云服务器上进行连接</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>后来就直接在腾讯云服务器上测试连接，然后就连好了。这个问题搞到我们三到晚上12点，确实菜，然后预料到的确实少，回过头来看下代码，一点毛病都没有啊！不知道有句mmp，该不该讲。</p>
-]]></content>
-      <categories>
-        <category>工具软件</category>
-      </categories>
-      <tags>
-        <tag>MongoDB Redis 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CentOS7定时任务详解</title>
-    <url>/2018/02/10/2018/02/centos-crontab/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作中需要开启一个定时任务：每天晚上2点进行爬虫代码的运行，这不得不去学习一下linux 下的定时任务crontab</p>
-<span id="more"></span>
-<h2 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h2><p>yum install crontabs</p>
-<p>说明：<br>/sbin/service crond start //启动服务<br>/sbin/service crond stop //关闭服务<br>/sbin/service crond restart //重启服务<br>/sbin/service crond reload //重新载入配置<br>查看crontab服务状态：service crond status<br>手动启动crontab服务：service crond start<br>查看crontab服务是否已设置为开机启动，执行命令：ntsysv<br>加入开机自动启动:<br>chkconfig crond on</p>
-<h2 id="1，crontab命令"><a href="#1，crontab命令" class="headerlink" title="1，crontab命令"></a>1，crontab命令</h2><p>功能说明：设置计时器。<br>语　　法：crontab [-u &lt;用户名称&gt;][配置文件] 或 crontab [-u &lt;用户名称&gt;][-elr]</p>
-<p>补充说明：cron是一个常驻服务，它提供计时器的功能，让用户在特定的时间得以执行预设的指令或程序。只要用户会编辑计时器的配置文件，就可以使 用计时器的功能。</p>
-<p>其配置文件格式如下：<br>Minute Hour Day Month DayOFWeek Command</p>
-<p>参　　数：<br>-e 　编辑该用户的计时器设置。<br>-l 　列出该用户的计时器设置。<br>-r 　删除该用户的计时器设置。<br>-u&lt;用户名称&gt; 　指定要设定计时器的用户名称。</p>
-<h2 id="2，crontab-格式"><a href="#2，crontab-格式" class="headerlink" title="2，crontab 格式"></a>2，crontab 格式</h2><p>基本格式 :</p>
-<ul>
-<li>*　 *　 *　 *　　command<br>分　时　日　月　周　 命令<br>第1列表示分钟1～59 每分钟用*或者 */1表示<br>第2列表示小时1～23（0表示0点）<br>第3列表示日期1～31<br>第4列 表示月份1～12<br>第5列标识号星期0～6（0表示星期天）<br>第6列要运行的命令<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># Use the hash sign to prefix a comment</span><br><span class="line"># +—————- minute (0 – 59)</span><br><span class="line"># | +————- hour (0 – 23)</span><br><span class="line"># | | +———- day of month (1 – 31)</span><br><span class="line"># | | | +——- month (1 – 12)</span><br><span class="line"># | | | | +—- day of week (0 – 7) (Sunday=0 or 7)</span><br><span class="line"># | | | | |</span><br><span class="line"># * * * * * command to be executed</span><br></pre></td></tr></table></figure>
-<h2 id="3，crontab文件的一些例子："><a href="#3，crontab文件的一些例子：" class="headerlink" title="3，crontab文件的一些例子："></a>3，crontab文件的一些例子：</h2></li>
-</ul>
-<blockquote>
-<p>1 简单打印</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">每天早上<span class="number">6</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">6</span> * * * echo <span class="string">&quot;Good morning.&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt <span class="comment">//注意单纯echo，从屏幕上看不到任何输出，因为cron把任何输出都email到root的信箱了。</span></span><br><span class="line"></span><br><span class="line">每两个小时 </span><br><span class="line"><span class="number">0</span> *<span class="regexp">/2 * * * echo &quot;Have a break now.&quot; &gt;&gt; /</span>tmp/test.txt  </span><br><span class="line"></span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">8</span>点之间每两个小时和早上八点 </span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">2</span>，<span class="number">8</span> * * * echo <span class="string">&quot;Have a good dream&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt</span><br><span class="line"></span><br><span class="line">每个月的<span class="number">4</span>号和每个礼拜的礼拜一到礼拜三的早上<span class="number">11</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * <span class="number">1</span>-<span class="number">3</span> command line</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>月<span class="number">1</span>日早上<span class="number">4</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> <span class="number">1</span> * command line SHELL=<span class="regexp">/bin/</span>bash PATH=<span class="regexp">/sbin:/</span>bin:<span class="regexp">/usr/</span>sbin:<span class="regexp">/usr/</span>bin MAILTO=root <span class="comment">//如果出现错误，或者有数据输出，数据作为邮件发给这个帐号 HOME=/ </span></span><br><span class="line"></span><br><span class="line">每小时执行/etc/cron.hourly内的脚本</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br><span class="line"></span><br><span class="line">每天执行/etc/cron.daily内的脚本</span><br><span class="line"><span class="number">02</span> <span class="number">4</span> * * * root run-parts /etc/cron.daily </span><br><span class="line"></span><br><span class="line">每星期执行/etc/cron.weekly内的脚本</span><br><span class="line"><span class="number">22</span> <span class="number">4</span> * * <span class="number">0</span> root run-parts /etc/cron.weekly </span><br><span class="line"></span><br><span class="line">每月去执行/etc/cron.monthly内的脚本 </span><br><span class="line"><span class="number">42</span> <span class="number">4</span> <span class="number">1</span> * * root run-parts /etc/cron.monthly </span><br><span class="line"></span><br><span class="line">注意: <span class="string">&quot;run-parts&quot;</span>这个参数了，如果去掉这个参数的话，后面就可以写要运行的某个脚本名，而不是文件夹名。 　 </span><br><span class="line"></span><br><span class="line">每天的下午<span class="number">4</span>点、<span class="number">5</span>点、<span class="number">6</span>点的<span class="number">5</span> min、<span class="number">15</span> min、<span class="number">25</span> min、<span class="number">35</span> min、<span class="number">45</span> min、<span class="number">55</span> min时执行命令。 </span><br><span class="line"><span class="number">5</span>，<span class="number">15</span>，<span class="number">25</span>，<span class="number">35</span>，<span class="number">45</span>，<span class="number">55</span> <span class="number">16</span>，<span class="number">17</span>，<span class="number">18</span> * * * command</span><br><span class="line"></span><br><span class="line">每周一，三，五的下午<span class="number">3</span>：<span class="number">00</span>系统进入维护状态，重新启动系统。</span><br><span class="line"><span class="number">00</span> <span class="number">15</span> * * <span class="number">1</span>，<span class="number">3</span>，<span class="number">5</span> shutdown -r +<span class="number">5</span></span><br><span class="line"></span><br><span class="line">每小时的<span class="number">10</span>分，<span class="number">40</span>分执行用户目录下的innd/bbslin这个指令： </span><br><span class="line"><span class="number">10</span>，<span class="number">40</span> * * * * innd/bbslink </span><br><span class="line"></span><br><span class="line">每小时的<span class="number">1</span>分执行用户目录下的bin/account这个指令： </span><br><span class="line"><span class="number">1</span> * * * * bin/account</span><br><span class="line"></span><br><span class="line">每天早晨三点二十分执行用户目录下如下所示的两个指令（每个指令以;分隔）： </span><br><span class="line">20 3 * * * （/bin/rm -f expire.ls logins.bad;bin/expire$#@62;expire.1st）　　</span><br><span class="line"></span><br><span class="line">每年的一月和四月，<span class="number">4</span>号到<span class="number">9</span>号的<span class="number">3</span>点<span class="number">12</span>分和<span class="number">3</span>点<span class="number">55</span>分执行/bin/rm -f expire.1st这个指令，并把结果添加在mm.txt这个文件之后（mm.txt文件位于用户自己的目录位置）。 </span><br><span class="line">12,55 3 4-9 1,4 * /bin/rm -f expire.1st$#@62;$#@62;mm.txt </span><br></pre></td></tr></table></figure>
-
-<hr>
-<blockquote>
-<p>2 nginx示例</p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每晚的<span class="number">21</span>:<span class="number">30</span>重启 nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每月<span class="number">1</span>、 <span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span> : <span class="number">45</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /etc/init.d/nginx restart</span><br><span class="line">每周六、周日的<span class="number">1</span> : <span class="number">10</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每天<span class="number">18</span> : <span class="number">00</span>至<span class="number">23</span> : <span class="number">00</span>之间每隔<span class="number">30</span>分钟重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /etc/init.d/nginx restart</span><br><span class="line">每星期六的<span class="number">11</span> : <span class="number">00</span> pm重启nginx。</span><br><span class="line"></span><br><span class="line">* *<span class="regexp">/1 * * * /</span>etc/init.d/nginx restart</span><br><span class="line">每一小时重启nginx</span><br><span class="line"></span><br><span class="line">* <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">7</span>点之间，每 隔一小时重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /etc/init.d/nginx restart</span><br><span class="line">每月的<span class="number">4</span>号与每周一到周三 的<span class="number">11</span>点重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">一月一号的<span class="number">4</span>点重启nginx</span><br><span class="line"></span><br><span class="line">*<span class="regexp">/30 * * * * /u</span>sr/sbin/ntpdate <span class="number">210.72</span><span class="number">.145</span><span class="number">.20</span></span><br><span class="line">每半小时同步一下时间</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-创建cron脚本"><a href="#4-创建cron脚本" class="headerlink" title="4 创建cron脚本"></a>4 创建cron脚本</h2><ol>
-<li><p>第一步：写cron脚本文件,命名为crontest.cron。<br>15,30,45,59 * * * * echo “xgmtest…..” &gt;&gt; xgmtest.txt  表示，每隔15分钟，执行打印一次命令 </p>
-</li>
-<li><p>第二步：添加定时任务。执行命令 “crontab crontest.cron”。搞定 </p>
-</li>
-<li><p>第三步：”crontab -l” 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</p>
-</li>
-</ol>
-<h2 id="将脚本改为可执行（针对shell，-sh文件）"><a href="#将脚本改为可执行（针对shell，-sh文件）" class="headerlink" title="将脚本改为可执行（针对shell，.sh文件）"></a>将脚本改为可执行（针对shell，.sh文件）</h2><blockquote>
-<p>chmod +x filename</p>
-</blockquote>
-<p>引用：</p>
-<p><a href="http://blog.csdn.net/u012402276/article/details/51063269">http://blog.csdn.net/u012402276/article/details/51063269</a><br><a href="https://www.cnblogs.com/longjshz/p/5779215.html">https://www.cnblogs.com/longjshz/p/5779215.html</a><br><a href="http://blog.csdn.net/edgdvcyz/article/details/53348832">http://blog.csdn.net/edgdvcyz/article/details/53348832</a></p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>centos7 crontab linux 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Write-Ahead Log（WAL）的工作原理</title>
-    <url>/2021/05/13/2021/05/WAL/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在存储系统的运行过程中，每时每刻都发生着数据的更新，背后意味着诸如创建，删除，修改文件等数据的操作。抛开物理文件数据的改变，对于中心控制节点而言，这些都会涉及到元数据的更新操作。而为了保持系统元数据和物理数据间的状态一致性，系统所有的数据操作对应的元数据变更都需要持久化到元数据db内，但其实这里有一个性能问题，我们的每次变更如果都要实时同步到外部db内，是否意味着高频的io操作？是否有延时写入的手段呢？本文将要阐述的预写式日志Write Ahead Log(WAL),正是对此的优化。</p>
-<span id="more"></span>
-<h2 id="Write-Ahead-Log概述"><a href="#Write-Ahead-Log概述" class="headerlink" title="Write Ahead Log概述"></a>Write Ahead Log概述</h2><p>Write Ahead Log简称WAL，在分布式存储系统中的元数据更新中应用得十分广泛。WAL的主要意思是说在将元数据的变更操作写入到持久稳定的db之前，先预先写入到一个log中，然后再由另外的操作将log apply到外部的持久db里去。这种模式会减少掉每次的db写入操作，尤其当系统要处理大量的transaction操作的时候，WAL的方式相比较于实时同步db的方式有着更高的效率。</p>
-<p>WAL还有一点很重要的帮助是可以在disaster recovery过程中起到状态恢复的作用，系统在load完元数据db后，再把未来得及提交的WAL apply进来，就能恢复成和之前最终一致的状态。</p>
-<h1 id="WAL的执行机理"><a href="#WAL的执行机理" class="headerlink" title="WAL的执行机理"></a>WAL的执行机理</h1><p>上面只介绍了WAL的概述内容，本小节我们来深入了解WAL的内部执行细节。</p>
-<p>首先我们要搞清楚一点的是，WAL不记录元数据的本身，而是变更的record。那么何为”变更的record“？一个删除操作记录，一个添加记录，至于每个记录会包含有什么信息呢，大家可以参考audit log的内容属性。不过WAL的log格式和audit log还是有所区别的。</p>
-<p>追本溯源，对于WAL来说，它是被谁写入的呢？答案是WAL buffer，当这个buffer满了的时候或者人工触发flush动作时，它就会将transaction数据写出到WAL的log内。当然，系统在每次完成一个操作时，同时会将改动应用到memory和WAL buffer内，然后自己再控制buffer flush出去的逻辑。</p>
-<p>当老的WAL已经被apply进元数据db之后，我们会用更新commitId来表明当前最新的transaction，理论上来说低于这个commitId的WAL已经可以被清除purge出去了。这个过程我们可以理解为checkpoint过程，当前db+WAL变更=新的db。</p>
-<p>上述WAL细节过程如下图:<br><img src="/2021/05/13/2021/05/WAL/16208757110681/16208820219607.jpg"></p>
-<h1 id="WAL-apply的控制"><a href="#WAL-apply的控制" class="headerlink" title="WAL apply的控制"></a>WAL apply的控制</h1><p>在系统做disaster recovery中，对于WAL的应用过程，有时可能会出现应用出差的情况，包括一些局部WAL记录格式写异常的情况。这个时候用户可以选择是否中断WAL的apply过程或者是忽略异常，来完成尽可能的数据状态恢复。这些都是WAL内部的细节控制。</p>
-<p>以上就是本文主要阐述的关于WAL的内容了。<br>#引用<br>[1].<a href="https://pgadminedb.readthedocs.io/en/latest/module_02/">https://pgadminedb.readthedocs.io/en/latest/module_02/</a></p>
-]]></content>
-      <categories>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>WAL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>安装php7.3.5</title>
-    <url>/2021/05/08/2021/05/centos-php7.3.5/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>工作需要使用php7.3.5做报表系统<br>本文采用编译安装</p>
-<span id="more"></span>
-<p>1、先安装依赖包</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum -y install epel-release libxml2 libxml2-devel openssl openssl-devel bzip2 bzip2-devel libcurl libcurl-devel libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gmp gmp-devel libmcrypt libmcrypt-devel readline readline-devel libxslt libxslt-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel ncurses curl gdbm-devel db4-devel libXpm-devel libX11-devel gd-devel gmp-devel expat-devel xmlrpc-c xmlrpc-c-devel libicu-devel libmcrypt-devel libmemcached-devel libzip gcc-c++ sqlite-devel  oniguruma oniguruma-devel autoconf</span><br></pre></td></tr></table></figure>
-
-<p>2、开始编译</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;configure \</span><br><span class="line">--prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php \</span><br><span class="line">--exec-prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php \</span><br><span class="line">--bindir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin \</span><br><span class="line">--sbindir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin \</span><br><span class="line">--includedir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;include \</span><br><span class="line">--libdir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;lib&#x2F;php \</span><br><span class="line">--mandir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;php&#x2F;man \</span><br><span class="line">--with-config-file-path&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;etc \</span><br><span class="line">--with-mhash \</span><br><span class="line">--with-openssl \</span><br><span class="line">--with-mysqli&#x3D;shared,mysqlnd \</span><br><span class="line">--with-pdo-mysql&#x3D;shared,mysqlnd \</span><br><span class="line">--with-gd \</span><br><span class="line">--with-iconv \</span><br><span class="line">--with-zlib \</span><br><span class="line">--enable-zip \</span><br><span class="line">--enable-inline-optimization \</span><br><span class="line">--disable-debug \</span><br><span class="line">--disable-rpath \</span><br><span class="line">--enable-shared \</span><br><span class="line">--enable-xml \</span><br><span class="line">--enable-redis\</span><br><span class="line">--enable-bcmath \</span><br><span class="line">--enable-shmop \</span><br><span class="line">--enable-sysvsem \</span><br><span class="line">--enable-mbregex \</span><br><span class="line">--enable-mbstring \</span><br><span class="line">--enable-ftp \</span><br><span class="line">--enable-pcntl \</span><br><span class="line">--enable-calendar \</span><br><span class="line">--enable-exif \</span><br><span class="line">--enable-sockets \</span><br><span class="line">--with-xmlrpc \</span><br><span class="line">--with-libxml-dir \</span><br><span class="line">--enable-soap \</span><br><span class="line">--without-pear \</span><br><span class="line">--with-gettext \</span><br><span class="line">--enable-session \</span><br><span class="line">--with-curl \</span><br><span class="line">--with-jpeg-dir \</span><br><span class="line">--with-png-dir \</span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--with-bz2 \</span><br><span class="line">--enable-opcache \</span><br><span class="line">--enable-fpm \</span><br><span class="line">--with-fpm-user&#x3D;nginx \</span><br><span class="line">--with-fpm-group&#x3D;nginx \</span><br><span class="line">--without-gdbm \</span><br><span class="line">--enable-fast-install \</span><br><span class="line">--disable-fileinfo</span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install </span><br></pre></td></tr></table></figure>
-<p>添加配置文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc</span><br><span class="line">cp php-fpm.conf.default php-fpm.conf</span><br><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.d</span><br><span class="line">cp www.conf.default www.conf</span><br></pre></td></tr></table></figure>
-<p>查找当前php使用ini的位置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">php --ini</span><br></pre></td></tr></table></figure>
-<p>添加配置文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir &#x2F;usr&#x2F;local&#x2F;php&#x2F;conf</span><br><span class="line">vim php.ini</span><br><span class="line">[PHP]</span><br><span class="line">engine &#x3D; On</span><br><span class="line">short_open_tag &#x3D; Off</span><br><span class="line">precision &#x3D; 14</span><br><span class="line">output_buffering &#x3D; 4096</span><br><span class="line">zlib.output_compression &#x3D; Off</span><br><span class="line">implicit_flush &#x3D; Off</span><br><span class="line">unserialize_callback_func &#x3D;</span><br><span class="line">serialize_precision &#x3D; -1</span><br><span class="line">disable_functions &#x3D;</span><br><span class="line">disable_classes &#x3D;</span><br><span class="line">zend.enable_gc &#x3D; On</span><br><span class="line">zend.exception_ignore_args &#x3D; Off</span><br><span class="line">expose_php &#x3D; On</span><br><span class="line">max_execution_time &#x3D; 30</span><br><span class="line">max_input_time &#x3D; 60</span><br><span class="line">memory_limit &#x3D; 128M</span><br><span class="line">error_reporting &#x3D; E_ALL</span><br><span class="line">display_errors &#x3D; On</span><br><span class="line">display_startup_errors &#x3D; On</span><br><span class="line">log_errors &#x3D; On</span><br><span class="line">log_errors_max_len &#x3D; 1024</span><br><span class="line">ignore_repeated_errors &#x3D; Off</span><br><span class="line">ignore_repeated_source &#x3D; Off</span><br><span class="line">report_memleaks &#x3D; On</span><br><span class="line">variables_order &#x3D; &quot;GPCS&quot;</span><br><span class="line">request_order &#x3D; &quot;GP&quot;</span><br><span class="line">register_argc_argv &#x3D; Off</span><br><span class="line">auto_globals_jit &#x3D; On</span><br><span class="line">post_max_size &#x3D; 8M</span><br><span class="line">auto_prepend_file &#x3D;</span><br><span class="line">auto_append_file &#x3D;</span><br><span class="line">default_mimetype &#x3D; &quot;text&#x2F;html&quot;</span><br><span class="line">default_charset &#x3D; &quot;UTF-8&quot;</span><br><span class="line">doc_root &#x3D;</span><br><span class="line">user_dir &#x3D;</span><br><span class="line">enable_dl &#x3D; Off</span><br><span class="line">file_uploads &#x3D; On</span><br><span class="line">upload_max_filesize &#x3D; 2M</span><br><span class="line">max_file_uploads &#x3D; 20</span><br><span class="line">allow_url_fopen &#x3D; On</span><br><span class="line">allow_url_include &#x3D; Off</span><br><span class="line">default_socket_timeout &#x3D; 60</span><br><span class="line">extension&#x3D;ldap</span><br><span class="line">[CLI Server]</span><br><span class="line">cli_server.color &#x3D; On</span><br><span class="line">[Date]</span><br><span class="line">[filter]</span><br><span class="line">[iconv]</span><br><span class="line">[imap]</span><br><span class="line">[intl]</span><br><span class="line">[sqlite3]</span><br><span class="line">[Pcre]</span><br><span class="line">[Pdo]</span><br><span class="line">[Pdo_mysql]</span><br><span class="line">pdo_mysql.default_socket&#x3D;</span><br><span class="line">[Phar]</span><br><span class="line">[mail function]</span><br><span class="line">SMTP &#x3D; localhost</span><br><span class="line">smtp_port &#x3D; 25</span><br><span class="line">mail.add_x_header &#x3D; Off</span><br><span class="line">[ODBC]</span><br><span class="line">odbc.allow_persistent &#x3D; On</span><br><span class="line">odbc.check_persistent &#x3D; On</span><br><span class="line">odbc.max_persistent &#x3D; -1</span><br><span class="line">odbc.max_links &#x3D; -1</span><br><span class="line">odbc.defaultlrl &#x3D; 4096</span><br><span class="line">odbc.defaultbinmode &#x3D; 1</span><br><span class="line">[MySQLi]</span><br><span class="line">mysqli.max_persistent &#x3D; -1</span><br><span class="line">mysqli.allow_persistent &#x3D; On</span><br><span class="line">mysqli.max_links &#x3D; -1</span><br><span class="line">mysqli.default_port &#x3D; 3306</span><br><span class="line">mysqli.default_socket &#x3D;</span><br><span class="line">mysqli.default_host &#x3D;</span><br><span class="line">mysqli.default_user &#x3D;</span><br><span class="line">mysqli.default_pw &#x3D;</span><br><span class="line">mysqli.reconnect &#x3D; Off</span><br><span class="line">[mysqlnd]</span><br><span class="line">mysqlnd.collect_statistics &#x3D; On</span><br><span class="line">mysqlnd.collect_memory_statistics &#x3D; On</span><br><span class="line">[OCI8]</span><br><span class="line">[PostgreSQL]</span><br><span class="line">pgsql.allow_persistent &#x3D; On</span><br><span class="line">pgsql.auto_reset_persistent &#x3D; Off</span><br><span class="line">pgsql.max_persistent &#x3D; -1</span><br><span class="line">pgsql.max_links &#x3D; -1</span><br><span class="line">pgsql.ignore_notice &#x3D; 0</span><br><span class="line">pgsql.log_notice &#x3D; 0</span><br><span class="line">[bcmath]</span><br><span class="line">bcmath.scale &#x3D; 0</span><br><span class="line">[browscap]</span><br><span class="line">[Session]</span><br><span class="line">session.save_handler &#x3D; files</span><br><span class="line">session.use_strict_mode &#x3D; 0</span><br><span class="line">session.use_cookies &#x3D; 1</span><br><span class="line">session.use_only_cookies &#x3D; 1</span><br><span class="line">session.name &#x3D; PHPSESSID</span><br><span class="line">session.auto_start &#x3D; 0</span><br><span class="line">session.cookie_lifetime &#x3D; 0</span><br><span class="line">session.cookie_path &#x3D; &#x2F;</span><br><span class="line">session.cookie_domain &#x3D;</span><br><span class="line">session.cookie_httponly &#x3D;</span><br><span class="line">session.cookie_samesite &#x3D;</span><br><span class="line">session.serialize_handler &#x3D; php</span><br><span class="line">session.gc_probability &#x3D; 1</span><br><span class="line">session.gc_divisor &#x3D; 1000</span><br><span class="line">session.gc_maxlifetime &#x3D; 1440</span><br><span class="line">session.referer_check &#x3D;</span><br><span class="line">session.cache_limiter &#x3D; nocache</span><br><span class="line">session.cache_expire &#x3D; 180</span><br><span class="line">session.use_trans_sid &#x3D; 0</span><br><span class="line">session.sid_length &#x3D; 26</span><br><span class="line">session.trans_sid_tags &#x3D; &quot;a&#x3D;href,area&#x3D;href,frame&#x3D;src,form&#x3D;&quot;</span><br><span class="line">session.sid_bits_per_character &#x3D; 5</span><br><span class="line">[Assertion]</span><br><span class="line">zend.assertions &#x3D; 1</span><br><span class="line">[COM]</span><br><span class="line">[mbstring]</span><br><span class="line">[gd]</span><br><span class="line">[exif]</span><br><span class="line">[Tidy]</span><br><span class="line">tidy.clean_output &#x3D; Off</span><br><span class="line">[soap]</span><br><span class="line">soap.wsdl_cache_enabled&#x3D;1</span><br><span class="line">soap.wsdl_cache_dir&#x3D;&quot;&#x2F;tmp&quot;</span><br><span class="line">soap.wsdl_cache_ttl&#x3D;86400</span><br><span class="line">soap.wsdl_cache_limit &#x3D; 5</span><br><span class="line">[sysvshm]</span><br><span class="line">[ldap]</span><br><span class="line">ldap.max_links &#x3D; -1</span><br><span class="line">[dba]</span><br><span class="line">[opcache]</span><br><span class="line">[curl]</span><br><span class="line">[openssl]</span><br><span class="line">[ffi]</span><br></pre></td></tr></table></figure>
-<p>安装php-redis</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -zxvf owlient-phpredis-2.1.1-1-g90ecd17.tar.gz</span><br><span class="line">cd owlient-phpredis-90ecd17</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;phpize</span><br><span class="line">.&#x2F;configure --with-php-config&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;php-config</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20060613&#x2F;</span><br><span class="line">vim php.ini</span><br><span class="line">extension_dir &#x3D; &quot;&#x2F;usr&#x2F;local&#x2F;php&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20060613&#x2F;&quot;</span><br><span class="line">extension &#x3D; redis.so</span><br></pre></td></tr></table></figure>
-<p>安装php-grpc</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget http:&#x2F;&#x2F;pecl.php.net&#x2F;get&#x2F;grpc-1.20.0.tgz</span><br><span class="line">tar -xzvf grpc-1.20.0.tgz</span><br><span class="line">cd grpc-1.20.0</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;phpize</span><br><span class="line">.&#x2F;configure --with-php-config&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;php-config </span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">vim php.ini</span><br><span class="line">extension &#x3D; redis.so</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>centos7 php</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux下，cat和less显示正常，vim出现了中文乱码问题</title>
-    <url>/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/</url>
-    <content><![CDATA[<p>#一.查看文件编码格式<br>vim 文件<br>:set fileencoding<br><img src="/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/16214080139603/16214094825495.jpg" alt="当前文件"></p>
-<span id="more"></span>
-
-<p><img src="/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/16214080139603/16214095062338.jpg" alt="正常文件"></p>
-<p>#二.处理方法<br>1.单文件更改文件格式编码<br>:e ++enc=utf-8<br>2.vim配置文件修改<br>set fence=utf8<br>这样即可</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Jekyll 搭建静态博客</title>
     <url>/2015/02/15/2015/02/reate-my-blog-with-jekyll/</url>
     <content><![CDATA[<p>一直以来都想搭建一个自己的博客，但是近半年做项目太忙，再加上教研室的网络很坑爹，所以也一直没顾得上。之前用过 WordPress 托管在免费的京东云擎上，但是速度太慢。在知乎上看到一些相关的内容，于是选择了在github上用jekyll搭建博客。</p>
@@ -1175,6 +1109,93 @@
       </categories>
       <tags>
         <tag>jekyll</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>代码校验工具 SublimeLinter 的安装与使用</title>
+    <url>/2015/03/26/2015/03/sublimeLinter/</url>
+    <content><![CDATA[<p>本文我将讲述一下 SublimeLinter 的安装过程。其组件 jshint 的安装与使用。其组件 csslint 的安装与使用。我将基于 <a href="http://sublimetext.com/3">Sublime Text 3</a> 来安装。使用 Sublime Text 2 的用户阅读本文是没有帮助的。</p>
+<span id="more"></span>
+<p>SublimeLinter 是 Sublime 的插件，它的作用是检查代码语法是否有错误，并提示。习惯了 IDE 下写代码的人一定需要一款在 Sublime 上类似的语法检查工具。下面我们开始。   </p>
+<h2 id="安装-SublimeLinter"><a href="#安装-SublimeLinter" class="headerlink" title="安装 SublimeLinter"></a>安装 SublimeLinter</h2><p>如同其他插件一样使用 Package Control 来安装。   </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter</code>。进行安装.   </li>
+</ol>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-sublimeLinter.jpg" alt="SublimeLinter">   </p>
+<p>安装完成后可以看到这样一段话：   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Welcome to SublimeLinter, a linter framework for Sublime Text 3.</span><br><span class="line"></span><br><span class="line">                  * * * IMPORTANT! * * *</span><br><span class="line"></span><br><span class="line">         SublimeLinter 3 is NOT a drop-in replacement for</span><br><span class="line">        earlier versions.</span><br><span class="line"></span><br><span class="line">         Linters *NOT* included with SublimeLinter 3,</span><br><span class="line">         they must be installed separately.</span><br><span class="line"></span><br><span class="line">         The settings are different.</span><br><span class="line"></span><br><span class="line">                 * * * READ THE DOCS! * * *</span><br><span class="line"></span><br><span class="line"> Otherwise you will never know how to install linters, nor will</span><br><span class="line"> you know about all of the great new features in SublimeLinter 3.</span><br><span class="line"></span><br><span class="line"> For complete documentation on how to install and use SublimeLinter,</span><br><span class="line"> please see:</span><br><span class="line"></span><br><span class="line"> http:&#x2F;&#x2F;www.sublimelinter.com</span><br></pre></td></tr></table></figure>
+
+<p>可以看到具体的 Linters 组件<strong>不</strong>被包含在 SublimeLinter 3 中，所以我们要额外独立安装组件。<br>可以针对不同的语言安装不同的组件。   </p>
+<h2 id="JavaScript-语法检查"><a href="#JavaScript-语法检查" class="headerlink" title="JavaScript 语法检查"></a>JavaScript 语法检查</h2><p>SublimeLinter-jshint 是基于 nodeJS 下的 jshint 的插件，实际上 SublimeLinter-jshint 调用了 nodeJS 中 jshint 的接口来进行语法检查的。   </p>
+<hr>
+<h3 id="安装-SublimeLinter-jshint"><a href="#安装-SublimeLinter-jshint" class="headerlink" title="安装 SublimeLinter-jshint"></a>安装 SublimeLinter-jshint</h3><p>为了让 JavaScript 代码有语法检查，我们安装 SublimeLinter-jshint<br>同样的方法，我们安装 SublimeLinter-jshint    </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter-jshint</code>。进行安装.   </li>
+</ol>
+<p>如下图   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint.jpg" alt="SublimeLinter-jshint">   </p>
+<p>安装完成后我们可以看到下面的一段话   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-jshint</span><br><span class="line">  -------------------------------</span><br><span class="line">  This linter plugin for SublimeLinter provides an interface to jshint.</span><br><span class="line"></span><br><span class="line">  ** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">  Before this plugin will activate, you *must*</span><br><span class="line">  follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">  https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-jshint</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-nodeJS-和-jshint"><a href="#安装-nodeJS-和-jshint" class="headerlink" title="安装 nodeJS 和 jshint"></a>安装 nodeJS 和 jshint</h3><p>在插件开始工作之前，我们必须再看一下上述插件的<a href="https://github.com/SublimeLinter/SublimeLinter-jshint">安装说明</a><br>通过 <a href="https://github.com/SublimeLinter/SublimeLinter-jshint">SublimeLinter-jshint 的说明</a> 我们可以看到，这个组件依赖于 nodeJS 下的 jshint，所以我们安装 nodeJS 环境和 nodeJS 下的 jshint。   </p>
+<ol>
+<li>安装 <a href="https://nodejs.org/">Node.js</a>   </li>
+<li>通过 npm 安装<code>jshint</code>   </li>
+</ol>
+<p>在命令行下输入如下代码，完成安装   </p>
+<pre><code>npm install -g jshint
+</code></pre>
+<p>安装完成后命令行中出现如下的信息   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\jshint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint\bin\jshint</span><br><span class="line">jshint@2.6.3 C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint</span><br><span class="line">├── strip-json-comments@1.0.2</span><br><span class="line">├── underscore@1.6.0</span><br><span class="line">├── exit@0.1.2</span><br><span class="line">├── shelljs@0.3.0</span><br><span class="line">├── console-browserify@1.1.0 (date-now@0.1.4)</span><br><span class="line">├── htmlparser2@3.8.2 (domelementtype@1.3.0, entities@1.0.0, domhandler@2.3.0, readable-stream@1.1.13, domutils@1.5.1)</span><br><span class="line">├── minimatch@1.0.0 (sigmund@1.0.0, lru-cache@2.5.0)</span><br><span class="line">└── cli@0.6.6 (glob@3.2.11)</span><br></pre></td></tr></table></figure>
+
+<p>可以查看 jshint 版本，已确认安装完成。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;jshint -v</span><br><span class="line">jshint v2.6.3</span><br></pre></td></tr></table></figure>
+
+<p>现在，恭喜你，我们使用 Sublime 编辑 JavaScript 文件，就会有语法检查了！   </p>
+<p>在编辑过程中，会有如下提示   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test.jpg" alt="SublimeLinter-jshint-test"></p>
+<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test2.jpg" alt="SublimeLinter-jshint-test2"></p>
+<h2 id="css-语法检查"><a href="#css-语法检查" class="headerlink" title="css 语法检查"></a>css 语法检查</h2><p>与 jshint 同理，SublimeLinter-csslint 也是基于 nodeJS 下的 csslint 的插件，实际上 SublimeLinter-csslint 调用了 nodeJS 中 csslint 的接口来进行语法检查的。   </p>
+<hr>
+<h3 id="安装-SublimeLinter-csslint"><a href="#安装-SublimeLinter-csslint" class="headerlink" title="安装 SublimeLinter-csslint"></a>安装 SublimeLinter-csslint</h3><p>同样的方法。   </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter-csslint</code>。进行安装.   </li>
+</ol>
+<p>如下图   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint.jpg" alt="SublimeLinter-csslint">   </p>
+<p>安装完成后我们可以看到下面的一段话   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-csslint</span><br><span class="line">-------------------------------</span><br><span class="line">This linter plugin for SublimeLinter provides an interface to csslint.</span><br><span class="line"></span><br><span class="line">** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">Before this plugin will activate, you *must*</span><br><span class="line">follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-csslint</span><br></pre></td></tr></table></figure>
+
+<p>在使用插件之前，必须遵循上述网址中的<a href="https://github.com/SublimeLinter/SublimeLinter-csslint">安装说明</a>   </p>
+<h3 id="在-nodeJS-下安装-csslint"><a href="#在-nodeJS-下安装-csslint" class="headerlink" title="在 nodeJS 下安装 csslint"></a>在 nodeJS 下安装 csslint</h3><p>进入上述的 GitHub 地址，csslint 的说明页。我们知道了和 jshint 一样，csslint 也是基于 nodeJS 下的 csslint 来使用的。   </p>
+<p>这里安装 nodeJS 过程省略。<br>只需用 npm 安装 csslint 即可。   </p>
+<p>在命令行中输入     </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g csslint   </span><br></pre></td></tr></table></figure>
+
+<p>安装完成后命令行中出现如下的信息     </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\csslint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint\cli.js</span><br><span class="line">csslint@0.10.0 C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint</span><br><span class="line">└── parserlib@0.2.5</span><br></pre></td></tr></table></figure>
+
+<p>可以查看 csslint 版本，已确认安装完成。   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;csslint --version</span><br><span class="line">v0.10.0</span><br></pre></td></tr></table></figure>
+
+<p>现在，恭喜你，我们使用 Sublime 编辑 css 文件，就会有语法检查了！     </p>
+<p>在编辑过程中，会有如下提示   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test.jpg" alt="SublimeLinter-csslint-test"></p>
+<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test2.jpg" alt="SublimeLinter-csslint-test2"></p>
+]]></content>
+      <categories>
+        <category>Sublime</category>
+      </categories>
+      <tags>
+        <tag>Sublime jshint csslint</tag>
       </tags>
   </entry>
   <entry>
@@ -2073,16 +2094,69 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>JavaScript 阶段总结</title>
-    <url>/2015/07/09/2015/07/JavaScript-Net/</url>
-    <content><![CDATA[<p>做了一张思维导图。总结这几个月对 JavaScript 的学习吧，也是一个复习。也是我目前的技能树。</p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/blog-JavaScriptNet2.png" alt="JavaScriptNet"></p>
+    <title>Write-Ahead Log（WAL）的工作原理</title>
+    <url>/2021/05/13/2021/05/WAL/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在存储系统的运行过程中，每时每刻都发生着数据的更新，背后意味着诸如创建，删除，修改文件等数据的操作。抛开物理文件数据的改变，对于中心控制节点而言，这些都会涉及到元数据的更新操作。而为了保持系统元数据和物理数据间的状态一致性，系统所有的数据操作对应的元数据变更都需要持久化到元数据db内，但其实这里有一个性能问题，我们的每次变更如果都要实时同步到外部db内，是否意味着高频的io操作？是否有延时写入的手段呢？本文将要阐述的预写式日志Write Ahead Log(WAL),正是对此的优化。</p>
+<span id="more"></span>
+<h2 id="Write-Ahead-Log概述"><a href="#Write-Ahead-Log概述" class="headerlink" title="Write Ahead Log概述"></a>Write Ahead Log概述</h2><p>Write Ahead Log简称WAL，在分布式存储系统中的元数据更新中应用得十分广泛。WAL的主要意思是说在将元数据的变更操作写入到持久稳定的db之前，先预先写入到一个log中，然后再由另外的操作将log apply到外部的持久db里去。这种模式会减少掉每次的db写入操作，尤其当系统要处理大量的transaction操作的时候，WAL的方式相比较于实时同步db的方式有着更高的效率。</p>
+<p>WAL还有一点很重要的帮助是可以在disaster recovery过程中起到状态恢复的作用，系统在load完元数据db后，再把未来得及提交的WAL apply进来，就能恢复成和之前最终一致的状态。</p>
+<h1 id="WAL的执行机理"><a href="#WAL的执行机理" class="headerlink" title="WAL的执行机理"></a>WAL的执行机理</h1><p>上面只介绍了WAL的概述内容，本小节我们来深入了解WAL的内部执行细节。</p>
+<p>首先我们要搞清楚一点的是，WAL不记录元数据的本身，而是变更的record。那么何为”变更的record“？一个删除操作记录，一个添加记录，至于每个记录会包含有什么信息呢，大家可以参考audit log的内容属性。不过WAL的log格式和audit log还是有所区别的。</p>
+<p>追本溯源，对于WAL来说，它是被谁写入的呢？答案是WAL buffer，当这个buffer满了的时候或者人工触发flush动作时，它就会将transaction数据写出到WAL的log内。当然，系统在每次完成一个操作时，同时会将改动应用到memory和WAL buffer内，然后自己再控制buffer flush出去的逻辑。</p>
+<p>当老的WAL已经被apply进元数据db之后，我们会用更新commitId来表明当前最新的transaction，理论上来说低于这个commitId的WAL已经可以被清除purge出去了。这个过程我们可以理解为checkpoint过程，当前db+WAL变更=新的db。</p>
+<p>上述WAL细节过程如下图:<br><img src="/2021/05/13/2021/05/WAL/16208757110681/16208820219607.jpg"></p>
+<h1 id="WAL-apply的控制"><a href="#WAL-apply的控制" class="headerlink" title="WAL apply的控制"></a>WAL apply的控制</h1><p>在系统做disaster recovery中，对于WAL的应用过程，有时可能会出现应用出差的情况，包括一些局部WAL记录格式写异常的情况。这个时候用户可以选择是否中断WAL的apply过程或者是忽略异常，来完成尽可能的数据状态恢复。这些都是WAL内部的细节控制。</p>
+<p>以上就是本文主要阐述的关于WAL的内容了。<br>#引用<br>[1].<a href="https://pgadminedb.readthedocs.io/en/latest/module_02/">https://pgadminedb.readthedocs.io/en/latest/module_02/</a></p>
 ]]></content>
       <categories>
-        <category>JavaScript</category>
+        <category>分布式系统</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
+        <tag>WAL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>安装php7.3.5</title>
+    <url>/2021/05/08/2021/05/centos-php7.3.5/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>工作需要使用php7.3.5做报表系统<br>本文采用编译安装</p>
+<span id="more"></span>
+<p>1、先安装依赖包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum -y install epel-release libxml2 libxml2-devel openssl openssl-devel bzip2 bzip2-devel libcurl libcurl-devel libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gmp gmp-devel libmcrypt libmcrypt-devel readline readline-devel libxslt libxslt-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel ncurses curl gdbm-devel db4-devel libXpm-devel libX11-devel gd-devel gmp-devel expat-devel xmlrpc-c xmlrpc-c-devel libicu-devel libmcrypt-devel libmemcached-devel libzip gcc-c++ sqlite-devel  oniguruma oniguruma-devel autoconf</span><br></pre></td></tr></table></figure>
+
+<p>2、开始编译</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;configure \</span><br><span class="line">--prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php \</span><br><span class="line">--exec-prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php \</span><br><span class="line">--bindir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin \</span><br><span class="line">--sbindir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin \</span><br><span class="line">--includedir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;include \</span><br><span class="line">--libdir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;lib&#x2F;php \</span><br><span class="line">--mandir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;php&#x2F;man \</span><br><span class="line">--with-config-file-path&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;etc \</span><br><span class="line">--with-mhash \</span><br><span class="line">--with-openssl \</span><br><span class="line">--with-mysqli&#x3D;shared,mysqlnd \</span><br><span class="line">--with-pdo-mysql&#x3D;shared,mysqlnd \</span><br><span class="line">--with-gd \</span><br><span class="line">--with-iconv \</span><br><span class="line">--with-zlib \</span><br><span class="line">--enable-zip \</span><br><span class="line">--enable-inline-optimization \</span><br><span class="line">--disable-debug \</span><br><span class="line">--disable-rpath \</span><br><span class="line">--enable-shared \</span><br><span class="line">--enable-xml \</span><br><span class="line">--enable-redis\</span><br><span class="line">--enable-bcmath \</span><br><span class="line">--enable-shmop \</span><br><span class="line">--enable-sysvsem \</span><br><span class="line">--enable-mbregex \</span><br><span class="line">--enable-mbstring \</span><br><span class="line">--enable-ftp \</span><br><span class="line">--enable-pcntl \</span><br><span class="line">--enable-calendar \</span><br><span class="line">--enable-exif \</span><br><span class="line">--enable-sockets \</span><br><span class="line">--with-xmlrpc \</span><br><span class="line">--with-libxml-dir \</span><br><span class="line">--enable-soap \</span><br><span class="line">--without-pear \</span><br><span class="line">--with-gettext \</span><br><span class="line">--enable-session \</span><br><span class="line">--with-curl \</span><br><span class="line">--with-jpeg-dir \</span><br><span class="line">--with-png-dir \</span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--with-bz2 \</span><br><span class="line">--enable-opcache \</span><br><span class="line">--enable-fpm \</span><br><span class="line">--with-fpm-user&#x3D;nginx \</span><br><span class="line">--with-fpm-group&#x3D;nginx \</span><br><span class="line">--without-gdbm \</span><br><span class="line">--enable-fast-install \</span><br><span class="line">--disable-fileinfo</span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install </span><br></pre></td></tr></table></figure>
+<p>添加配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc</span><br><span class="line">cp php-fpm.conf.default php-fpm.conf</span><br><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.d</span><br><span class="line">cp www.conf.default www.conf</span><br></pre></td></tr></table></figure>
+<p>查找当前php使用ini的位置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">php --ini</span><br></pre></td></tr></table></figure>
+<p>添加配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir &#x2F;usr&#x2F;local&#x2F;php&#x2F;conf</span><br><span class="line">vim php.ini</span><br><span class="line">[PHP]</span><br><span class="line">engine &#x3D; On</span><br><span class="line">short_open_tag &#x3D; Off</span><br><span class="line">precision &#x3D; 14</span><br><span class="line">output_buffering &#x3D; 4096</span><br><span class="line">zlib.output_compression &#x3D; Off</span><br><span class="line">implicit_flush &#x3D; Off</span><br><span class="line">unserialize_callback_func &#x3D;</span><br><span class="line">serialize_precision &#x3D; -1</span><br><span class="line">disable_functions &#x3D;</span><br><span class="line">disable_classes &#x3D;</span><br><span class="line">zend.enable_gc &#x3D; On</span><br><span class="line">zend.exception_ignore_args &#x3D; Off</span><br><span class="line">expose_php &#x3D; On</span><br><span class="line">max_execution_time &#x3D; 30</span><br><span class="line">max_input_time &#x3D; 60</span><br><span class="line">memory_limit &#x3D; 128M</span><br><span class="line">error_reporting &#x3D; E_ALL</span><br><span class="line">display_errors &#x3D; On</span><br><span class="line">display_startup_errors &#x3D; On</span><br><span class="line">log_errors &#x3D; On</span><br><span class="line">log_errors_max_len &#x3D; 1024</span><br><span class="line">ignore_repeated_errors &#x3D; Off</span><br><span class="line">ignore_repeated_source &#x3D; Off</span><br><span class="line">report_memleaks &#x3D; On</span><br><span class="line">variables_order &#x3D; &quot;GPCS&quot;</span><br><span class="line">request_order &#x3D; &quot;GP&quot;</span><br><span class="line">register_argc_argv &#x3D; Off</span><br><span class="line">auto_globals_jit &#x3D; On</span><br><span class="line">post_max_size &#x3D; 8M</span><br><span class="line">auto_prepend_file &#x3D;</span><br><span class="line">auto_append_file &#x3D;</span><br><span class="line">default_mimetype &#x3D; &quot;text&#x2F;html&quot;</span><br><span class="line">default_charset &#x3D; &quot;UTF-8&quot;</span><br><span class="line">doc_root &#x3D;</span><br><span class="line">user_dir &#x3D;</span><br><span class="line">enable_dl &#x3D; Off</span><br><span class="line">file_uploads &#x3D; On</span><br><span class="line">upload_max_filesize &#x3D; 2M</span><br><span class="line">max_file_uploads &#x3D; 20</span><br><span class="line">allow_url_fopen &#x3D; On</span><br><span class="line">allow_url_include &#x3D; Off</span><br><span class="line">default_socket_timeout &#x3D; 60</span><br><span class="line">extension&#x3D;ldap</span><br><span class="line">[CLI Server]</span><br><span class="line">cli_server.color &#x3D; On</span><br><span class="line">[Date]</span><br><span class="line">[filter]</span><br><span class="line">[iconv]</span><br><span class="line">[imap]</span><br><span class="line">[intl]</span><br><span class="line">[sqlite3]</span><br><span class="line">[Pcre]</span><br><span class="line">[Pdo]</span><br><span class="line">[Pdo_mysql]</span><br><span class="line">pdo_mysql.default_socket&#x3D;</span><br><span class="line">[Phar]</span><br><span class="line">[mail function]</span><br><span class="line">SMTP &#x3D; localhost</span><br><span class="line">smtp_port &#x3D; 25</span><br><span class="line">mail.add_x_header &#x3D; Off</span><br><span class="line">[ODBC]</span><br><span class="line">odbc.allow_persistent &#x3D; On</span><br><span class="line">odbc.check_persistent &#x3D; On</span><br><span class="line">odbc.max_persistent &#x3D; -1</span><br><span class="line">odbc.max_links &#x3D; -1</span><br><span class="line">odbc.defaultlrl &#x3D; 4096</span><br><span class="line">odbc.defaultbinmode &#x3D; 1</span><br><span class="line">[MySQLi]</span><br><span class="line">mysqli.max_persistent &#x3D; -1</span><br><span class="line">mysqli.allow_persistent &#x3D; On</span><br><span class="line">mysqli.max_links &#x3D; -1</span><br><span class="line">mysqli.default_port &#x3D; 3306</span><br><span class="line">mysqli.default_socket &#x3D;</span><br><span class="line">mysqli.default_host &#x3D;</span><br><span class="line">mysqli.default_user &#x3D;</span><br><span class="line">mysqli.default_pw &#x3D;</span><br><span class="line">mysqli.reconnect &#x3D; Off</span><br><span class="line">[mysqlnd]</span><br><span class="line">mysqlnd.collect_statistics &#x3D; On</span><br><span class="line">mysqlnd.collect_memory_statistics &#x3D; On</span><br><span class="line">[OCI8]</span><br><span class="line">[PostgreSQL]</span><br><span class="line">pgsql.allow_persistent &#x3D; On</span><br><span class="line">pgsql.auto_reset_persistent &#x3D; Off</span><br><span class="line">pgsql.max_persistent &#x3D; -1</span><br><span class="line">pgsql.max_links &#x3D; -1</span><br><span class="line">pgsql.ignore_notice &#x3D; 0</span><br><span class="line">pgsql.log_notice &#x3D; 0</span><br><span class="line">[bcmath]</span><br><span class="line">bcmath.scale &#x3D; 0</span><br><span class="line">[browscap]</span><br><span class="line">[Session]</span><br><span class="line">session.save_handler &#x3D; files</span><br><span class="line">session.use_strict_mode &#x3D; 0</span><br><span class="line">session.use_cookies &#x3D; 1</span><br><span class="line">session.use_only_cookies &#x3D; 1</span><br><span class="line">session.name &#x3D; PHPSESSID</span><br><span class="line">session.auto_start &#x3D; 0</span><br><span class="line">session.cookie_lifetime &#x3D; 0</span><br><span class="line">session.cookie_path &#x3D; &#x2F;</span><br><span class="line">session.cookie_domain &#x3D;</span><br><span class="line">session.cookie_httponly &#x3D;</span><br><span class="line">session.cookie_samesite &#x3D;</span><br><span class="line">session.serialize_handler &#x3D; php</span><br><span class="line">session.gc_probability &#x3D; 1</span><br><span class="line">session.gc_divisor &#x3D; 1000</span><br><span class="line">session.gc_maxlifetime &#x3D; 1440</span><br><span class="line">session.referer_check &#x3D;</span><br><span class="line">session.cache_limiter &#x3D; nocache</span><br><span class="line">session.cache_expire &#x3D; 180</span><br><span class="line">session.use_trans_sid &#x3D; 0</span><br><span class="line">session.sid_length &#x3D; 26</span><br><span class="line">session.trans_sid_tags &#x3D; &quot;a&#x3D;href,area&#x3D;href,frame&#x3D;src,form&#x3D;&quot;</span><br><span class="line">session.sid_bits_per_character &#x3D; 5</span><br><span class="line">[Assertion]</span><br><span class="line">zend.assertions &#x3D; 1</span><br><span class="line">[COM]</span><br><span class="line">[mbstring]</span><br><span class="line">[gd]</span><br><span class="line">[exif]</span><br><span class="line">[Tidy]</span><br><span class="line">tidy.clean_output &#x3D; Off</span><br><span class="line">[soap]</span><br><span class="line">soap.wsdl_cache_enabled&#x3D;1</span><br><span class="line">soap.wsdl_cache_dir&#x3D;&quot;&#x2F;tmp&quot;</span><br><span class="line">soap.wsdl_cache_ttl&#x3D;86400</span><br><span class="line">soap.wsdl_cache_limit &#x3D; 5</span><br><span class="line">[sysvshm]</span><br><span class="line">[ldap]</span><br><span class="line">ldap.max_links &#x3D; -1</span><br><span class="line">[dba]</span><br><span class="line">[opcache]</span><br><span class="line">[curl]</span><br><span class="line">[openssl]</span><br><span class="line">[ffi]</span><br></pre></td></tr></table></figure>
+<p>安装php-redis</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -zxvf owlient-phpredis-2.1.1-1-g90ecd17.tar.gz</span><br><span class="line">cd owlient-phpredis-90ecd17</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;phpize</span><br><span class="line">.&#x2F;configure --with-php-config&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;php-config</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20060613&#x2F;</span><br><span class="line">vim php.ini</span><br><span class="line">extension_dir &#x3D; &quot;&#x2F;usr&#x2F;local&#x2F;php&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20060613&#x2F;&quot;</span><br><span class="line">extension &#x3D; redis.so</span><br></pre></td></tr></table></figure>
+<p>安装php-grpc</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget http:&#x2F;&#x2F;pecl.php.net&#x2F;get&#x2F;grpc-1.20.0.tgz</span><br><span class="line">tar -xzvf grpc-1.20.0.tgz</span><br><span class="line">cd grpc-1.20.0</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;phpize</span><br><span class="line">.&#x2F;configure --with-php-config&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;bin&#x2F;php-config </span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">vim php.ini</span><br><span class="line">extension &#x3D; redis.so</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>centos7 php</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux下，cat和less显示正常，vim出现了中文乱码问题</title>
+    <url>/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/</url>
+    <content><![CDATA[<p>#一.查看文件编码格式<br>vim 文件<br>:set fileencoding<br><img src="/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/16214080139603/16214094825495.jpg" alt="当前文件"></p>
+<span id="more"></span>
+
+<p><img src="/2021/05/19/2021/05/%E5%AD%97%E7%AC%A6%E6%B7%B7%E4%B9%B1/16214080139603/16214095062338.jpg" alt="正常文件"></p>
+<p>#二.处理方法<br>1.单文件更改文件格式编码<br>:e ++enc=utf-8<br>2.vim配置文件修改<br>set fence=utf8<br>这样即可</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
@@ -2203,90 +2277,16 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>代码校验工具 SublimeLinter 的安装与使用</title>
-    <url>/2015/03/26/2015/03/sublimeLinter/</url>
-    <content><![CDATA[<p>本文我将讲述一下 SublimeLinter 的安装过程。其组件 jshint 的安装与使用。其组件 csslint 的安装与使用。我将基于 <a href="http://sublimetext.com/3">Sublime Text 3</a> 来安装。使用 Sublime Text 2 的用户阅读本文是没有帮助的。</p>
-<span id="more"></span>
-<p>SublimeLinter 是 Sublime 的插件，它的作用是检查代码语法是否有错误，并提示。习惯了 IDE 下写代码的人一定需要一款在 Sublime 上类似的语法检查工具。下面我们开始。   </p>
-<h2 id="安装-SublimeLinter"><a href="#安装-SublimeLinter" class="headerlink" title="安装 SublimeLinter"></a>安装 SublimeLinter</h2><p>如同其他插件一样使用 Package Control 来安装。   </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter</code>。进行安装.   </li>
-</ol>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-sublimeLinter.jpg" alt="SublimeLinter">   </p>
-<p>安装完成后可以看到这样一段话：   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Welcome to SublimeLinter, a linter framework for Sublime Text 3.</span><br><span class="line"></span><br><span class="line">                  * * * IMPORTANT! * * *</span><br><span class="line"></span><br><span class="line">         SublimeLinter 3 is NOT a drop-in replacement for</span><br><span class="line">        earlier versions.</span><br><span class="line"></span><br><span class="line">         Linters *NOT* included with SublimeLinter 3,</span><br><span class="line">         they must be installed separately.</span><br><span class="line"></span><br><span class="line">         The settings are different.</span><br><span class="line"></span><br><span class="line">                 * * * READ THE DOCS! * * *</span><br><span class="line"></span><br><span class="line"> Otherwise you will never know how to install linters, nor will</span><br><span class="line"> you know about all of the great new features in SublimeLinter 3.</span><br><span class="line"></span><br><span class="line"> For complete documentation on how to install and use SublimeLinter,</span><br><span class="line"> please see:</span><br><span class="line"></span><br><span class="line"> http:&#x2F;&#x2F;www.sublimelinter.com</span><br></pre></td></tr></table></figure>
-
-<p>可以看到具体的 Linters 组件<strong>不</strong>被包含在 SublimeLinter 3 中，所以我们要额外独立安装组件。<br>可以针对不同的语言安装不同的组件。   </p>
-<h2 id="JavaScript-语法检查"><a href="#JavaScript-语法检查" class="headerlink" title="JavaScript 语法检查"></a>JavaScript 语法检查</h2><p>SublimeLinter-jshint 是基于 nodeJS 下的 jshint 的插件，实际上 SublimeLinter-jshint 调用了 nodeJS 中 jshint 的接口来进行语法检查的。   </p>
-<hr>
-<h3 id="安装-SublimeLinter-jshint"><a href="#安装-SublimeLinter-jshint" class="headerlink" title="安装 SublimeLinter-jshint"></a>安装 SublimeLinter-jshint</h3><p>为了让 JavaScript 代码有语法检查，我们安装 SublimeLinter-jshint<br>同样的方法，我们安装 SublimeLinter-jshint    </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter-jshint</code>。进行安装.   </li>
-</ol>
-<p>如下图   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint.jpg" alt="SublimeLinter-jshint">   </p>
-<p>安装完成后我们可以看到下面的一段话   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-jshint</span><br><span class="line">  -------------------------------</span><br><span class="line">  This linter plugin for SublimeLinter provides an interface to jshint.</span><br><span class="line"></span><br><span class="line">  ** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">  Before this plugin will activate, you *must*</span><br><span class="line">  follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">  https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-jshint</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装-nodeJS-和-jshint"><a href="#安装-nodeJS-和-jshint" class="headerlink" title="安装 nodeJS 和 jshint"></a>安装 nodeJS 和 jshint</h3><p>在插件开始工作之前，我们必须再看一下上述插件的<a href="https://github.com/SublimeLinter/SublimeLinter-jshint">安装说明</a><br>通过 <a href="https://github.com/SublimeLinter/SublimeLinter-jshint">SublimeLinter-jshint 的说明</a> 我们可以看到，这个组件依赖于 nodeJS 下的 jshint，所以我们安装 nodeJS 环境和 nodeJS 下的 jshint。   </p>
-<ol>
-<li>安装 <a href="https://nodejs.org/">Node.js</a>   </li>
-<li>通过 npm 安装<code>jshint</code>   </li>
-</ol>
-<p>在命令行下输入如下代码，完成安装   </p>
-<pre><code>npm install -g jshint
-</code></pre>
-<p>安装完成后命令行中出现如下的信息   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\jshint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint\bin\jshint</span><br><span class="line">jshint@2.6.3 C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint</span><br><span class="line">├── strip-json-comments@1.0.2</span><br><span class="line">├── underscore@1.6.0</span><br><span class="line">├── exit@0.1.2</span><br><span class="line">├── shelljs@0.3.0</span><br><span class="line">├── console-browserify@1.1.0 (date-now@0.1.4)</span><br><span class="line">├── htmlparser2@3.8.2 (domelementtype@1.3.0, entities@1.0.0, domhandler@2.3.0, readable-stream@1.1.13, domutils@1.5.1)</span><br><span class="line">├── minimatch@1.0.0 (sigmund@1.0.0, lru-cache@2.5.0)</span><br><span class="line">└── cli@0.6.6 (glob@3.2.11)</span><br></pre></td></tr></table></figure>
-
-<p>可以查看 jshint 版本，已确认安装完成。  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;jshint -v</span><br><span class="line">jshint v2.6.3</span><br></pre></td></tr></table></figure>
-
-<p>现在，恭喜你，我们使用 Sublime 编辑 JavaScript 文件，就会有语法检查了！   </p>
-<p>在编辑过程中，会有如下提示   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test.jpg" alt="SublimeLinter-jshint-test"></p>
-<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test2.jpg" alt="SublimeLinter-jshint-test2"></p>
-<h2 id="css-语法检查"><a href="#css-语法检查" class="headerlink" title="css 语法检查"></a>css 语法检查</h2><p>与 jshint 同理，SublimeLinter-csslint 也是基于 nodeJS 下的 csslint 的插件，实际上 SublimeLinter-csslint 调用了 nodeJS 中 csslint 的接口来进行语法检查的。   </p>
-<hr>
-<h3 id="安装-SublimeLinter-csslint"><a href="#安装-SublimeLinter-csslint" class="headerlink" title="安装 SublimeLinter-csslint"></a>安装 SublimeLinter-csslint</h3><p>同样的方法。   </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter-csslint</code>。进行安装.   </li>
-</ol>
-<p>如下图   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint.jpg" alt="SublimeLinter-csslint">   </p>
-<p>安装完成后我们可以看到下面的一段话   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-csslint</span><br><span class="line">-------------------------------</span><br><span class="line">This linter plugin for SublimeLinter provides an interface to csslint.</span><br><span class="line"></span><br><span class="line">** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">Before this plugin will activate, you *must*</span><br><span class="line">follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-csslint</span><br></pre></td></tr></table></figure>
-
-<p>在使用插件之前，必须遵循上述网址中的<a href="https://github.com/SublimeLinter/SublimeLinter-csslint">安装说明</a>   </p>
-<h3 id="在-nodeJS-下安装-csslint"><a href="#在-nodeJS-下安装-csslint" class="headerlink" title="在 nodeJS 下安装 csslint"></a>在 nodeJS 下安装 csslint</h3><p>进入上述的 GitHub 地址，csslint 的说明页。我们知道了和 jshint 一样，csslint 也是基于 nodeJS 下的 csslint 来使用的。   </p>
-<p>这里安装 nodeJS 过程省略。<br>只需用 npm 安装 csslint 即可。   </p>
-<p>在命令行中输入     </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g csslint   </span><br></pre></td></tr></table></figure>
-
-<p>安装完成后命令行中出现如下的信息     </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\csslint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint\cli.js</span><br><span class="line">csslint@0.10.0 C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint</span><br><span class="line">└── parserlib@0.2.5</span><br></pre></td></tr></table></figure>
-
-<p>可以查看 csslint 版本，已确认安装完成。   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;csslint --version</span><br><span class="line">v0.10.0</span><br></pre></td></tr></table></figure>
-
-<p>现在，恭喜你，我们使用 Sublime 编辑 css 文件，就会有语法检查了！     </p>
-<p>在编辑过程中，会有如下提示   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test.jpg" alt="SublimeLinter-csslint-test"></p>
-<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test2.jpg" alt="SublimeLinter-csslint-test2"></p>
+    <title>JavaScript 阶段总结</title>
+    <url>/2015/07/09/2015/07/JavaScript-Net/</url>
+    <content><![CDATA[<p>做了一张思维导图。总结这几个月对 JavaScript 的学习吧，也是一个复习。也是我目前的技能树。</p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/blog-JavaScriptNet2.png" alt="JavaScriptNet"></p>
 ]]></content>
       <categories>
-        <category>Sublime</category>
+        <category>JavaScript</category>
       </categories>
       <tags>
-        <tag>Sublime jshint csslint</tag>
+        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
