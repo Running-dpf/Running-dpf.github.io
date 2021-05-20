@@ -131,6 +131,139 @@
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 中的闭包</title>
+    <url>/2015/06/14/JavaScript-closure/</url>
+    <content><![CDATA[<h2 id="闭包的例子"><a href="#闭包的例子" class="headerlink" title="闭包的例子"></a>闭包的例子</h2><pre><code>function outer() &#123;
+    var localVal = 30;
+    return localVal;
+&#125;
+
+console.log(outer()); //30
+
+function outer2() &#123;
+    var localVal = 30;
+    return function() &#123;
+        return localVal;
+    &#125;;
+&#125;
+
+var func = outer2();
+console.log(func()); //30
+</code></pre>
+<p>对于第一个普通的函数，在执行过之后，它的局部变量就可以被释放。</p>
+<p>对于第二个函数，<code>localVal</code> 是不能被释放的。因为调用 <code>outer2()</code> 后，返回的是匿名函数，匿名函数可以访问外部的 <code>outer2()</code> 中的局部变量，并返回了这个局部变量 localVal。当 <code>outer2()</code> 赋值给 <code>func</code> 后，再次调用 <code>func()</code>，仍能访问到局部变量 <code>localVal</code>。这种情况就是闭包。</p>
+<span id="more"></span>
+<hr>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li><p><strong>所谓闭包就是：子函数可以使用父函数中的局部变量。</strong></p>
+<pre><code>  ! function() &#123;
+      var localData = &quot;localData here&quot;;
+      document.addEventListener(&#39;click&#39;,
+          function() &#123;
+              console.log(localData); //这里访问外部数据
+          &#125;);
+  &#125;();
+
+  ! function() &#123;
+      var localData = &quot;localData here&quot;;
+      var url = &quot;http://www.baidu.com/&quot;;
+      $.ajax(&#123;
+          url: url,
+          success: function() &#123;
+              // do sth...
+              console.log(localData); //这里访问外部数据
+          &#125;
+      &#125;);
+  &#125;()
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="常见错误之循环闭包"><a href="#常见错误之循环闭包" class="headerlink" title="常见错误之循环闭包"></a>常见错误之循环闭包</h2><p>比如我们想循环绑定点击事件</p>
+<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
+for (var i = 1; i &lt; 4; i++) &#123;
+    document.getElementById(&#39;div&#39; + i).
+    addEventListener(&#39;click&#39;, function() &#123;
+        alert(i); // all are 4!
+    &#125;);
+&#125;
+</code></pre>
+<p>上面的代码，我们点击任何一个 div，弹出的都是 4</p>
+<p>这是因为，for 循环中的 i 是一个全局变量。这里内函数的点击事件，访问到的是循环后的 i 值，所以是 4</p>
+<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
+for (var i = 1; i &lt; 4; i++) &#123;
+    ! function(i) &#123;
+        document.getElementById(&#39;div&#39; + i).
+        addEventListener(&#39;click&#39;, function() &#123;
+            alert(i); // 1, 2, 3
+        &#125;);
+    &#125;(i);
+&#125;
+</code></pre>
+<p>这里使用了立即执行函数，并给匿名函数赋值 i，这样点击事件每一次就会访问到相应的 i。</p>
+<hr>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><pre><code>(function() &#123;
+    var _userId = 9527;
+    var _typeId = &quot;item&quot;;
+    var exp = &#123;&#125;;
+
+    function converter(userId) &#123;
+        return +userId;
+    &#125;
+
+    exp.getUserId = function() &#123;
+        return converter(_userId);
+    &#125;;
+
+    exp.getTypeId = function() &#123;
+        return _typeId;
+    &#125;;
+
+    window.a = exp;
+&#125;)();
+
+console.log(a.getUserId()); //9527
+console.log(a.getTypeId()); //item
+
+console.log(a._userId); //undefined
+console.log(a._typeId); //undefined
+console.log(converter); //Uncaught ReferenceError: converter is not defined
+</code></pre>
+<p>上面的代码通过闭包实现了一个封装。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<ul>
+<li><p>在计算机科学中，闭包（也称词法闭包或函数闭包）是指一个函数或函数的引用，与一个引用环境绑定在一起。这个引用环境是一个存储该函数每个非局部变量（也叫自由变量）的表。</p>
+</li>
+<li><p>闭包，不同于一般的函数，它允许一个函数在立即词法作用域外调用时，仍可访问非本地变量。</p>
+</li>
+</ul>
+<p>from 维基百科</p>
+</blockquote>
+<ul>
+<li><p>闭包的优点</p>
+<ul>
+<li>灵活和方便</li>
+<li>封装</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>空间浪费</li>
+<li>内存泄露</li>
+<li>性能消耗</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JavaScript 面向对象</title>
     <url>/2015/06/15/JavaScript-Object-Oriented/</url>
     <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><blockquote>
@@ -457,139 +590,6 @@ moduleA = function() &#123;
 <li><a href="http://www.oschina.net/translate/learning-javascript-design-patterns">学用 JavaScript 设计模式</a></li>
 <li><a href="http://blog.jobbole.com/29454/">常用的Javascript设计模式</a></li>
 <li><a href="http://developer.51cto.com/art/201109/288650_all.htm">JavaScript设计模式深入分析</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JavaScript 中的闭包</title>
-    <url>/2015/06/14/JavaScript-closure/</url>
-    <content><![CDATA[<h2 id="闭包的例子"><a href="#闭包的例子" class="headerlink" title="闭包的例子"></a>闭包的例子</h2><pre><code>function outer() &#123;
-    var localVal = 30;
-    return localVal;
-&#125;
-
-console.log(outer()); //30
-
-function outer2() &#123;
-    var localVal = 30;
-    return function() &#123;
-        return localVal;
-    &#125;;
-&#125;
-
-var func = outer2();
-console.log(func()); //30
-</code></pre>
-<p>对于第一个普通的函数，在执行过之后，它的局部变量就可以被释放。</p>
-<p>对于第二个函数，<code>localVal</code> 是不能被释放的。因为调用 <code>outer2()</code> 后，返回的是匿名函数，匿名函数可以访问外部的 <code>outer2()</code> 中的局部变量，并返回了这个局部变量 localVal。当 <code>outer2()</code> 赋值给 <code>func</code> 后，再次调用 <code>func()</code>，仍能访问到局部变量 <code>localVal</code>。这种情况就是闭包。</p>
-<span id="more"></span>
-<hr>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
-<li><p><strong>所谓闭包就是：子函数可以使用父函数中的局部变量。</strong></p>
-<pre><code>  ! function() &#123;
-      var localData = &quot;localData here&quot;;
-      document.addEventListener(&#39;click&#39;,
-          function() &#123;
-              console.log(localData); //这里访问外部数据
-          &#125;);
-  &#125;();
-
-  ! function() &#123;
-      var localData = &quot;localData here&quot;;
-      var url = &quot;http://www.baidu.com/&quot;;
-      $.ajax(&#123;
-          url: url,
-          success: function() &#123;
-              // do sth...
-              console.log(localData); //这里访问外部数据
-          &#125;
-      &#125;);
-  &#125;()
-</code></pre>
-</li>
-</ul>
-<hr>
-<h2 id="常见错误之循环闭包"><a href="#常见错误之循环闭包" class="headerlink" title="常见错误之循环闭包"></a>常见错误之循环闭包</h2><p>比如我们想循环绑定点击事件</p>
-<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
-for (var i = 1; i &lt; 4; i++) &#123;
-    document.getElementById(&#39;div&#39; + i).
-    addEventListener(&#39;click&#39;, function() &#123;
-        alert(i); // all are 4!
-    &#125;);
-&#125;
-</code></pre>
-<p>上面的代码，我们点击任何一个 div，弹出的都是 4</p>
-<p>这是因为，for 循环中的 i 是一个全局变量。这里内函数的点击事件，访问到的是循环后的 i 值，所以是 4</p>
-<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
-for (var i = 1; i &lt; 4; i++) &#123;
-    ! function(i) &#123;
-        document.getElementById(&#39;div&#39; + i).
-        addEventListener(&#39;click&#39;, function() &#123;
-            alert(i); // 1, 2, 3
-        &#125;);
-    &#125;(i);
-&#125;
-</code></pre>
-<p>这里使用了立即执行函数，并给匿名函数赋值 i，这样点击事件每一次就会访问到相应的 i。</p>
-<hr>
-<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><pre><code>(function() &#123;
-    var _userId = 9527;
-    var _typeId = &quot;item&quot;;
-    var exp = &#123;&#125;;
-
-    function converter(userId) &#123;
-        return +userId;
-    &#125;
-
-    exp.getUserId = function() &#123;
-        return converter(_userId);
-    &#125;;
-
-    exp.getTypeId = function() &#123;
-        return _typeId;
-    &#125;;
-
-    window.a = exp;
-&#125;)();
-
-console.log(a.getUserId()); //9527
-console.log(a.getTypeId()); //item
-
-console.log(a._userId); //undefined
-console.log(a._typeId); //undefined
-console.log(converter); //Uncaught ReferenceError: converter is not defined
-</code></pre>
-<p>上面的代码通过闭包实现了一个封装。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
-<ul>
-<li><p>在计算机科学中，闭包（也称词法闭包或函数闭包）是指一个函数或函数的引用，与一个引用环境绑定在一起。这个引用环境是一个存储该函数每个非局部变量（也叫自由变量）的表。</p>
-</li>
-<li><p>闭包，不同于一般的函数，它允许一个函数在立即词法作用域外调用时，仍可访问非本地变量。</p>
-</li>
-</ul>
-<p>from 维基百科</p>
-</blockquote>
-<ul>
-<li><p>闭包的优点</p>
-<ul>
-<li>灵活和方便</li>
-<li>封装</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>空间浪费</li>
-<li>内存泄露</li>
-<li>性能消耗</li>
-</ul>
-</li>
 </ul>
 ]]></content>
       <categories>
@@ -1416,6 +1416,30 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
+    <title>win10 关闭更新</title>
+    <url>/2021/05/08/close-win10-update/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
+<span id="more"></span>
+<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>2 在运行处输入 “services.msc”   点击确定。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>3 在弹出来的服务中，找到“Windows Update”</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>4 选择禁用</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>会多出这两个位置，这样子就设置成功了。</p>
+]]></content>
+      <categories>
+        <category>win10</category>
+      </categories>
+      <tags>
+        <tag>win10 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Git 如何 clone 非 master 分支的代码</title>
     <url>/2021/05/08/git-clone-not-master-branch/</url>
     <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>我们每次使用命令</p>
@@ -1542,30 +1566,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>ES2015 ES6 ES5 babel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>win10 关闭更新</title>
-    <url>/2021/05/08/close-win10-update/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
-<span id="more"></span>
-<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>2 在运行处输入 “services.msc”   点击确定。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>3 在弹出来的服务中，找到“Windows Update”</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>4 选择禁用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>会多出这两个位置，这样子就设置成功了。</p>
-]]></content>
-      <categories>
-        <category>win10</category>
-      </categories>
-      <tags>
-        <tag>win10 工具软件</tag>
       </tags>
   </entry>
   <entry>
@@ -1731,84 +1731,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>Jekyll 搭建静态博客</title>
-    <url>/2015/02/15/reate-my-blog-with-jekyll/</url>
-    <content><![CDATA[<p>一直以来都想搭建一个自己的博客，但是近半年做项目太忙，再加上教研室的网络很坑爹，所以也一直没顾得上。之前用过 WordPress 托管在免费的京东云擎上，但是速度太慢。在知乎上看到一些相关的内容，于是选择了在github上用jekyll搭建博客。</p>
-<span id="more"></span>
-
-
-
-
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><p>在jekyll的官网上 <a href="http://jekyllrb.com/">http://jekyllrb.com/</a> 其实已经说得比较明白了，我在这里还是简单的说一下吧。我用的是Windows系统。<br>主要环节有：安装Ruby，安装RubyGems，安装jekyll，安装代码高亮插件，安装node.js</p>
-<h3 id="安装Ruby"><a href="#安装Ruby" class="headerlink" title="安装Ruby"></a>安装Ruby</h3><p>ruby官网下载安装：<a href="https://www.ruby-lang.org/en/downloads/">https://www.ruby-lang.org/en/downloads/</a></p>
-<p>安装完成后配置环境变量</p>
-<p>在命令提示符中，得到ruby版本号，如下图，即安装成功</p>
-<p><img src="/2015/02/15/reate-my-blog-with-jekyll/large/7011d6cfjw1f2ue0e393vj20cu00t748.jpg"></p>
-<h3 id="安装RubyGems"><a href="#安装RubyGems" class="headerlink" title="安装RubyGems"></a>安装RubyGems</h3><p>官网下载 <a href="http://rubygems.org/pages/download">http://rubygems.org/pages/download</a> rubygems-2.4.5.zip   </p>
-<p>cd到RubyGems目录   </p>
-<p><img src="/2015/02/15/reate-my-blog-with-jekyll/large/7011d6cfjw1f2ue1l2yscj20gk02amxj.jpg"></p>
-<p>执行安装   </p>
-<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue1w8eqnj20bx00hglg.jpg">  </p>
-<h3 id="用RubyGems安装Jekyll"><a href="#用RubyGems安装Jekyll" class="headerlink" title="用RubyGems安装Jekyll"></a>用RubyGems安装Jekyll</h3><p>执行下面的语句安装   </p>
-<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue2g2p3uj207x00ft8j.jpg"></p>
-<p>安装结束画面   </p>
-<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue32drwhj20hv09xq5m.jpg"></p>
-<p>至此jekyll就已经安装完毕了，后续就是个性化的自己设定了。</p>
-<h3 id="创建博客"><a href="#创建博客" class="headerlink" title="创建博客"></a>创建博客</h3><p>在d盘新建一个工作区jekyllWorkspace</p>
-<p>cd到jekyllWorkspace   </p>
-<p>执行jekyll new name创建新的工作区   </p>
-<p><img src="http://ww3.sinaimg.cn/large/7011d6cfjw1f2ue3lt31nj20cj02nt8u.jpg"></p>
-<p>文件结构如下：   </p>
-<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue3ujsybj20ek06wabh.jpg"></p>
-<p>cd到博客文件夹，开启服务器   </p>
-<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue47y9lgj20ao00f0sl.jpg"></p>
-<p>watch为了检测文件夹内的变化，即修改后不需要重新启动jekyll</p>
-<p>我的环境下启动报错(你的可能没有)，再安装yajl-ruby和rouge  </p>
-<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue4nelnxj20dd077q49.jpg"></p>
-<p>再次启动服务器成功</p>
-<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue4v42koj20g505bdgy.jpg"></p>
-<p>访问 <a href="http://localhost:4000/">http://localhost:4000/</a>   </p>
-<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue56ckwoj20je0eumz3.jpg"></p>
-<p>详细文章页面   </p>
-<p><img src="http://ww2.sinaimg.cn/large/7011d6cfjw1f2ue5f3j9cj20je0gyq7a.jpg"></p>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><ul>
-<li> 整个安装过程参考了jekyll官网，注意jekyll还有一个简体中文官网，不过比较坑（我就被坑了），有些内容没有翻译过来，有可能会走弯路，建议如果想看中文的相关资料，也要中英对照着阅读。<a href="http://jekyllcn.com/">jekyll中文网 http://jekyllcn.com</a>, <a href="http://jekyllrb.com/">jekyll英文网 http://jekyllrb.com</a></li>
-<li> jekyll中的css是用sass写的，当然直接在<code>_sass/_layout.scss</code>中添加css也是可以的。</li>
-<li> 本文是用Markdown格式来写的，相关语法可参考： <a href="http://wowubuntu.com/markdown/">Markdown 语法说明 (简体中文版) http://wowubuntu.com/markdown/</a>  </li>
-<li> 按照本文的说明搭建完博客后，用<code>github Pages</code>托管就可以看到了。注意，在github上面好像不支持rouge，所以要push到github上时，我将配置文件_config.yml中的代码高亮改变为<code>highlighter: pygments</code>就可以了</li>
-<li> 博客默认是没有评论系统的，本文的评论系统使用了多说，详细安装办法可访问<a href="http://duoshuo.com/">多说官网 http://duoshuo.com/</a>，当然也可以使用<a href="http://changyan.sohu.com/">搜狐畅言 http://changyan.sohu.com/</a>作为评论系统。</li>
-<li> 也可以绑定自己的域名，如果没有域名，可以在<a href="http://www.godaddy.com/">godaddy http://www.godaddy.com/</a>上将域名放入购物车等待降价，买之。</li>
-<li> 祝各位新年快乐！</li>
-</ul>
-<hr>
-<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="hitimes-hitimes-LoadError"><a href="#hitimes-hitimes-LoadError" class="headerlink" title="hitimes/hitimes (LoadError)"></a><code>hitimes/hitimes (LoadError)</code></h3><p><strong>错误代码：</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:&#x2F;Ruby22&#x2F;lib&#x2F;ruby&#x2F;2.2.0&#x2F;rubygems&#x2F;core_ext&#x2F;kernel_require.rb:54:in &#96;require&#39;: cannot load such file -- hitimes&#x2F;hitimes (LoadError)</span><br></pre></td></tr></table></figure>
-
-<p><strong>解决方法：</strong></p>
-<p>在stackoverflow上又一个很好的解决方法。<a href="http://stackoverflow.com/questions/28985481/hitimes-require-error-when-running-jekyll-serve-on-windows-8-1">hitimes require error when running jekyll serve on windows 8.1</a> 虽然上面的题主问的是 win 8.1 系统下的情况，但是同样适用于 win7。下面我简单翻译一下错误原因和解决方法。</p>
-<blockquote>
-<p>可能是 Ruby 2.2 和 hitimes-1.2.2-x86-mingw32 中有一些 ABI 变化，少了一些相关的类库。</p>
-<p>所以卸载 hitimes 并通过 <code>--platform ruby</code> 重装即可。代码如下：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gem uni hitimes</span><br><span class="line">**Remove ALL versions**</span><br><span class="line">gem ins hitimes -v 1.2.1 --platform ruby</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>然后将自动重新编译 hitimes 并适用于 Ruby 2.2</p>
-</blockquote>
-<p>下面是我自己的卸载和安装过程：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E:\GitWorkSpace\gaohaoyang.github.io&gt;gem uni hitimes</span><br><span class="line"></span><br><span class="line">You have requested to uninstall the gem:</span><br><span class="line">        hitimes-1.2.2-x86-mingw32</span><br><span class="line"></span><br><span class="line">timers-4.0.1 depends on hitimes (&gt;&#x3D; 0)</span><br><span class="line">If you remove this gem, these dependencies will not be met.</span><br><span class="line">Continue with Uninstall? [yN]  y</span><br><span class="line">Successfully uninstalled hitimes-1.2.2-x86-mingw32</span><br><span class="line"></span><br><span class="line">E:\GitWorkSpace\gaohaoyang.github.io&gt;gem ins hitimes -v 1.2.1 --platform ruby</span><br><span class="line">Fetching: hitimes-1.2.1.gem (100%)</span><br><span class="line">Temporarily enhancing PATH to include DevKit...</span><br><span class="line">Building native extensions.  This could take a while...</span><br><span class="line">Successfully installed hitimes-1.2.1</span><br><span class="line">Parsing documentation for hitimes-1.2.1</span><br><span class="line">Installing ri documentation for hitimes-1.2.1</span><br><span class="line">Done installing documentation for hitimes after 1 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
-
-
-<p>关于，<a href="https://rubygems.org/gems/hitimes/versions/1.2.2">hitimes</a> 是一个快速的高效的定时器解决方案库，详情可以去官网查看。</p>
-]]></content>
-      <categories>
-        <category>jekyll</category>
-      </categories>
-      <tags>
-        <tag>jekyll</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>News_scrapy_redis 框架系统</title>
     <url>/2021/05/08/python_crawl_words/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该文档针对爬虫系统设计目标中相应的场景给出技术方案</p>
@@ -1903,6 +1825,84 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>scrapy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jekyll 搭建静态博客</title>
+    <url>/2015/02/15/reate-my-blog-with-jekyll/</url>
+    <content><![CDATA[<p>一直以来都想搭建一个自己的博客，但是近半年做项目太忙，再加上教研室的网络很坑爹，所以也一直没顾得上。之前用过 WordPress 托管在免费的京东云擎上，但是速度太慢。在知乎上看到一些相关的内容，于是选择了在github上用jekyll搭建博客。</p>
+<span id="more"></span>
+
+
+
+
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><p>在jekyll的官网上 <a href="http://jekyllrb.com/">http://jekyllrb.com/</a> 其实已经说得比较明白了，我在这里还是简单的说一下吧。我用的是Windows系统。<br>主要环节有：安装Ruby，安装RubyGems，安装jekyll，安装代码高亮插件，安装node.js</p>
+<h3 id="安装Ruby"><a href="#安装Ruby" class="headerlink" title="安装Ruby"></a>安装Ruby</h3><p>ruby官网下载安装：<a href="https://www.ruby-lang.org/en/downloads/">https://www.ruby-lang.org/en/downloads/</a></p>
+<p>安装完成后配置环境变量</p>
+<p>在命令提示符中，得到ruby版本号，如下图，即安装成功</p>
+<p><img src="/2015/02/15/reate-my-blog-with-jekyll/large/7011d6cfjw1f2ue0e393vj20cu00t748.jpg"></p>
+<h3 id="安装RubyGems"><a href="#安装RubyGems" class="headerlink" title="安装RubyGems"></a>安装RubyGems</h3><p>官网下载 <a href="http://rubygems.org/pages/download">http://rubygems.org/pages/download</a> rubygems-2.4.5.zip   </p>
+<p>cd到RubyGems目录   </p>
+<p><img src="/2015/02/15/reate-my-blog-with-jekyll/large/7011d6cfjw1f2ue1l2yscj20gk02amxj.jpg"></p>
+<p>执行安装   </p>
+<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue1w8eqnj20bx00hglg.jpg">  </p>
+<h3 id="用RubyGems安装Jekyll"><a href="#用RubyGems安装Jekyll" class="headerlink" title="用RubyGems安装Jekyll"></a>用RubyGems安装Jekyll</h3><p>执行下面的语句安装   </p>
+<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue2g2p3uj207x00ft8j.jpg"></p>
+<p>安装结束画面   </p>
+<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue32drwhj20hv09xq5m.jpg"></p>
+<p>至此jekyll就已经安装完毕了，后续就是个性化的自己设定了。</p>
+<h3 id="创建博客"><a href="#创建博客" class="headerlink" title="创建博客"></a>创建博客</h3><p>在d盘新建一个工作区jekyllWorkspace</p>
+<p>cd到jekyllWorkspace   </p>
+<p>执行jekyll new name创建新的工作区   </p>
+<p><img src="http://ww3.sinaimg.cn/large/7011d6cfjw1f2ue3lt31nj20cj02nt8u.jpg"></p>
+<p>文件结构如下：   </p>
+<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue3ujsybj20ek06wabh.jpg"></p>
+<p>cd到博客文件夹，开启服务器   </p>
+<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue47y9lgj20ao00f0sl.jpg"></p>
+<p>watch为了检测文件夹内的变化，即修改后不需要重新启动jekyll</p>
+<p>我的环境下启动报错(你的可能没有)，再安装yajl-ruby和rouge  </p>
+<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue4nelnxj20dd077q49.jpg"></p>
+<p>再次启动服务器成功</p>
+<p><img src="http://ww4.sinaimg.cn/large/7011d6cfjw1f2ue4v42koj20g505bdgy.jpg"></p>
+<p>访问 <a href="http://localhost:4000/">http://localhost:4000/</a>   </p>
+<p><img src="http://ww1.sinaimg.cn/large/7011d6cfjw1f2ue56ckwoj20je0eumz3.jpg"></p>
+<p>详细文章页面   </p>
+<p><img src="http://ww2.sinaimg.cn/large/7011d6cfjw1f2ue5f3j9cj20je0gyq7a.jpg"></p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><ul>
+<li> 整个安装过程参考了jekyll官网，注意jekyll还有一个简体中文官网，不过比较坑（我就被坑了），有些内容没有翻译过来，有可能会走弯路，建议如果想看中文的相关资料，也要中英对照着阅读。<a href="http://jekyllcn.com/">jekyll中文网 http://jekyllcn.com</a>, <a href="http://jekyllrb.com/">jekyll英文网 http://jekyllrb.com</a></li>
+<li> jekyll中的css是用sass写的，当然直接在<code>_sass/_layout.scss</code>中添加css也是可以的。</li>
+<li> 本文是用Markdown格式来写的，相关语法可参考： <a href="http://wowubuntu.com/markdown/">Markdown 语法说明 (简体中文版) http://wowubuntu.com/markdown/</a>  </li>
+<li> 按照本文的说明搭建完博客后，用<code>github Pages</code>托管就可以看到了。注意，在github上面好像不支持rouge，所以要push到github上时，我将配置文件_config.yml中的代码高亮改变为<code>highlighter: pygments</code>就可以了</li>
+<li> 博客默认是没有评论系统的，本文的评论系统使用了多说，详细安装办法可访问<a href="http://duoshuo.com/">多说官网 http://duoshuo.com/</a>，当然也可以使用<a href="http://changyan.sohu.com/">搜狐畅言 http://changyan.sohu.com/</a>作为评论系统。</li>
+<li> 也可以绑定自己的域名，如果没有域名，可以在<a href="http://www.godaddy.com/">godaddy http://www.godaddy.com/</a>上将域名放入购物车等待降价，买之。</li>
+<li> 祝各位新年快乐！</li>
+</ul>
+<hr>
+<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="hitimes-hitimes-LoadError"><a href="#hitimes-hitimes-LoadError" class="headerlink" title="hitimes/hitimes (LoadError)"></a><code>hitimes/hitimes (LoadError)</code></h3><p><strong>错误代码：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:&#x2F;Ruby22&#x2F;lib&#x2F;ruby&#x2F;2.2.0&#x2F;rubygems&#x2F;core_ext&#x2F;kernel_require.rb:54:in &#96;require&#39;: cannot load such file -- hitimes&#x2F;hitimes (LoadError)</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方法：</strong></p>
+<p>在stackoverflow上又一个很好的解决方法。<a href="http://stackoverflow.com/questions/28985481/hitimes-require-error-when-running-jekyll-serve-on-windows-8-1">hitimes require error when running jekyll serve on windows 8.1</a> 虽然上面的题主问的是 win 8.1 系统下的情况，但是同样适用于 win7。下面我简单翻译一下错误原因和解决方法。</p>
+<blockquote>
+<p>可能是 Ruby 2.2 和 hitimes-1.2.2-x86-mingw32 中有一些 ABI 变化，少了一些相关的类库。</p>
+<p>所以卸载 hitimes 并通过 <code>--platform ruby</code> 重装即可。代码如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gem uni hitimes</span><br><span class="line">**Remove ALL versions**</span><br><span class="line">gem ins hitimes -v 1.2.1 --platform ruby</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>然后将自动重新编译 hitimes 并适用于 Ruby 2.2</p>
+</blockquote>
+<p>下面是我自己的卸载和安装过程：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">E:\GitWorkSpace\gaohaoyang.github.io&gt;gem uni hitimes</span><br><span class="line"></span><br><span class="line">You have requested to uninstall the gem:</span><br><span class="line">        hitimes-1.2.2-x86-mingw32</span><br><span class="line"></span><br><span class="line">timers-4.0.1 depends on hitimes (&gt;&#x3D; 0)</span><br><span class="line">If you remove this gem, these dependencies will not be met.</span><br><span class="line">Continue with Uninstall? [yN]  y</span><br><span class="line">Successfully uninstalled hitimes-1.2.2-x86-mingw32</span><br><span class="line"></span><br><span class="line">E:\GitWorkSpace\gaohaoyang.github.io&gt;gem ins hitimes -v 1.2.1 --platform ruby</span><br><span class="line">Fetching: hitimes-1.2.1.gem (100%)</span><br><span class="line">Temporarily enhancing PATH to include DevKit...</span><br><span class="line">Building native extensions.  This could take a while...</span><br><span class="line">Successfully installed hitimes-1.2.1</span><br><span class="line">Parsing documentation for hitimes-1.2.1</span><br><span class="line">Installing ri documentation for hitimes-1.2.1</span><br><span class="line">Done installing documentation for hitimes after 1 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
+
+
+<p>关于，<a href="https://rubygems.org/gems/hitimes/versions/1.2.2">hitimes</a> 是一个快速的高效的定时器解决方案库，详情可以去官网查看。</p>
+]]></content>
+      <categories>
+        <category>jekyll</category>
+      </categories>
+      <tags>
+        <tag>jekyll</tag>
       </tags>
   </entry>
   <entry>
@@ -2079,93 +2079,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>代码校验工具 SublimeLinter 的安装与使用</title>
-    <url>/2015/03/26/sublimeLinter/</url>
-    <content><![CDATA[<p>本文我将讲述一下 SublimeLinter 的安装过程。其组件 jshint 的安装与使用。其组件 csslint 的安装与使用。我将基于 <a href="http://sublimetext.com/3">Sublime Text 3</a> 来安装。使用 Sublime Text 2 的用户阅读本文是没有帮助的。</p>
-<span id="more"></span>
-<p>SublimeLinter 是 Sublime 的插件，它的作用是检查代码语法是否有错误，并提示。习惯了 IDE 下写代码的人一定需要一款在 Sublime 上类似的语法检查工具。下面我们开始。   </p>
-<h2 id="安装-SublimeLinter"><a href="#安装-SublimeLinter" class="headerlink" title="安装 SublimeLinter"></a>安装 SublimeLinter</h2><p>如同其他插件一样使用 Package Control 来安装。   </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter</code>。进行安装.   </li>
-</ol>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-sublimeLinter.jpg" alt="SublimeLinter">   </p>
-<p>安装完成后可以看到这样一段话：   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Welcome to SublimeLinter, a linter framework for Sublime Text 3.</span><br><span class="line"></span><br><span class="line">                  * * * IMPORTANT! * * *</span><br><span class="line"></span><br><span class="line">         SublimeLinter 3 is NOT a drop-in replacement for</span><br><span class="line">        earlier versions.</span><br><span class="line"></span><br><span class="line">         Linters *NOT* included with SublimeLinter 3,</span><br><span class="line">         they must be installed separately.</span><br><span class="line"></span><br><span class="line">         The settings are different.</span><br><span class="line"></span><br><span class="line">                 * * * READ THE DOCS! * * *</span><br><span class="line"></span><br><span class="line"> Otherwise you will never know how to install linters, nor will</span><br><span class="line"> you know about all of the great new features in SublimeLinter 3.</span><br><span class="line"></span><br><span class="line"> For complete documentation on how to install and use SublimeLinter,</span><br><span class="line"> please see:</span><br><span class="line"></span><br><span class="line"> http:&#x2F;&#x2F;www.sublimelinter.com</span><br></pre></td></tr></table></figure>
-
-<p>可以看到具体的 Linters 组件<strong>不</strong>被包含在 SublimeLinter 3 中，所以我们要额外独立安装组件。<br>可以针对不同的语言安装不同的组件。   </p>
-<h2 id="JavaScript-语法检查"><a href="#JavaScript-语法检查" class="headerlink" title="JavaScript 语法检查"></a>JavaScript 语法检查</h2><p>SublimeLinter-jshint 是基于 nodeJS 下的 jshint 的插件，实际上 SublimeLinter-jshint 调用了 nodeJS 中 jshint 的接口来进行语法检查的。   </p>
-<hr>
-<h3 id="安装-SublimeLinter-jshint"><a href="#安装-SublimeLinter-jshint" class="headerlink" title="安装 SublimeLinter-jshint"></a>安装 SublimeLinter-jshint</h3><p>为了让 JavaScript 代码有语法检查，我们安装 SublimeLinter-jshint<br>同样的方法，我们安装 SublimeLinter-jshint    </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter-jshint</code>。进行安装.   </li>
-</ol>
-<p>如下图   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint.jpg" alt="SublimeLinter-jshint">   </p>
-<p>安装完成后我们可以看到下面的一段话   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-jshint</span><br><span class="line">  -------------------------------</span><br><span class="line">  This linter plugin for SublimeLinter provides an interface to jshint.</span><br><span class="line"></span><br><span class="line">  ** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">  Before this plugin will activate, you *must*</span><br><span class="line">  follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">  https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-jshint</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装-nodeJS-和-jshint"><a href="#安装-nodeJS-和-jshint" class="headerlink" title="安装 nodeJS 和 jshint"></a>安装 nodeJS 和 jshint</h3><p>在插件开始工作之前，我们必须再看一下上述插件的<a href="https://github.com/SublimeLinter/SublimeLinter-jshint">安装说明</a><br>通过 <a href="https://github.com/SublimeLinter/SublimeLinter-jshint">SublimeLinter-jshint 的说明</a> 我们可以看到，这个组件依赖于 nodeJS 下的 jshint，所以我们安装 nodeJS 环境和 nodeJS 下的 jshint。   </p>
-<ol>
-<li>安装 <a href="https://nodejs.org/">Node.js</a>   </li>
-<li>通过 npm 安装<code>jshint</code>   </li>
-</ol>
-<p>在命令行下输入如下代码，完成安装   </p>
-<pre><code>npm install -g jshint
-</code></pre>
-<p>安装完成后命令行中出现如下的信息   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\jshint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint\bin\jshint</span><br><span class="line">jshint@2.6.3 C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint</span><br><span class="line">├── strip-json-comments@1.0.2</span><br><span class="line">├── underscore@1.6.0</span><br><span class="line">├── exit@0.1.2</span><br><span class="line">├── shelljs@0.3.0</span><br><span class="line">├── console-browserify@1.1.0 (date-now@0.1.4)</span><br><span class="line">├── htmlparser2@3.8.2 (domelementtype@1.3.0, entities@1.0.0, domhandler@2.3.0, readable-stream@1.1.13, domutils@1.5.1)</span><br><span class="line">├── minimatch@1.0.0 (sigmund@1.0.0, lru-cache@2.5.0)</span><br><span class="line">└── cli@0.6.6 (glob@3.2.11)</span><br></pre></td></tr></table></figure>
-
-<p>可以查看 jshint 版本，已确认安装完成。  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;jshint -v</span><br><span class="line">jshint v2.6.3</span><br></pre></td></tr></table></figure>
-
-<p>现在，恭喜你，我们使用 Sublime 编辑 JavaScript 文件，就会有语法检查了！   </p>
-<p>在编辑过程中，会有如下提示   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test.jpg" alt="SublimeLinter-jshint-test"></p>
-<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test2.jpg" alt="SublimeLinter-jshint-test2"></p>
-<h2 id="css-语法检查"><a href="#css-语法检查" class="headerlink" title="css 语法检查"></a>css 语法检查</h2><p>与 jshint 同理，SublimeLinter-csslint 也是基于 nodeJS 下的 csslint 的插件，实际上 SublimeLinter-csslint 调用了 nodeJS 中 csslint 的接口来进行语法检查的。   </p>
-<hr>
-<h3 id="安装-SublimeLinter-csslint"><a href="#安装-SublimeLinter-csslint" class="headerlink" title="安装 SublimeLinter-csslint"></a>安装 SublimeLinter-csslint</h3><p>同样的方法。   </p>
-<ol>
-<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
-<li>输入<code>install</code>进入 Package Control: Install Package   </li>
-<li>输入<code>SublimeLinter-csslint</code>。进行安装.   </li>
-</ol>
-<p>如下图   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint.jpg" alt="SublimeLinter-csslint">   </p>
-<p>安装完成后我们可以看到下面的一段话   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-csslint</span><br><span class="line">-------------------------------</span><br><span class="line">This linter plugin for SublimeLinter provides an interface to csslint.</span><br><span class="line"></span><br><span class="line">** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">Before this plugin will activate, you *must*</span><br><span class="line">follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-csslint</span><br></pre></td></tr></table></figure>
-
-<p>在使用插件之前，必须遵循上述网址中的<a href="https://github.com/SublimeLinter/SublimeLinter-csslint">安装说明</a>   </p>
-<h3 id="在-nodeJS-下安装-csslint"><a href="#在-nodeJS-下安装-csslint" class="headerlink" title="在 nodeJS 下安装 csslint"></a>在 nodeJS 下安装 csslint</h3><p>进入上述的 GitHub 地址，csslint 的说明页。我们知道了和 jshint 一样，csslint 也是基于 nodeJS 下的 csslint 来使用的。   </p>
-<p>这里安装 nodeJS 过程省略。<br>只需用 npm 安装 csslint 即可。   </p>
-<p>在命令行中输入     </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g csslint   </span><br></pre></td></tr></table></figure>
-
-<p>安装完成后命令行中出现如下的信息     </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\csslint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint\cli.js</span><br><span class="line">csslint@0.10.0 C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint</span><br><span class="line">└── parserlib@0.2.5</span><br></pre></td></tr></table></figure>
-
-<p>可以查看 csslint 版本，已确认安装完成。   </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;csslint --version</span><br><span class="line">v0.10.0</span><br></pre></td></tr></table></figure>
-
-<p>现在，恭喜你，我们使用 Sublime 编辑 css 文件，就会有语法检查了！     </p>
-<p>在编辑过程中，会有如下提示   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test.jpg" alt="SublimeLinter-csslint-test"></p>
-<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test2.jpg" alt="SublimeLinter-csslint-test2"></p>
-]]></content>
-      <categories>
-        <category>Sublime</category>
-      </categories>
-      <tags>
-        <tag>Sublime jshint csslint</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Fisher–Yates shuffle 洗牌算法</title>
     <url>/2021/05/08/shuffle-algorithm/</url>
     <content><![CDATA[<p>简单来说 Fisher–Yates shuffle 算法是一个用来将一个有限集合生成一个随机排列的算法（数组随机排序）。这个算法生成的随机排列是等概率的。同时这个算法非常高效。</p>
@@ -2264,6 +2177,93 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>算法 shuffle 乱序 洗牌</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>代码校验工具 SublimeLinter 的安装与使用</title>
+    <url>/2015/03/26/sublimeLinter/</url>
+    <content><![CDATA[<p>本文我将讲述一下 SublimeLinter 的安装过程。其组件 jshint 的安装与使用。其组件 csslint 的安装与使用。我将基于 <a href="http://sublimetext.com/3">Sublime Text 3</a> 来安装。使用 Sublime Text 2 的用户阅读本文是没有帮助的。</p>
+<span id="more"></span>
+<p>SublimeLinter 是 Sublime 的插件，它的作用是检查代码语法是否有错误，并提示。习惯了 IDE 下写代码的人一定需要一款在 Sublime 上类似的语法检查工具。下面我们开始。   </p>
+<h2 id="安装-SublimeLinter"><a href="#安装-SublimeLinter" class="headerlink" title="安装 SublimeLinter"></a>安装 SublimeLinter</h2><p>如同其他插件一样使用 Package Control 来安装。   </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter</code>。进行安装.   </li>
+</ol>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-sublimeLinter.jpg" alt="SublimeLinter">   </p>
+<p>安装完成后可以看到这样一段话：   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Welcome to SublimeLinter, a linter framework for Sublime Text 3.</span><br><span class="line"></span><br><span class="line">                  * * * IMPORTANT! * * *</span><br><span class="line"></span><br><span class="line">         SublimeLinter 3 is NOT a drop-in replacement for</span><br><span class="line">        earlier versions.</span><br><span class="line"></span><br><span class="line">         Linters *NOT* included with SublimeLinter 3,</span><br><span class="line">         they must be installed separately.</span><br><span class="line"></span><br><span class="line">         The settings are different.</span><br><span class="line"></span><br><span class="line">                 * * * READ THE DOCS! * * *</span><br><span class="line"></span><br><span class="line"> Otherwise you will never know how to install linters, nor will</span><br><span class="line"> you know about all of the great new features in SublimeLinter 3.</span><br><span class="line"></span><br><span class="line"> For complete documentation on how to install and use SublimeLinter,</span><br><span class="line"> please see:</span><br><span class="line"></span><br><span class="line"> http:&#x2F;&#x2F;www.sublimelinter.com</span><br></pre></td></tr></table></figure>
+
+<p>可以看到具体的 Linters 组件<strong>不</strong>被包含在 SublimeLinter 3 中，所以我们要额外独立安装组件。<br>可以针对不同的语言安装不同的组件。   </p>
+<h2 id="JavaScript-语法检查"><a href="#JavaScript-语法检查" class="headerlink" title="JavaScript 语法检查"></a>JavaScript 语法检查</h2><p>SublimeLinter-jshint 是基于 nodeJS 下的 jshint 的插件，实际上 SublimeLinter-jshint 调用了 nodeJS 中 jshint 的接口来进行语法检查的。   </p>
+<hr>
+<h3 id="安装-SublimeLinter-jshint"><a href="#安装-SublimeLinter-jshint" class="headerlink" title="安装 SublimeLinter-jshint"></a>安装 SublimeLinter-jshint</h3><p>为了让 JavaScript 代码有语法检查，我们安装 SublimeLinter-jshint<br>同样的方法，我们安装 SublimeLinter-jshint    </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter-jshint</code>。进行安装.   </li>
+</ol>
+<p>如下图   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint.jpg" alt="SublimeLinter-jshint">   </p>
+<p>安装完成后我们可以看到下面的一段话   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-jshint</span><br><span class="line">  -------------------------------</span><br><span class="line">  This linter plugin for SublimeLinter provides an interface to jshint.</span><br><span class="line"></span><br><span class="line">  ** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">  Before this plugin will activate, you *must*</span><br><span class="line">  follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">  https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-jshint</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-nodeJS-和-jshint"><a href="#安装-nodeJS-和-jshint" class="headerlink" title="安装 nodeJS 和 jshint"></a>安装 nodeJS 和 jshint</h3><p>在插件开始工作之前，我们必须再看一下上述插件的<a href="https://github.com/SublimeLinter/SublimeLinter-jshint">安装说明</a><br>通过 <a href="https://github.com/SublimeLinter/SublimeLinter-jshint">SublimeLinter-jshint 的说明</a> 我们可以看到，这个组件依赖于 nodeJS 下的 jshint，所以我们安装 nodeJS 环境和 nodeJS 下的 jshint。   </p>
+<ol>
+<li>安装 <a href="https://nodejs.org/">Node.js</a>   </li>
+<li>通过 npm 安装<code>jshint</code>   </li>
+</ol>
+<p>在命令行下输入如下代码，完成安装   </p>
+<pre><code>npm install -g jshint
+</code></pre>
+<p>安装完成后命令行中出现如下的信息   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\jshint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint\bin\jshint</span><br><span class="line">jshint@2.6.3 C:\Users\Administrator\AppData\Roaming\npm\node_modules\jshint</span><br><span class="line">├── strip-json-comments@1.0.2</span><br><span class="line">├── underscore@1.6.0</span><br><span class="line">├── exit@0.1.2</span><br><span class="line">├── shelljs@0.3.0</span><br><span class="line">├── console-browserify@1.1.0 (date-now@0.1.4)</span><br><span class="line">├── htmlparser2@3.8.2 (domelementtype@1.3.0, entities@1.0.0, domhandler@2.3.0, readable-stream@1.1.13, domutils@1.5.1)</span><br><span class="line">├── minimatch@1.0.0 (sigmund@1.0.0, lru-cache@2.5.0)</span><br><span class="line">└── cli@0.6.6 (glob@3.2.11)</span><br></pre></td></tr></table></figure>
+
+<p>可以查看 jshint 版本，已确认安装完成。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;jshint -v</span><br><span class="line">jshint v2.6.3</span><br></pre></td></tr></table></figure>
+
+<p>现在，恭喜你，我们使用 Sublime 编辑 JavaScript 文件，就会有语法检查了！   </p>
+<p>在编辑过程中，会有如下提示   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test.jpg" alt="SublimeLinter-jshint-test"></p>
+<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-jshint-test2.jpg" alt="SublimeLinter-jshint-test2"></p>
+<h2 id="css-语法检查"><a href="#css-语法检查" class="headerlink" title="css 语法检查"></a>css 语法检查</h2><p>与 jshint 同理，SublimeLinter-csslint 也是基于 nodeJS 下的 csslint 的插件，实际上 SublimeLinter-csslint 调用了 nodeJS 中 csslint 的接口来进行语法检查的。   </p>
+<hr>
+<h3 id="安装-SublimeLinter-csslint"><a href="#安装-SublimeLinter-csslint" class="headerlink" title="安装 SublimeLinter-csslint"></a>安装 SublimeLinter-csslint</h3><p>同样的方法。   </p>
+<ol>
+<li>按下 <code>Ctrl+Shift+p</code> 进入 Command Palette   </li>
+<li>输入<code>install</code>进入 Package Control: Install Package   </li>
+<li>输入<code>SublimeLinter-csslint</code>。进行安装.   </li>
+</ol>
+<p>如下图   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint.jpg" alt="SublimeLinter-csslint">   </p>
+<p>安装完成后我们可以看到下面的一段话   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SublimeLinter-csslint</span><br><span class="line">-------------------------------</span><br><span class="line">This linter plugin for SublimeLinter provides an interface to csslint.</span><br><span class="line"></span><br><span class="line">** IMPORTANT! **</span><br><span class="line"></span><br><span class="line">Before this plugin will activate, you *must*</span><br><span class="line">follow the installation instructions here:</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;SublimeLinter&#x2F;SublimeLinter-csslint</span><br></pre></td></tr></table></figure>
+
+<p>在使用插件之前，必须遵循上述网址中的<a href="https://github.com/SublimeLinter/SublimeLinter-csslint">安装说明</a>   </p>
+<h3 id="在-nodeJS-下安装-csslint"><a href="#在-nodeJS-下安装-csslint" class="headerlink" title="在 nodeJS 下安装 csslint"></a>在 nodeJS 下安装 csslint</h3><p>进入上述的 GitHub 地址，csslint 的说明页。我们知道了和 jshint 一样，csslint 也是基于 nodeJS 下的 csslint 来使用的。   </p>
+<p>这里安装 nodeJS 过程省略。<br>只需用 npm 安装 csslint 即可。   </p>
+<p>在命令行中输入     </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g csslint   </span><br></pre></td></tr></table></figure>
+
+<p>安装完成后命令行中出现如下的信息     </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator\AppData\Roaming\npm\csslint -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint\cli.js</span><br><span class="line">csslint@0.10.0 C:\Users\Administrator\AppData\Roaming\npm\node_modules\csslint</span><br><span class="line">└── parserlib@0.2.5</span><br></pre></td></tr></table></figure>
+
+<p>可以查看 csslint 版本，已确认安装完成。   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">C:\Users\Administrator&gt;csslint --version</span><br><span class="line">v0.10.0</span><br></pre></td></tr></table></figure>
+
+<p>现在，恭喜你，我们使用 Sublime 编辑 css 文件，就会有语法检查了！     </p>
+<p>在编辑过程中，会有如下提示   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test.jpg" alt="SublimeLinter-csslint-test"></p>
+<p>点击提示点后，Sublime 状态栏也会有相应的说明   </p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/SublimeLinter-csslint-test2.jpg" alt="SublimeLinter-csslint-test2"></p>
+]]></content>
+      <categories>
+        <category>Sublime</category>
+      </categories>
+      <tags>
+        <tag>Sublime jshint csslint</tag>
       </tags>
   </entry>
   <entry>
