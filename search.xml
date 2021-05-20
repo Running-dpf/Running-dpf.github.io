@@ -467,6 +467,139 @@ moduleA = function() &#123;
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 中的闭包</title>
+    <url>/2015/06/14/JavaScript-closure/</url>
+    <content><![CDATA[<h2 id="闭包的例子"><a href="#闭包的例子" class="headerlink" title="闭包的例子"></a>闭包的例子</h2><pre><code>function outer() &#123;
+    var localVal = 30;
+    return localVal;
+&#125;
+
+console.log(outer()); //30
+
+function outer2() &#123;
+    var localVal = 30;
+    return function() &#123;
+        return localVal;
+    &#125;;
+&#125;
+
+var func = outer2();
+console.log(func()); //30
+</code></pre>
+<p>对于第一个普通的函数，在执行过之后，它的局部变量就可以被释放。</p>
+<p>对于第二个函数，<code>localVal</code> 是不能被释放的。因为调用 <code>outer2()</code> 后，返回的是匿名函数，匿名函数可以访问外部的 <code>outer2()</code> 中的局部变量，并返回了这个局部变量 localVal。当 <code>outer2()</code> 赋值给 <code>func</code> 后，再次调用 <code>func()</code>，仍能访问到局部变量 <code>localVal</code>。这种情况就是闭包。</p>
+<span id="more"></span>
+<hr>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li><p><strong>所谓闭包就是：子函数可以使用父函数中的局部变量。</strong></p>
+<pre><code>  ! function() &#123;
+      var localData = &quot;localData here&quot;;
+      document.addEventListener(&#39;click&#39;,
+          function() &#123;
+              console.log(localData); //这里访问外部数据
+          &#125;);
+  &#125;();
+
+  ! function() &#123;
+      var localData = &quot;localData here&quot;;
+      var url = &quot;http://www.baidu.com/&quot;;
+      $.ajax(&#123;
+          url: url,
+          success: function() &#123;
+              // do sth...
+              console.log(localData); //这里访问外部数据
+          &#125;
+      &#125;);
+  &#125;()
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="常见错误之循环闭包"><a href="#常见错误之循环闭包" class="headerlink" title="常见错误之循环闭包"></a>常见错误之循环闭包</h2><p>比如我们想循环绑定点击事件</p>
+<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
+for (var i = 1; i &lt; 4; i++) &#123;
+    document.getElementById(&#39;div&#39; + i).
+    addEventListener(&#39;click&#39;, function() &#123;
+        alert(i); // all are 4!
+    &#125;);
+&#125;
+</code></pre>
+<p>上面的代码，我们点击任何一个 div，弹出的都是 4</p>
+<p>这是因为，for 循环中的 i 是一个全局变量。这里内函数的点击事件，访问到的是循环后的 i 值，所以是 4</p>
+<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
+for (var i = 1; i &lt; 4; i++) &#123;
+    ! function(i) &#123;
+        document.getElementById(&#39;div&#39; + i).
+        addEventListener(&#39;click&#39;, function() &#123;
+            alert(i); // 1, 2, 3
+        &#125;);
+    &#125;(i);
+&#125;
+</code></pre>
+<p>这里使用了立即执行函数，并给匿名函数赋值 i，这样点击事件每一次就会访问到相应的 i。</p>
+<hr>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><pre><code>(function() &#123;
+    var _userId = 9527;
+    var _typeId = &quot;item&quot;;
+    var exp = &#123;&#125;;
+
+    function converter(userId) &#123;
+        return +userId;
+    &#125;
+
+    exp.getUserId = function() &#123;
+        return converter(_userId);
+    &#125;;
+
+    exp.getTypeId = function() &#123;
+        return _typeId;
+    &#125;;
+
+    window.a = exp;
+&#125;)();
+
+console.log(a.getUserId()); //9527
+console.log(a.getTypeId()); //item
+
+console.log(a._userId); //undefined
+console.log(a._typeId); //undefined
+console.log(converter); //Uncaught ReferenceError: converter is not defined
+</code></pre>
+<p>上面的代码通过闭包实现了一个封装。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<ul>
+<li><p>在计算机科学中，闭包（也称词法闭包或函数闭包）是指一个函数或函数的引用，与一个引用环境绑定在一起。这个引用环境是一个存储该函数每个非局部变量（也叫自由变量）的表。</p>
+</li>
+<li><p>闭包，不同于一般的函数，它允许一个函数在立即词法作用域外调用时，仍可访问非本地变量。</p>
+</li>
+</ul>
+<p>from 维基百科</p>
+</blockquote>
+<ul>
+<li><p>闭包的优点</p>
+<ul>
+<li>灵活和方便</li>
+<li>封装</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>空间浪费</li>
+<li>内存泄露</li>
+<li>性能消耗</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JavaScript 函数</title>
     <url>/2015/06/11/JavaScript-function/</url>
     <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>函数是一块JavaScript代码，被定义一次，但可执行和调用多次。</p>
@@ -609,208 +742,6 @@ moduleA = function() &#123;
       </categories>
       <tags>
         <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JavaScript 中的闭包</title>
-    <url>/2015/06/14/JavaScript-closure/</url>
-    <content><![CDATA[<h2 id="闭包的例子"><a href="#闭包的例子" class="headerlink" title="闭包的例子"></a>闭包的例子</h2><pre><code>function outer() &#123;
-    var localVal = 30;
-    return localVal;
-&#125;
-
-console.log(outer()); //30
-
-function outer2() &#123;
-    var localVal = 30;
-    return function() &#123;
-        return localVal;
-    &#125;;
-&#125;
-
-var func = outer2();
-console.log(func()); //30
-</code></pre>
-<p>对于第一个普通的函数，在执行过之后，它的局部变量就可以被释放。</p>
-<p>对于第二个函数，<code>localVal</code> 是不能被释放的。因为调用 <code>outer2()</code> 后，返回的是匿名函数，匿名函数可以访问外部的 <code>outer2()</code> 中的局部变量，并返回了这个局部变量 localVal。当 <code>outer2()</code> 赋值给 <code>func</code> 后，再次调用 <code>func()</code>，仍能访问到局部变量 <code>localVal</code>。这种情况就是闭包。</p>
-<span id="more"></span>
-<hr>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
-<li><p><strong>所谓闭包就是：子函数可以使用父函数中的局部变量。</strong></p>
-<pre><code>  ! function() &#123;
-      var localData = &quot;localData here&quot;;
-      document.addEventListener(&#39;click&#39;,
-          function() &#123;
-              console.log(localData); //这里访问外部数据
-          &#125;);
-  &#125;();
-
-  ! function() &#123;
-      var localData = &quot;localData here&quot;;
-      var url = &quot;http://www.baidu.com/&quot;;
-      $.ajax(&#123;
-          url: url,
-          success: function() &#123;
-              // do sth...
-              console.log(localData); //这里访问外部数据
-          &#125;
-      &#125;);
-  &#125;()
-</code></pre>
-</li>
-</ul>
-<hr>
-<h2 id="常见错误之循环闭包"><a href="#常见错误之循环闭包" class="headerlink" title="常见错误之循环闭包"></a>常见错误之循环闭包</h2><p>比如我们想循环绑定点击事件</p>
-<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
-for (var i = 1; i &lt; 4; i++) &#123;
-    document.getElementById(&#39;div&#39; + i).
-    addEventListener(&#39;click&#39;, function() &#123;
-        alert(i); // all are 4!
-    &#125;);
-&#125;
-</code></pre>
-<p>上面的代码，我们点击任何一个 div，弹出的都是 4</p>
-<p>这是因为，for 循环中的 i 是一个全局变量。这里内函数的点击事件，访问到的是循环后的 i 值，所以是 4</p>
-<pre><code>document.body.innerHTML = &quot;&lt;div id=div1&gt;aaa&lt;/div&gt;&lt;div id=div2&gt;bbb&lt;/div&gt;&lt;div id=div3&gt;ccc&lt;/div&gt;&quot;;
-for (var i = 1; i &lt; 4; i++) &#123;
-    ! function(i) &#123;
-        document.getElementById(&#39;div&#39; + i).
-        addEventListener(&#39;click&#39;, function() &#123;
-            alert(i); // 1, 2, 3
-        &#125;);
-    &#125;(i);
-&#125;
-</code></pre>
-<p>这里使用了立即执行函数，并给匿名函数赋值 i，这样点击事件每一次就会访问到相应的 i。</p>
-<hr>
-<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><pre><code>(function() &#123;
-    var _userId = 9527;
-    var _typeId = &quot;item&quot;;
-    var exp = &#123;&#125;;
-
-    function converter(userId) &#123;
-        return +userId;
-    &#125;
-
-    exp.getUserId = function() &#123;
-        return converter(_userId);
-    &#125;;
-
-    exp.getTypeId = function() &#123;
-        return _typeId;
-    &#125;;
-
-    window.a = exp;
-&#125;)();
-
-console.log(a.getUserId()); //9527
-console.log(a.getTypeId()); //item
-
-console.log(a._userId); //undefined
-console.log(a._typeId); //undefined
-console.log(converter); //Uncaught ReferenceError: converter is not defined
-</code></pre>
-<p>上面的代码通过闭包实现了一个封装。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
-<ul>
-<li><p>在计算机科学中，闭包（也称词法闭包或函数闭包）是指一个函数或函数的引用，与一个引用环境绑定在一起。这个引用环境是一个存储该函数每个非局部变量（也叫自由变量）的表。</p>
-</li>
-<li><p>闭包，不同于一般的函数，它允许一个函数在立即词法作用域外调用时，仍可访问非本地变量。</p>
-</li>
-</ul>
-<p>from 维基百科</p>
-</blockquote>
-<ul>
-<li><p>闭包的优点</p>
-<ul>
-<li>灵活和方便</li>
-<li>封装</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>空间浪费</li>
-<li>内存泄露</li>
-<li>性能消耗</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
-    <url>/2021/05/08/JavaScript-good-parts-note2/</url>
-    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。</p>
-<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承的两大好处：代码重用，引入一套类型系统的规范。</p>
-<span id="more"></span>
-<h3 id="伪类"><a href="#伪类" class="headerlink" title="伪类"></a>伪类</h3><p>JavaScript 通过构造器函数产生对象。</p>
-<p>构造器调用模式，即用<code>new</code>前缀去调用一个函数。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Mammal = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = <span class="keyword">new</span> Mammal(<span class="string">&#x27;Herb&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br></pre></td></tr></table></figure>
-
-<p>书中不推荐这样的写法。有很多风险。若忘记添加<code>new</code>前缀，<code>this</code>无法绑定到新的对象上。而是绑定到了全局对象上，破坏了全局变量环境。</p>
-<h3 id="对象说明符"><a href="#对象说明符" class="headerlink" title="对象说明符"></a>对象说明符</h3><p>上一节中的构造器可能要接受一大串参数。我们可以这样写：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = Maker(&#123;</span><br><span class="line">    first: f,</span><br><span class="line">    middle: m,</span><br><span class="line">    last: l,</span><br><span class="line">    state: s,</span><br><span class="line">    city: c</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>将JSON对象传递给构造器，而它返回一个构造完全的对象。</p>
-<h3 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h3><p>在一个纯粹的原型模式中，我们将摒弃类，转而专注于对象。一个新对象可以继承一个就对象的属性。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myMammal = &#123;</span><br><span class="line">    name: <span class="string">&#x27;MM&#x27;</span>,</span><br><span class="line">    getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">    &#125;,</span><br><span class="line">    says: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myCat = <span class="built_in">Object</span>.create(myMammal)</span><br><span class="line">myCat.name = <span class="string">&#x27;Kitty&#x27;</span></span><br><span class="line">myCat.saying = <span class="string">&#x27;meow&#x27;</span></span><br><span class="line">myCat.run = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Kitty is running&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">myCat.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.says + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.name + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.says</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是一种差异化继承。</p>
-<h3 id="函数化"><a href="#函数化" class="headerlink" title="函数化"></a>函数化</h3><p>前文看到的继承模式没法保护隐私。对象的所有属性都是可见的。无法得到私有变量和私有函数。为了解决这一问题，我们有模块模式。</p>
-<p>构造一个生成对象的函数需要4步骤：</p>
-<ol>
-<li>创建一个新对象。</li>
-<li>有选择的定义私有变量和方法。</li>
-<li>给这个新对象扩充方法。</li>
-<li>返回那个新对象。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mammal = <span class="function"><span class="keyword">function</span>(<span class="params">spec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> that = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    that.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.name</span><br><span class="line">    &#125;</span><br><span class="line">    that.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = mammal(&#123;</span><br><span class="line">    name: <span class="string">&#x27;Herb&#x27;</span>,</span><br><span class="line">    saying: <span class="string">&#x27;Cheers!&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.says()) <span class="comment">//Cheers!</span></span><br></pre></td></tr></table></figure>
-
-<p>也可以参考上一篇文章，<a href="http://gaohaoyang.github.io/2016/06/07/JavaScript-good-parts-note1/#section-34">JavaScript 语言精粹笔记1-语法、对象、函数 之模块部分</a>。</p>
-<h3 id="部件"><a href="#部件" class="headerlink" title="部件"></a>部件</h3><p>这一部分看的不是特别懂，我想等我学完ES2015中的类和模块部分后再看看吧。</p>
-<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="数组字面量"><a href="#数组字面量" class="headerlink" title="数组字面量"></a>数组字面量</h3><p>一个数组字面量是在一对方括号中包围零个或多个用逗号分隔的值的表达式。</p>
-<p>再大多数语言中，一个数组的多有元素都要求是相同的类型。JavaScript 允许数组包含任意混合类型的值。</p>
-<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>JavaScript 数组的<code>length</code>属性是没有上界的。如果用大于或等于当前<code>length</code>的数字作为下标来存储一个元素，那么<code>length</code>值会被增大以容纳新元素，不会发生数组越界错误。</p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>数组也是对象，可以用<code>delete</code>来删除元素</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;four&#x27;</span>, <span class="string">&#x27;wu&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> numbers[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
-
-<p>可以使用<code>splice</code>方法，进行删除和修改操作。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">numbers.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//two</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//4</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><p>使用常规<code>for</code>循环即可，可以保证数组的顺序。</p>
-<h3 id="容易混淆的地方"><a href="#容易混淆的地方" class="headerlink" title="容易混淆的地方"></a>容易混淆的地方</h3><p>当属性名是小而连续的整数时，应该使用数组，否则使用对象。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> [<span class="number">1</span>, <span class="number">2</span>]) <span class="comment">//object</span></span><br></pre></td></tr></table></figure>
-
-<p>返回数组的类型是<code>object</code>，没有任何意义。</p>
-<p>判断数组类型的方法</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>ECMAScript 5.1 (ECMA-262) 和 ECMAScript 2015 (6th Edition, ECMA-262) 标准中的方法。</p>
-<p>或者下面这个方法。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> is_array = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.apply(value) === <span class="string">&#x27;[object Array]&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is_array(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>数组的方法被存储在<code>Array.prototype</code>中的函数。</p>
-<p>数组是对象，因此<code>Array.prototype</code>也是可扩充的。</p>
-<h3 id="指定初始值"><a href="#指定初始值" class="headerlink" title="指定初始值"></a>指定初始值</h3><p>JavaScript 的数组不会预制值。</p>
-<p>JavaScript 没有多维数组，单项大多数类 C 语言一样，支持元素为数组的数组。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> matrix = [</span><br><span class="line">    [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span><br><span class="line">    [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</span><br><span class="line">    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">]</span><br><span class="line"><span class="built_in">console</span>.log(matrix[<span class="number">1</span>][<span class="number">2</span>]) <span class="comment">//6</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>关于正则表达式，以前的博文写的比较多了，详情见：</p>
-<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-10">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分1</a></p>
-<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-12">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分2</a></p>
-<p><a href="http://gaohaoyang.github.io/2016/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a></p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>继承 对象 原型 Array 正则</tag>
       </tags>
   </entry>
   <entry>
@@ -1015,6 +946,75 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>对象 函数 this 闭包 面向对象 作用域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
+    <url>/2021/05/08/JavaScript-good-parts-note2/</url>
+    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承的两大好处：代码重用，引入一套类型系统的规范。</p>
+<span id="more"></span>
+<h3 id="伪类"><a href="#伪类" class="headerlink" title="伪类"></a>伪类</h3><p>JavaScript 通过构造器函数产生对象。</p>
+<p>构造器调用模式，即用<code>new</code>前缀去调用一个函数。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Mammal = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = <span class="keyword">new</span> Mammal(<span class="string">&#x27;Herb&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br></pre></td></tr></table></figure>
+
+<p>书中不推荐这样的写法。有很多风险。若忘记添加<code>new</code>前缀，<code>this</code>无法绑定到新的对象上。而是绑定到了全局对象上，破坏了全局变量环境。</p>
+<h3 id="对象说明符"><a href="#对象说明符" class="headerlink" title="对象说明符"></a>对象说明符</h3><p>上一节中的构造器可能要接受一大串参数。我们可以这样写：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = Maker(&#123;</span><br><span class="line">    first: f,</span><br><span class="line">    middle: m,</span><br><span class="line">    last: l,</span><br><span class="line">    state: s,</span><br><span class="line">    city: c</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>将JSON对象传递给构造器，而它返回一个构造完全的对象。</p>
+<h3 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h3><p>在一个纯粹的原型模式中，我们将摒弃类，转而专注于对象。一个新对象可以继承一个就对象的属性。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myMammal = &#123;</span><br><span class="line">    name: <span class="string">&#x27;MM&#x27;</span>,</span><br><span class="line">    getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">    &#125;,</span><br><span class="line">    says: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myCat = <span class="built_in">Object</span>.create(myMammal)</span><br><span class="line">myCat.name = <span class="string">&#x27;Kitty&#x27;</span></span><br><span class="line">myCat.saying = <span class="string">&#x27;meow&#x27;</span></span><br><span class="line">myCat.run = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Kitty is running&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">myCat.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.says + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.name + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.says</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是一种差异化继承。</p>
+<h3 id="函数化"><a href="#函数化" class="headerlink" title="函数化"></a>函数化</h3><p>前文看到的继承模式没法保护隐私。对象的所有属性都是可见的。无法得到私有变量和私有函数。为了解决这一问题，我们有模块模式。</p>
+<p>构造一个生成对象的函数需要4步骤：</p>
+<ol>
+<li>创建一个新对象。</li>
+<li>有选择的定义私有变量和方法。</li>
+<li>给这个新对象扩充方法。</li>
+<li>返回那个新对象。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mammal = <span class="function"><span class="keyword">function</span>(<span class="params">spec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> that = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    that.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.name</span><br><span class="line">    &#125;</span><br><span class="line">    that.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = mammal(&#123;</span><br><span class="line">    name: <span class="string">&#x27;Herb&#x27;</span>,</span><br><span class="line">    saying: <span class="string">&#x27;Cheers!&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.says()) <span class="comment">//Cheers!</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以参考上一篇文章，<a href="http://gaohaoyang.github.io/2016/06/07/JavaScript-good-parts-note1/#section-34">JavaScript 语言精粹笔记1-语法、对象、函数 之模块部分</a>。</p>
+<h3 id="部件"><a href="#部件" class="headerlink" title="部件"></a>部件</h3><p>这一部分看的不是特别懂，我想等我学完ES2015中的类和模块部分后再看看吧。</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="数组字面量"><a href="#数组字面量" class="headerlink" title="数组字面量"></a>数组字面量</h3><p>一个数组字面量是在一对方括号中包围零个或多个用逗号分隔的值的表达式。</p>
+<p>再大多数语言中，一个数组的多有元素都要求是相同的类型。JavaScript 允许数组包含任意混合类型的值。</p>
+<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>JavaScript 数组的<code>length</code>属性是没有上界的。如果用大于或等于当前<code>length</code>的数字作为下标来存储一个元素，那么<code>length</code>值会被增大以容纳新元素，不会发生数组越界错误。</p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>数组也是对象，可以用<code>delete</code>来删除元素</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;four&#x27;</span>, <span class="string">&#x27;wu&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> numbers[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+
+<p>可以使用<code>splice</code>方法，进行删除和修改操作。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">numbers.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//two</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><p>使用常规<code>for</code>循环即可，可以保证数组的顺序。</p>
+<h3 id="容易混淆的地方"><a href="#容易混淆的地方" class="headerlink" title="容易混淆的地方"></a>容易混淆的地方</h3><p>当属性名是小而连续的整数时，应该使用数组，否则使用对象。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> [<span class="number">1</span>, <span class="number">2</span>]) <span class="comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<p>返回数组的类型是<code>object</code>，没有任何意义。</p>
+<p>判断数组类型的方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>ECMAScript 5.1 (ECMA-262) 和 ECMAScript 2015 (6th Edition, ECMA-262) 标准中的方法。</p>
+<p>或者下面这个方法。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> is_array = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.apply(value) === <span class="string">&#x27;[object Array]&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is_array(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>数组的方法被存储在<code>Array.prototype</code>中的函数。</p>
+<p>数组是对象，因此<code>Array.prototype</code>也是可扩充的。</p>
+<h3 id="指定初始值"><a href="#指定初始值" class="headerlink" title="指定初始值"></a>指定初始值</h3><p>JavaScript 的数组不会预制值。</p>
+<p>JavaScript 没有多维数组，单项大多数类 C 语言一样，支持元素为数组的数组。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> matrix = [</span><br><span class="line">    [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span><br><span class="line">    [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</span><br><span class="line">    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">]</span><br><span class="line"><span class="built_in">console</span>.log(matrix[<span class="number">1</span>][<span class="number">2</span>]) <span class="comment">//6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>关于正则表达式，以前的博文写的比较多了，详情见：</p>
+<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-10">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分1</a></p>
+<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-12">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分2</a></p>
+<p><a href="http://gaohaoyang.github.io/2016/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>继承 对象 原型 Array 正则</tag>
       </tags>
   </entry>
   <entry>
