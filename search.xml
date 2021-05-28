@@ -1402,6 +1402,30 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
+    <title>win10 关闭更新</title>
+    <url>/2021/05/08/close-win10-update/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
+<span id="more"></span>
+<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>2 在运行处输入 “services.msc”   点击确定。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>3 在弹出来的服务中，找到“Windows Update”</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>4 选择禁用</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>会多出这两个位置，这样子就设置成功了。</p>
+]]></content>
+      <categories>
+        <category>win10</category>
+      </categories>
+      <tags>
+        <tag>win10 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>安装php7.3.5</title>
     <url>/2021/05/08/centos-php7.3.5/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>工作需要使用php7.3.5做报表系统<br>本文采用编译安装</p>
@@ -1427,30 +1451,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>centos7 php</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>win10 关闭更新</title>
-    <url>/2021/05/08/close-win10-update/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
-<span id="more"></span>
-<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>2 在运行处输入 “services.msc”   点击确定。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>3 在弹出来的服务中，找到“Windows Update”</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>4 选择禁用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>会多出这两个位置，这样子就设置成功了。</p>
-]]></content>
-      <categories>
-        <category>win10</category>
-      </categories>
-      <tags>
-        <tag>win10 工具软件</tag>
       </tags>
   </entry>
   <entry>
@@ -2356,7 +2356,7 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
 <span id="more"></span>
 
 <p>swap分区的作用是当物理内存不足时，会将一部分硬盘当做虚拟内存来使用。</p>
-<p>kswapd0 占用过高是因为 物理内存不足，使用swap分区与内存换页操作交换数据，导致CPU占用过高。<br>swap分区的介绍可以看这个文章：[swap分区](<a href="https://running-dpf.github.io/2021/05/20/swap">https://running-dpf.github.io/2021/05/20/swap</a>    /)</p>
+<p>kswapd0 占用过高是因为 物理内存不足，使用swap分区与内存换页操作交换数据，导致CPU占用过高。<br>swap分区的介绍可以看这个文章：<a href="https://running-dpf.github.io/2021/05/20/swap/">swap分区</a></p>
 <h1 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h1><p>swappiness的值的大小对如何使用swap分区是有着很大的联系的。swappiness=0的时候表示最大限度使用物理内存，然后才是swap空间，swappiness＝100的时候表示积极的使用swap分区，并且把内存上的数据及时的搬运到swap空间里面。linux的基本默认设置为60，具体如下：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;swappiness</span><br><span class="line">#60</span><br></pre></td></tr></table></figure>
 
