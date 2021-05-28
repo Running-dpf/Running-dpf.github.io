@@ -1354,78 +1354,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>CentOS7定时任务详解</title>
-    <url>/2018/02/10/centos-crontab/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作中需要开启一个定时任务：每天晚上2点进行爬虫代码的运行，这不得不去学习一下linux 下的定时任务crontab</p>
-<span id="more"></span>
-<h2 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h2><p>yum install crontabs</p>
-<p>说明：<br>/sbin/service crond start //启动服务<br>/sbin/service crond stop //关闭服务<br>/sbin/service crond restart //重启服务<br>/sbin/service crond reload //重新载入配置<br>查看crontab服务状态：service crond status<br>手动启动crontab服务：service crond start<br>查看crontab服务是否已设置为开机启动，执行命令：ntsysv<br>加入开机自动启动:<br>chkconfig crond on</p>
-<h2 id="1，crontab命令"><a href="#1，crontab命令" class="headerlink" title="1，crontab命令"></a>1，crontab命令</h2><p>功能说明：设置计时器。<br>语　　法：crontab [-u &lt;用户名称&gt;][配置文件] 或 crontab [-u &lt;用户名称&gt;][-elr]</p>
-<p>补充说明：cron是一个常驻服务，它提供计时器的功能，让用户在特定的时间得以执行预设的指令或程序。只要用户会编辑计时器的配置文件，就可以使 用计时器的功能。</p>
-<p>其配置文件格式如下：<br>Minute Hour Day Month DayOFWeek Command</p>
-<p>参　　数：<br>-e 　编辑该用户的计时器设置。<br>-l 　列出该用户的计时器设置。<br>-r 　删除该用户的计时器设置。<br>-u&lt;用户名称&gt; 　指定要设定计时器的用户名称。</p>
-<h2 id="2，crontab-格式"><a href="#2，crontab-格式" class="headerlink" title="2，crontab 格式"></a>2，crontab 格式</h2><p>基本格式 :</p>
-<ul>
-<li>*　 *　 *　 *　　command<br>分　时　日　月　周　 命令<br>第1列表示分钟1～59 每分钟用*或者 */1表示<br>第2列表示小时1～23（0表示0点）<br>第3列表示日期1～31<br>第4列 表示月份1～12<br>第5列标识号星期0～6（0表示星期天）<br>第6列要运行的命令<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># Use the hash sign to prefix a comment</span><br><span class="line"># +—————- minute (0 – 59)</span><br><span class="line"># | +————- hour (0 – 23)</span><br><span class="line"># | | +———- day of month (1 – 31)</span><br><span class="line"># | | | +——- month (1 – 12)</span><br><span class="line"># | | | | +—- day of week (0 – 7) (Sunday=0 or 7)</span><br><span class="line"># | | | | |</span><br><span class="line"># * * * * * command to be executed</span><br></pre></td></tr></table></figure>
-<h2 id="3，crontab文件的一些例子："><a href="#3，crontab文件的一些例子：" class="headerlink" title="3，crontab文件的一些例子："></a>3，crontab文件的一些例子：</h2></li>
-</ul>
-<blockquote>
-<p>1 简单打印</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">每天早上<span class="number">6</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">6</span> * * * echo <span class="string">&quot;Good morning.&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt <span class="comment">//注意单纯echo，从屏幕上看不到任何输出，因为cron把任何输出都email到root的信箱了。</span></span><br><span class="line"></span><br><span class="line">每两个小时 </span><br><span class="line"><span class="number">0</span> *<span class="regexp">/2 * * * echo &quot;Have a break now.&quot; &gt;&gt; /</span>tmp/test.txt  </span><br><span class="line"></span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">8</span>点之间每两个小时和早上八点 </span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">2</span>，<span class="number">8</span> * * * echo <span class="string">&quot;Have a good dream&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt</span><br><span class="line"></span><br><span class="line">每个月的<span class="number">4</span>号和每个礼拜的礼拜一到礼拜三的早上<span class="number">11</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * <span class="number">1</span>-<span class="number">3</span> command line</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>月<span class="number">1</span>日早上<span class="number">4</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> <span class="number">1</span> * command line SHELL=<span class="regexp">/bin/</span>bash PATH=<span class="regexp">/sbin:/</span>bin:<span class="regexp">/usr/</span>sbin:<span class="regexp">/usr/</span>bin MAILTO=root <span class="comment">//如果出现错误，或者有数据输出，数据作为邮件发给这个帐号 HOME=/ </span></span><br><span class="line"></span><br><span class="line">每小时执行/etc/cron.hourly内的脚本</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br><span class="line"></span><br><span class="line">每天执行/etc/cron.daily内的脚本</span><br><span class="line"><span class="number">02</span> <span class="number">4</span> * * * root run-parts /etc/cron.daily </span><br><span class="line"></span><br><span class="line">每星期执行/etc/cron.weekly内的脚本</span><br><span class="line"><span class="number">22</span> <span class="number">4</span> * * <span class="number">0</span> root run-parts /etc/cron.weekly </span><br><span class="line"></span><br><span class="line">每月去执行/etc/cron.monthly内的脚本 </span><br><span class="line"><span class="number">42</span> <span class="number">4</span> <span class="number">1</span> * * root run-parts /etc/cron.monthly </span><br><span class="line"></span><br><span class="line">注意: <span class="string">&quot;run-parts&quot;</span>这个参数了，如果去掉这个参数的话，后面就可以写要运行的某个脚本名，而不是文件夹名。 　 </span><br><span class="line"></span><br><span class="line">每天的下午<span class="number">4</span>点、<span class="number">5</span>点、<span class="number">6</span>点的<span class="number">5</span> min、<span class="number">15</span> min、<span class="number">25</span> min、<span class="number">35</span> min、<span class="number">45</span> min、<span class="number">55</span> min时执行命令。 </span><br><span class="line"><span class="number">5</span>，<span class="number">15</span>，<span class="number">25</span>，<span class="number">35</span>，<span class="number">45</span>，<span class="number">55</span> <span class="number">16</span>，<span class="number">17</span>，<span class="number">18</span> * * * command</span><br><span class="line"></span><br><span class="line">每周一，三，五的下午<span class="number">3</span>：<span class="number">00</span>系统进入维护状态，重新启动系统。</span><br><span class="line"><span class="number">00</span> <span class="number">15</span> * * <span class="number">1</span>，<span class="number">3</span>，<span class="number">5</span> shutdown -r +<span class="number">5</span></span><br><span class="line"></span><br><span class="line">每小时的<span class="number">10</span>分，<span class="number">40</span>分执行用户目录下的innd/bbslin这个指令： </span><br><span class="line"><span class="number">10</span>，<span class="number">40</span> * * * * innd/bbslink </span><br><span class="line"></span><br><span class="line">每小时的<span class="number">1</span>分执行用户目录下的bin/account这个指令： </span><br><span class="line"><span class="number">1</span> * * * * bin/account</span><br><span class="line"></span><br><span class="line">每天早晨三点二十分执行用户目录下如下所示的两个指令（每个指令以;分隔）： </span><br><span class="line">20 3 * * * （/bin/rm -f expire.ls logins.bad;bin/expire$#@62;expire.1st）　　</span><br><span class="line"></span><br><span class="line">每年的一月和四月，<span class="number">4</span>号到<span class="number">9</span>号的<span class="number">3</span>点<span class="number">12</span>分和<span class="number">3</span>点<span class="number">55</span>分执行/bin/rm -f expire.1st这个指令，并把结果添加在mm.txt这个文件之后（mm.txt文件位于用户自己的目录位置）。 </span><br><span class="line">12,55 3 4-9 1,4 * /bin/rm -f expire.1st$#@62;$#@62;mm.txt </span><br></pre></td></tr></table></figure>
-
-<hr>
-<blockquote>
-<p>2 nginx示例</p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每晚的<span class="number">21</span>:<span class="number">30</span>重启 nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每月<span class="number">1</span>、 <span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span> : <span class="number">45</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /etc/init.d/nginx restart</span><br><span class="line">每周六、周日的<span class="number">1</span> : <span class="number">10</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每天<span class="number">18</span> : <span class="number">00</span>至<span class="number">23</span> : <span class="number">00</span>之间每隔<span class="number">30</span>分钟重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /etc/init.d/nginx restart</span><br><span class="line">每星期六的<span class="number">11</span> : <span class="number">00</span> pm重启nginx。</span><br><span class="line"></span><br><span class="line">* *<span class="regexp">/1 * * * /</span>etc/init.d/nginx restart</span><br><span class="line">每一小时重启nginx</span><br><span class="line"></span><br><span class="line">* <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">7</span>点之间，每 隔一小时重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /etc/init.d/nginx restart</span><br><span class="line">每月的<span class="number">4</span>号与每周一到周三 的<span class="number">11</span>点重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">一月一号的<span class="number">4</span>点重启nginx</span><br><span class="line"></span><br><span class="line">*<span class="regexp">/30 * * * * /u</span>sr/sbin/ntpdate <span class="number">210.72</span><span class="number">.145</span><span class="number">.20</span></span><br><span class="line">每半小时同步一下时间</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-创建cron脚本"><a href="#4-创建cron脚本" class="headerlink" title="4 创建cron脚本"></a>4 创建cron脚本</h2><ol>
-<li><p>第一步：写cron脚本文件,命名为crontest.cron。<br>15,30,45,59 * * * * echo “xgmtest…..” &gt;&gt; xgmtest.txt  表示，每隔15分钟，执行打印一次命令 </p>
-</li>
-<li><p>第二步：添加定时任务。执行命令 “crontab crontest.cron”。搞定 </p>
-</li>
-<li><p>第三步：”crontab -l” 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</p>
-</li>
-</ol>
-<h2 id="将脚本改为可执行（针对shell，-sh文件）"><a href="#将脚本改为可执行（针对shell，-sh文件）" class="headerlink" title="将脚本改为可执行（针对shell，.sh文件）"></a>将脚本改为可执行（针对shell，.sh文件）</h2><blockquote>
-<p>chmod +x filename</p>
-</blockquote>
-<p>引用：</p>
-<p><a href="http://blog.csdn.net/u012402276/article/details/51063269">http://blog.csdn.net/u012402276/article/details/51063269</a><br><a href="https://www.cnblogs.com/longjshz/p/5779215.html">https://www.cnblogs.com/longjshz/p/5779215.html</a><br><a href="http://blog.csdn.net/edgdvcyz/article/details/53348832">http://blog.csdn.net/edgdvcyz/article/details/53348832</a></p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>centos7 crontab linux 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>win10 关闭更新</title>
-    <url>/2021/05/08/close-win10-update/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
-<span id="more"></span>
-<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>2 在运行处输入 “services.msc”   点击确定。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>3 在弹出来的服务中，找到“Windows Update”</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>4 选择禁用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>会多出这两个位置，这样子就设置成功了。</p>
-]]></content>
-      <categories>
-        <category>win10</category>
-      </categories>
-      <tags>
-        <tag>win10 工具软件</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>安装php7.3.5</title>
     <url>/2021/05/08/centos-php7.3.5/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>工作需要使用php7.3.5做报表系统<br>本文采用编译安装</p>
@@ -1499,6 +1427,78 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CentOS7定时任务详解</title>
+    <url>/2018/02/10/centos-crontab/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作中需要开启一个定时任务：每天晚上2点进行爬虫代码的运行，这不得不去学习一下linux 下的定时任务crontab</p>
+<span id="more"></span>
+<h2 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h2><p>yum install crontabs</p>
+<p>说明：<br>/sbin/service crond start //启动服务<br>/sbin/service crond stop //关闭服务<br>/sbin/service crond restart //重启服务<br>/sbin/service crond reload //重新载入配置<br>查看crontab服务状态：service crond status<br>手动启动crontab服务：service crond start<br>查看crontab服务是否已设置为开机启动，执行命令：ntsysv<br>加入开机自动启动:<br>chkconfig crond on</p>
+<h2 id="1，crontab命令"><a href="#1，crontab命令" class="headerlink" title="1，crontab命令"></a>1，crontab命令</h2><p>功能说明：设置计时器。<br>语　　法：crontab [-u &lt;用户名称&gt;][配置文件] 或 crontab [-u &lt;用户名称&gt;][-elr]</p>
+<p>补充说明：cron是一个常驻服务，它提供计时器的功能，让用户在特定的时间得以执行预设的指令或程序。只要用户会编辑计时器的配置文件，就可以使 用计时器的功能。</p>
+<p>其配置文件格式如下：<br>Minute Hour Day Month DayOFWeek Command</p>
+<p>参　　数：<br>-e 　编辑该用户的计时器设置。<br>-l 　列出该用户的计时器设置。<br>-r 　删除该用户的计时器设置。<br>-u&lt;用户名称&gt; 　指定要设定计时器的用户名称。</p>
+<h2 id="2，crontab-格式"><a href="#2，crontab-格式" class="headerlink" title="2，crontab 格式"></a>2，crontab 格式</h2><p>基本格式 :</p>
+<ul>
+<li>*　 *　 *　 *　　command<br>分　时　日　月　周　 命令<br>第1列表示分钟1～59 每分钟用*或者 */1表示<br>第2列表示小时1～23（0表示0点）<br>第3列表示日期1～31<br>第4列 表示月份1～12<br>第5列标识号星期0～6（0表示星期天）<br>第6列要运行的命令<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># Use the hash sign to prefix a comment</span><br><span class="line"># +—————- minute (0 – 59)</span><br><span class="line"># | +————- hour (0 – 23)</span><br><span class="line"># | | +———- day of month (1 – 31)</span><br><span class="line"># | | | +——- month (1 – 12)</span><br><span class="line"># | | | | +—- day of week (0 – 7) (Sunday=0 or 7)</span><br><span class="line"># | | | | |</span><br><span class="line"># * * * * * command to be executed</span><br></pre></td></tr></table></figure>
+<h2 id="3，crontab文件的一些例子："><a href="#3，crontab文件的一些例子：" class="headerlink" title="3，crontab文件的一些例子："></a>3，crontab文件的一些例子：</h2></li>
+</ul>
+<blockquote>
+<p>1 简单打印</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">每天早上<span class="number">6</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">6</span> * * * echo <span class="string">&quot;Good morning.&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt <span class="comment">//注意单纯echo，从屏幕上看不到任何输出，因为cron把任何输出都email到root的信箱了。</span></span><br><span class="line"></span><br><span class="line">每两个小时 </span><br><span class="line"><span class="number">0</span> *<span class="regexp">/2 * * * echo &quot;Have a break now.&quot; &gt;&gt; /</span>tmp/test.txt  </span><br><span class="line"></span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">8</span>点之间每两个小时和早上八点 </span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">2</span>，<span class="number">8</span> * * * echo <span class="string">&quot;Have a good dream&quot;</span> &gt;&gt; <span class="regexp">/tmp/</span>test.txt</span><br><span class="line"></span><br><span class="line">每个月的<span class="number">4</span>号和每个礼拜的礼拜一到礼拜三的早上<span class="number">11</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * <span class="number">1</span>-<span class="number">3</span> command line</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>月<span class="number">1</span>日早上<span class="number">4</span>点 </span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> <span class="number">1</span> * command line SHELL=<span class="regexp">/bin/</span>bash PATH=<span class="regexp">/sbin:/</span>bin:<span class="regexp">/usr/</span>sbin:<span class="regexp">/usr/</span>bin MAILTO=root <span class="comment">//如果出现错误，或者有数据输出，数据作为邮件发给这个帐号 HOME=/ </span></span><br><span class="line"></span><br><span class="line">每小时执行/etc/cron.hourly内的脚本</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br><span class="line"></span><br><span class="line">每天执行/etc/cron.daily内的脚本</span><br><span class="line"><span class="number">02</span> <span class="number">4</span> * * * root run-parts /etc/cron.daily </span><br><span class="line"></span><br><span class="line">每星期执行/etc/cron.weekly内的脚本</span><br><span class="line"><span class="number">22</span> <span class="number">4</span> * * <span class="number">0</span> root run-parts /etc/cron.weekly </span><br><span class="line"></span><br><span class="line">每月去执行/etc/cron.monthly内的脚本 </span><br><span class="line"><span class="number">42</span> <span class="number">4</span> <span class="number">1</span> * * root run-parts /etc/cron.monthly </span><br><span class="line"></span><br><span class="line">注意: <span class="string">&quot;run-parts&quot;</span>这个参数了，如果去掉这个参数的话，后面就可以写要运行的某个脚本名，而不是文件夹名。 　 </span><br><span class="line"></span><br><span class="line">每天的下午<span class="number">4</span>点、<span class="number">5</span>点、<span class="number">6</span>点的<span class="number">5</span> min、<span class="number">15</span> min、<span class="number">25</span> min、<span class="number">35</span> min、<span class="number">45</span> min、<span class="number">55</span> min时执行命令。 </span><br><span class="line"><span class="number">5</span>，<span class="number">15</span>，<span class="number">25</span>，<span class="number">35</span>，<span class="number">45</span>，<span class="number">55</span> <span class="number">16</span>，<span class="number">17</span>，<span class="number">18</span> * * * command</span><br><span class="line"></span><br><span class="line">每周一，三，五的下午<span class="number">3</span>：<span class="number">00</span>系统进入维护状态，重新启动系统。</span><br><span class="line"><span class="number">00</span> <span class="number">15</span> * * <span class="number">1</span>，<span class="number">3</span>，<span class="number">5</span> shutdown -r +<span class="number">5</span></span><br><span class="line"></span><br><span class="line">每小时的<span class="number">10</span>分，<span class="number">40</span>分执行用户目录下的innd/bbslin这个指令： </span><br><span class="line"><span class="number">10</span>，<span class="number">40</span> * * * * innd/bbslink </span><br><span class="line"></span><br><span class="line">每小时的<span class="number">1</span>分执行用户目录下的bin/account这个指令： </span><br><span class="line"><span class="number">1</span> * * * * bin/account</span><br><span class="line"></span><br><span class="line">每天早晨三点二十分执行用户目录下如下所示的两个指令（每个指令以;分隔）： </span><br><span class="line">20 3 * * * （/bin/rm -f expire.ls logins.bad;bin/expire$#@62;expire.1st）　　</span><br><span class="line"></span><br><span class="line">每年的一月和四月，<span class="number">4</span>号到<span class="number">9</span>号的<span class="number">3</span>点<span class="number">12</span>分和<span class="number">3</span>点<span class="number">55</span>分执行/bin/rm -f expire.1st这个指令，并把结果添加在mm.txt这个文件之后（mm.txt文件位于用户自己的目录位置）。 </span><br><span class="line">12,55 3 4-9 1,4 * /bin/rm -f expire.1st$#@62;$#@62;mm.txt </span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>2 nginx示例</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每晚的<span class="number">21</span>:<span class="number">30</span>重启 nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每月<span class="number">1</span>、 <span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span> : <span class="number">45</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /etc/init.d/nginx restart</span><br><span class="line">每周六、周日的<span class="number">1</span> : <span class="number">10</span>重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">每天<span class="number">18</span> : <span class="number">00</span>至<span class="number">23</span> : <span class="number">00</span>之间每隔<span class="number">30</span>分钟重启nginx。</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /etc/init.d/nginx restart</span><br><span class="line">每星期六的<span class="number">11</span> : <span class="number">00</span> pm重启nginx。</span><br><span class="line"></span><br><span class="line">* *<span class="regexp">/1 * * * /</span>etc/init.d/nginx restart</span><br><span class="line">每一小时重启nginx</span><br><span class="line"></span><br><span class="line">* <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">晚上<span class="number">11</span>点到早上<span class="number">7</span>点之间，每 隔一小时重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /etc/init.d/nginx restart</span><br><span class="line">每月的<span class="number">4</span>号与每周一到周三 的<span class="number">11</span>点重启nginx</span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * <span class="regexp">/etc/i</span>nit.d/nginx restart</span><br><span class="line">一月一号的<span class="number">4</span>点重启nginx</span><br><span class="line"></span><br><span class="line">*<span class="regexp">/30 * * * * /u</span>sr/sbin/ntpdate <span class="number">210.72</span><span class="number">.145</span><span class="number">.20</span></span><br><span class="line">每半小时同步一下时间</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-创建cron脚本"><a href="#4-创建cron脚本" class="headerlink" title="4 创建cron脚本"></a>4 创建cron脚本</h2><ol>
+<li><p>第一步：写cron脚本文件,命名为crontest.cron。<br>15,30,45,59 * * * * echo “xgmtest…..” &gt;&gt; xgmtest.txt  表示，每隔15分钟，执行打印一次命令 </p>
+</li>
+<li><p>第二步：添加定时任务。执行命令 “crontab crontest.cron”。搞定 </p>
+</li>
+<li><p>第三步：”crontab -l” 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</p>
+</li>
+</ol>
+<h2 id="将脚本改为可执行（针对shell，-sh文件）"><a href="#将脚本改为可执行（针对shell，-sh文件）" class="headerlink" title="将脚本改为可执行（针对shell，.sh文件）"></a>将脚本改为可执行（针对shell，.sh文件）</h2><blockquote>
+<p>chmod +x filename</p>
+</blockquote>
+<p>引用：</p>
+<p><a href="http://blog.csdn.net/u012402276/article/details/51063269">http://blog.csdn.net/u012402276/article/details/51063269</a><br><a href="https://www.cnblogs.com/longjshz/p/5779215.html">https://www.cnblogs.com/longjshz/p/5779215.html</a><br><a href="http://blog.csdn.net/edgdvcyz/article/details/53348832">http://blog.csdn.net/edgdvcyz/article/details/53348832</a></p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>centos7 crontab linux 工具软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>win10 关闭更新</title>
+    <url>/2021/05/08/close-win10-update/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为自己的电脑装了双系统（win10 跟Ubuntu16.04），在win10下，有时候每次关机的时候都说要进行更新后进行关机，就是自动更新功能，现在的选项中没有关闭自动更新的选项了，这是一个bug，微软要强制更新。</p>
+<span id="more"></span>
+<p>我就忍受不了自动更新，会拉取网络，影响我们的上网体验，但是我们不要他自动更新，那怎么办呢，其实还是有解决方法的，下面就介绍怎么关闭自动更新功能！（ps：百度有些人写的其实是win8的自动更新，根本就不是win10的，我这个才是win10的处理方法）希望能帮到你们。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1 右键点击左下角微软按钮，找到“运行”   也可用键盘的win+R     </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-07f3d54cc3ce1538.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>2 在运行处输入 “services.msc”   点击确定。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-2df616c88439415a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>3 在弹出来的服务中，找到“Windows Update”</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-403c9d7761ad60b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>4 选择禁用</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577413-1728ba13ad50acfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>5 点击确定或者启动就可以了，这时候我们可以看到：<br><img src="http://upload-images.jianshu.io/upload_images/2577413-8d901951002a4bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>会多出这两个位置，这样子就设置成功了。</p>
+]]></content>
+      <categories>
+        <category>win10</category>
+      </categories>
+      <tags>
+        <tag>win10 工具软件</tag>
       </tags>
   </entry>
   <entry>
