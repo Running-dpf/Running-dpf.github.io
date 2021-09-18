@@ -963,66 +963,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>JavaScript 语言精粹笔记3-方法、毒瘤等</title>
-    <url>/2021/05/08/JavaScript-good-parts-note3/</url>
-    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中最后一部分：方法、代码风格、优美的特性、毒瘤、糟粕等。</p>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>这一章主要介绍了一些方法集。这里写几个我不太熟悉的方法和要点吧。</p>
-<span id="more"></span>
-<ul>
-<li><p><code>array.join()</code></p>
-<blockquote>
-<p>对于IE6/7，使用<code>array.join()</code>连接大量字符串的效率确实优于使用<code>+</code>元素运算符。但是目前主流的浏览器，包括IE8以后的版本，都对<code>+</code>元素运算符连接字符串做了特别优化，性能已经显著高于<code>array.join()</code>。</p>
-</blockquote>
-</li>
-<li><p><code>number.toExponential(fractionDigits)</code></p>
-<p>  把这个<code>number</code>转换成一个指数形式的字符串。</p>
-</li>
-<li><p><code>number.toFixed(fractionDigits)</code></p>
-<p>  将这个<code>number</code>转换成一个十进制形式的字符串。</p>
-</li>
-</ul>
-<h2 id="毒瘤"><a href="#毒瘤" class="headerlink" title="毒瘤"></a>毒瘤</h2><ul>
-<li><p>注意全局变量的引入。</p>
-</li>
-<li><p>JavaScript 中 Unicode 是16位的。包含65536个字符（基本多文种平面 Basic Multilingual Plane）。剩下的百万字符中的每一个都可以用一对字符来表示。Unicode 把一对字符视为一个单一的字符，而 JavaScript 认为一对字符是两个不同的字符。</p>
-</li>
-<li><p>检测<code>null</code>的方式。</p>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> <span class="literal">null</span>) <span class="comment">//object</span></span><br><span class="line"></span><br><span class="line">myValue === <span class="literal">null</span> <span class="comment">//检测 null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myValue &amp;&amp; <span class="keyword">typeof</span> myValue === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">    <span class="comment">// myValue 是一个对象或数组！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>parseInt</code> 把字符串转化为整数的函数。它遇到非数字时会停止解析，所以<code>parseInt(&#39;16&#39;)</code>和<code>parseInt(&#39;16ton&#39;)</code>产生相同的结果。</p>
-<p>  如果该字符串第一个字符是0，那么该字符串会基于八进制而不是十进制来求职。在八进制中，8和9不是数字，所以<code>parseInt(&#39;08&#39;)</code>和<code>parseInt(&#39;09&#39;)</code>都产生0作为结果。但<code>parseInt()</code>可以接受基数，因此<code>parseInt(&#39;08&#39;,10)</code>结果为8，建议总是加上这个基数参数。</p>
-</li>
-<li><p>JavaScript 的对象永远不会是真的空对象，因为它们可以送原型链中取得成员属性。</p>
-</li>
-</ul>
-<h2 id="糟粕"><a href="#糟粕" class="headerlink" title="糟粕"></a>糟粕</h2><ul>
-<li><p>避免使用<code>with</code>语句。</p>
-</li>
-<li><p>避免使用<code>eval</code>语句。</p>
-</li>
-<li><p><code>continue</code>可能会降低运算性能。</p>
-</li>
-<li><p>位运算符在 JavaScript 会非常慢。</p>
-<p>  Java 里，位运算符处理的是整数。JavaScript 没有整数类型，它只有双精度的浮点数，因此，位运算符把它们的数字运算数先转换为整数，执行运算，在转换回去。JavaScript 的执行环境一般接触不到硬件，所以非常慢。</p>
-</li>
-<li><p>避免使用包装对象。<code>new Object</code>和<code>new Array</code>等。</p>
-</li>
-<li><p>避免使用<code>void</code>。</p>
-</li>
-</ul>
-<p>本系列结束。</p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
     <url>/2021/05/08/JavaScript-good-parts-note2/</url>
     <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。</p>
@@ -1092,6 +1032,82 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 语言精粹笔记3-方法、毒瘤等</title>
+    <url>/2021/05/08/JavaScript-good-parts-note3/</url>
+    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中最后一部分：方法、代码风格、优美的特性、毒瘤、糟粕等。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>这一章主要介绍了一些方法集。这里写几个我不太熟悉的方法和要点吧。</p>
+<span id="more"></span>
+<ul>
+<li><p><code>array.join()</code></p>
+<blockquote>
+<p>对于IE6/7，使用<code>array.join()</code>连接大量字符串的效率确实优于使用<code>+</code>元素运算符。但是目前主流的浏览器，包括IE8以后的版本，都对<code>+</code>元素运算符连接字符串做了特别优化，性能已经显著高于<code>array.join()</code>。</p>
+</blockquote>
+</li>
+<li><p><code>number.toExponential(fractionDigits)</code></p>
+<p>  把这个<code>number</code>转换成一个指数形式的字符串。</p>
+</li>
+<li><p><code>number.toFixed(fractionDigits)</code></p>
+<p>  将这个<code>number</code>转换成一个十进制形式的字符串。</p>
+</li>
+</ul>
+<h2 id="毒瘤"><a href="#毒瘤" class="headerlink" title="毒瘤"></a>毒瘤</h2><ul>
+<li><p>注意全局变量的引入。</p>
+</li>
+<li><p>JavaScript 中 Unicode 是16位的。包含65536个字符（基本多文种平面 Basic Multilingual Plane）。剩下的百万字符中的每一个都可以用一对字符来表示。Unicode 把一对字符视为一个单一的字符，而 JavaScript 认为一对字符是两个不同的字符。</p>
+</li>
+<li><p>检测<code>null</code>的方式。</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> <span class="literal">null</span>) <span class="comment">//object</span></span><br><span class="line"></span><br><span class="line">myValue === <span class="literal">null</span> <span class="comment">//检测 null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myValue &amp;&amp; <span class="keyword">typeof</span> myValue === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">    <span class="comment">// myValue 是一个对象或数组！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>parseInt</code> 把字符串转化为整数的函数。它遇到非数字时会停止解析，所以<code>parseInt(&#39;16&#39;)</code>和<code>parseInt(&#39;16ton&#39;)</code>产生相同的结果。</p>
+<p>  如果该字符串第一个字符是0，那么该字符串会基于八进制而不是十进制来求职。在八进制中，8和9不是数字，所以<code>parseInt(&#39;08&#39;)</code>和<code>parseInt(&#39;09&#39;)</code>都产生0作为结果。但<code>parseInt()</code>可以接受基数，因此<code>parseInt(&#39;08&#39;,10)</code>结果为8，建议总是加上这个基数参数。</p>
+</li>
+<li><p>JavaScript 的对象永远不会是真的空对象，因为它们可以送原型链中取得成员属性。</p>
+</li>
+</ul>
+<h2 id="糟粕"><a href="#糟粕" class="headerlink" title="糟粕"></a>糟粕</h2><ul>
+<li><p>避免使用<code>with</code>语句。</p>
+</li>
+<li><p>避免使用<code>eval</code>语句。</p>
+</li>
+<li><p><code>continue</code>可能会降低运算性能。</p>
+</li>
+<li><p>位运算符在 JavaScript 会非常慢。</p>
+<p>  Java 里，位运算符处理的是整数。JavaScript 没有整数类型，它只有双精度的浮点数，因此，位运算符把它们的数字运算数先转换为整数，执行运算，在转换回去。JavaScript 的执行环境一般接触不到硬件，所以非常慢。</p>
+</li>
+<li><p>避免使用包装对象。<code>new Object</code>和<code>new Array</code>等。</p>
+</li>
+<li><p>避免使用<code>void</code>。</p>
+</li>
+</ul>
+<p>本系列结束。</p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NGINX禁止解析IP访问</title>
+    <url>/2021/05/20/NGINX-Prohibit-IP-access/</url>
+    <content><![CDATA[<p>nginx配置禁止ip访问，只能域名访问，这样可以增加一定的安全性，并且在nginx内配置80跳转443，或者在公有云负载均衡配置。</p>
+<span id="more"></span>
+
+
+<h1 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a>配置如下</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server&#123; </span><br><span class="line">listen 80 default; </span><br><span class="line">server_name _; </span><br><span class="line">return 404; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 80;</span><br><span class="line">server_name xxx;</span><br><span class="line">rewrite ^(.*)$ https:&#x2F;&#x2F;$&#123;server_name&#125;$1 permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 443;</span><br><span class="line">server_name xxx;</span><br><span class="line">    #ssl_certificate ;</span><br><span class="line">    #ssl_certificate_key ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JavaScript 中的 this</title>
     <url>/2015/06/12/JavaScript-this/</url>
     <content><![CDATA[<h2 id="全局的-this"><a href="#全局的-this" class="headerlink" title="全局的 this"></a>全局的 this</h2><p>全局 this 一般指向全局对象，浏览器中的全局对象就是 <code>window</code>。</p>
@@ -1136,22 +1152,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>NGINX禁止解析IP访问</title>
-    <url>/2021/05/20/NGINX-Prohibit-IP-access/</url>
-    <content><![CDATA[<p>nginx配置禁止ip访问，只能域名访问，这样可以增加一定的安全性，并且在nginx内配置80跳转443，或者在公有云负载均衡配置。</p>
-<span id="more"></span>
-
-
-<h1 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a>配置如下</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server&#123; </span><br><span class="line">listen 80 default; </span><br><span class="line">server_name _; </span><br><span class="line">return 404; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 80;</span><br><span class="line">server_name xxx;</span><br><span class="line">rewrite ^(.*)$ https:&#x2F;&#x2F;$&#123;server_name&#125;$1 permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 443;</span><br><span class="line">server_name xxx;</span><br><span class="line">    #ssl_certificate ;</span><br><span class="line">    #ssl_certificate_key ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>nginx</category>
-      </categories>
-      <tags>
-        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -1492,6 +1492,54 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
+    <title>Git 如何 clone 非 master 分支的代码</title>
+    <url>/2021/05/08/git-clone-not-master-branch/</url>
+    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>我们每次使用命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone git@gitlab.xxx.com:xxxxx.git</span><br></pre></td></tr></table></figure>
+
+<p>默认 clone 的是这个仓库的 master 分支。如果最新的代码不在 master 分支上，该如何拿到呢？如下图所示，最新的代码可能在<code>daily/1.4.1</code>分支上，我们希望拿到这个分支上的代码。</p>
+<span id="more"></span>
+
+
+
+<p><img src="https://ooo.0o0.ooo/2016/07/07/577e349ab42ed.png" alt="7f07c8f6deef169ef6be5103bbd3e932f8676bb1.png"></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p><strong>刚刚开周会的时候，自己洋洋得意的分享我的解决方案，但是……经过与团队成员的的讨论，自己的方法弱爆了，现在把更优雅的方法写一下。原来写的方法并不太适合用在这个场景里。</strong> 我之前写的方法在文章后面。</p>
+<p>直接使用命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -r #查看远程分支</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -a #查看所有分支</span><br></pre></td></tr></table></figure>
+
+<p>会显示</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">origin&#x2F;HEAD -&gt; origin&#x2F;master</span><br><span class="line">origin&#x2F;daily&#x2F;1.2.2</span><br><span class="line">origin&#x2F;daily&#x2F;1.3.0</span><br><span class="line">origin&#x2F;daily&#x2F;1.4.1</span><br><span class="line">origin&#x2F;develop</span><br><span class="line">origin&#x2F;feature&#x2F;daily-1.0.0</span><br><span class="line">origin&#x2F;master</span><br></pre></td></tr></table></figure>
+
+<p>然后直接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout origin&#x2F;daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
+
+<p>就好了。。。</p>
+<h2 id="原来的解决方案"><a href="#原来的解决方案" class="headerlink" title="原来的解决方案"></a>原来的解决方案</h2><p><strong>其实我原来写的这个方法更多的是：设置已有的本地分支跟踪一个刚刚拉取下来的远程分支，或者想要修改正在跟踪的上游分支。</strong></p>
+<p>我们在本地先建立一个分支，建议名称和远程的想要同步的分支名称一样。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
+
+<p>在切换到这个本地分支</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout daily&#x2F;1.4.1</span><br><span class="line"># Switched to branch &#39;daily&#x2F;1.4.1&#39;</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以去建立上游分支的关联了，但是这个命令比较长，不好记，我们可以直接先<code>pull</code>一下，git 会提示我们相应的操作和命令。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull</span><br><span class="line">There is no tracking information for the current branch.</span><br><span class="line">Please specify which branch you want to merge with.</span><br><span class="line">See git-pull(1) for details.</span><br><span class="line"></span><br><span class="line">    git pull &lt;remote&gt; &lt;branch&gt;</span><br><span class="line"></span><br><span class="line">If you wish to set tracking information for this branch you can do so with:</span><br><span class="line"></span><br><span class="line">    git branch --set-upstream-to&#x3D;origin&#x2F;&lt;branch&gt; daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
+
+<p>我们看到最后一行，执行这个命令，即可完成与上游分支的关联。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch --set-upstream-to&#x3D;origin&#x2F;daily&#x2F;1.4.1 daily&#x2F;1.4.1</span><br><span class="line"># Branch daily&#x2F;1.4.1 set up to track remote branch daily&#x2F;1.4.1 from origin.</span><br></pre></td></tr></table></figure>
+
+<p>然后再<code>pull</code>一下就好了！</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>GitHub</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何使用 babel</title>
     <url>/2021/05/08/how-to-use-babel/</url>
     <content><![CDATA[<p><a href="https://babeljs.io/">Babel</a> 用于将 ES6 的代码转化为 ES5，使得 ES6 可以在目前的浏览器环境下使用。学习使用 babel 是为了使用 ES2015 做准备。本文将介绍如何使用 babel，以及一些相关的配置。</p>
@@ -1570,54 +1618,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>ES2015 ES6 ES5 babel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git 如何 clone 非 master 分支的代码</title>
-    <url>/2021/05/08/git-clone-not-master-branch/</url>
-    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>我们每次使用命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone git@gitlab.xxx.com:xxxxx.git</span><br></pre></td></tr></table></figure>
-
-<p>默认 clone 的是这个仓库的 master 分支。如果最新的代码不在 master 分支上，该如何拿到呢？如下图所示，最新的代码可能在<code>daily/1.4.1</code>分支上，我们希望拿到这个分支上的代码。</p>
-<span id="more"></span>
-
-
-
-<p><img src="https://ooo.0o0.ooo/2016/07/07/577e349ab42ed.png" alt="7f07c8f6deef169ef6be5103bbd3e932f8676bb1.png"></p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p><strong>刚刚开周会的时候，自己洋洋得意的分享我的解决方案，但是……经过与团队成员的的讨论，自己的方法弱爆了，现在把更优雅的方法写一下。原来写的方法并不太适合用在这个场景里。</strong> 我之前写的方法在文章后面。</p>
-<p>直接使用命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -r #查看远程分支</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -a #查看所有分支</span><br></pre></td></tr></table></figure>
-
-<p>会显示</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">origin&#x2F;HEAD -&gt; origin&#x2F;master</span><br><span class="line">origin&#x2F;daily&#x2F;1.2.2</span><br><span class="line">origin&#x2F;daily&#x2F;1.3.0</span><br><span class="line">origin&#x2F;daily&#x2F;1.4.1</span><br><span class="line">origin&#x2F;develop</span><br><span class="line">origin&#x2F;feature&#x2F;daily-1.0.0</span><br><span class="line">origin&#x2F;master</span><br></pre></td></tr></table></figure>
-
-<p>然后直接</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout origin&#x2F;daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
-
-<p>就好了。。。</p>
-<h2 id="原来的解决方案"><a href="#原来的解决方案" class="headerlink" title="原来的解决方案"></a>原来的解决方案</h2><p><strong>其实我原来写的这个方法更多的是：设置已有的本地分支跟踪一个刚刚拉取下来的远程分支，或者想要修改正在跟踪的上游分支。</strong></p>
-<p>我们在本地先建立一个分支，建议名称和远程的想要同步的分支名称一样。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
-
-<p>在切换到这个本地分支</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout daily&#x2F;1.4.1</span><br><span class="line"># Switched to branch &#39;daily&#x2F;1.4.1&#39;</span><br></pre></td></tr></table></figure>
-
-<p>接下来就可以去建立上游分支的关联了，但是这个命令比较长，不好记，我们可以直接先<code>pull</code>一下，git 会提示我们相应的操作和命令。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull</span><br><span class="line">There is no tracking information for the current branch.</span><br><span class="line">Please specify which branch you want to merge with.</span><br><span class="line">See git-pull(1) for details.</span><br><span class="line"></span><br><span class="line">    git pull &lt;remote&gt; &lt;branch&gt;</span><br><span class="line"></span><br><span class="line">If you wish to set tracking information for this branch you can do so with:</span><br><span class="line"></span><br><span class="line">    git branch --set-upstream-to&#x3D;origin&#x2F;&lt;branch&gt; daily&#x2F;1.4.1</span><br></pre></td></tr></table></figure>
-
-<p>我们看到最后一行，执行这个命令，即可完成与上游分支的关联。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch --set-upstream-to&#x3D;origin&#x2F;daily&#x2F;1.4.1 daily&#x2F;1.4.1</span><br><span class="line"># Branch daily&#x2F;1.4.1 set up to track remote branch daily&#x2F;1.4.1 from origin.</span><br></pre></td></tr></table></figure>
-
-<p>然后再<code>pull</code>一下就好了！</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>GitHub</category>
-      </categories>
-      <tags>
-        <tag>GitHub</tag>
       </tags>
   </entry>
   <entry>
