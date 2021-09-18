@@ -118,6 +118,19 @@
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 阶段总结</title>
+    <url>/2015/07/09/JavaScript-Net/</url>
+    <content><![CDATA[<p>做了一张思维导图。总结这几个月对 JavaScript 的学习吧，也是一个复习。也是我目前的技能树。</p>
+<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/blog-JavaScriptNet2.png" alt="JavaScriptNet"></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ISP</title>
     <url>/2021/05/28/ISP/</url>
     <content><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>互联网服务提供商（Internet Service Provider），简称ISP，指的是面向公众提供下列信息服务的经营者：一是接入服务，即帮助用户接入Internet；二是导航服务，即帮助用户在Internet上找到所需要的信息；三是信息服务，即建立数据服务系统，收集、加工、存储信息，定期维护更新，并通过网络向用户提供信息内容服务。</p>
@@ -129,19 +142,6 @@
       </categories>
       <tags>
         <tag>网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JavaScript 阶段总结</title>
-    <url>/2015/07/09/JavaScript-Net/</url>
-    <content><![CDATA[<p>做了一张思维导图。总结这几个月对 JavaScript 的学习吧，也是一个复习。也是我目前的技能树。</p>
-<p><img src="http://7q5cdt.com1.z0.glb.clouddn.com/blog-JavaScriptNet2.png" alt="JavaScriptNet"></p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
@@ -759,6 +759,75 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
+    <url>/2021/05/08/JavaScript-good-parts-note2/</url>
+    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承的两大好处：代码重用，引入一套类型系统的规范。</p>
+<span id="more"></span>
+<h3 id="伪类"><a href="#伪类" class="headerlink" title="伪类"></a>伪类</h3><p>JavaScript 通过构造器函数产生对象。</p>
+<p>构造器调用模式，即用<code>new</code>前缀去调用一个函数。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Mammal = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = <span class="keyword">new</span> Mammal(<span class="string">&#x27;Herb&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br></pre></td></tr></table></figure>
+
+<p>书中不推荐这样的写法。有很多风险。若忘记添加<code>new</code>前缀，<code>this</code>无法绑定到新的对象上。而是绑定到了全局对象上，破坏了全局变量环境。</p>
+<h3 id="对象说明符"><a href="#对象说明符" class="headerlink" title="对象说明符"></a>对象说明符</h3><p>上一节中的构造器可能要接受一大串参数。我们可以这样写：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = Maker(&#123;</span><br><span class="line">    first: f,</span><br><span class="line">    middle: m,</span><br><span class="line">    last: l,</span><br><span class="line">    state: s,</span><br><span class="line">    city: c</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>将JSON对象传递给构造器，而它返回一个构造完全的对象。</p>
+<h3 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h3><p>在一个纯粹的原型模式中，我们将摒弃类，转而专注于对象。一个新对象可以继承一个就对象的属性。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myMammal = &#123;</span><br><span class="line">    name: <span class="string">&#x27;MM&#x27;</span>,</span><br><span class="line">    getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">    &#125;,</span><br><span class="line">    says: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myCat = <span class="built_in">Object</span>.create(myMammal)</span><br><span class="line">myCat.name = <span class="string">&#x27;Kitty&#x27;</span></span><br><span class="line">myCat.saying = <span class="string">&#x27;meow&#x27;</span></span><br><span class="line">myCat.run = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Kitty is running&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">myCat.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.says + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.name + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.says</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是一种差异化继承。</p>
+<h3 id="函数化"><a href="#函数化" class="headerlink" title="函数化"></a>函数化</h3><p>前文看到的继承模式没法保护隐私。对象的所有属性都是可见的。无法得到私有变量和私有函数。为了解决这一问题，我们有模块模式。</p>
+<p>构造一个生成对象的函数需要4步骤：</p>
+<ol>
+<li>创建一个新对象。</li>
+<li>有选择的定义私有变量和方法。</li>
+<li>给这个新对象扩充方法。</li>
+<li>返回那个新对象。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mammal = <span class="function"><span class="keyword">function</span>(<span class="params">spec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> that = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    that.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.name</span><br><span class="line">    &#125;</span><br><span class="line">    that.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = mammal(&#123;</span><br><span class="line">    name: <span class="string">&#x27;Herb&#x27;</span>,</span><br><span class="line">    saying: <span class="string">&#x27;Cheers!&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.says()) <span class="comment">//Cheers!</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以参考上一篇文章，<a href="http://gaohaoyang.github.io/2016/06/07/JavaScript-good-parts-note1/#section-34">JavaScript 语言精粹笔记1-语法、对象、函数 之模块部分</a>。</p>
+<h3 id="部件"><a href="#部件" class="headerlink" title="部件"></a>部件</h3><p>这一部分看的不是特别懂，我想等我学完ES2015中的类和模块部分后再看看吧。</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="数组字面量"><a href="#数组字面量" class="headerlink" title="数组字面量"></a>数组字面量</h3><p>一个数组字面量是在一对方括号中包围零个或多个用逗号分隔的值的表达式。</p>
+<p>再大多数语言中，一个数组的多有元素都要求是相同的类型。JavaScript 允许数组包含任意混合类型的值。</p>
+<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>JavaScript 数组的<code>length</code>属性是没有上界的。如果用大于或等于当前<code>length</code>的数字作为下标来存储一个元素，那么<code>length</code>值会被增大以容纳新元素，不会发生数组越界错误。</p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>数组也是对象，可以用<code>delete</code>来删除元素</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;four&#x27;</span>, <span class="string">&#x27;wu&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> numbers[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+
+<p>可以使用<code>splice</code>方法，进行删除和修改操作。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">numbers.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//two</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><p>使用常规<code>for</code>循环即可，可以保证数组的顺序。</p>
+<h3 id="容易混淆的地方"><a href="#容易混淆的地方" class="headerlink" title="容易混淆的地方"></a>容易混淆的地方</h3><p>当属性名是小而连续的整数时，应该使用数组，否则使用对象。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> [<span class="number">1</span>, <span class="number">2</span>]) <span class="comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<p>返回数组的类型是<code>object</code>，没有任何意义。</p>
+<p>判断数组类型的方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>ECMAScript 5.1 (ECMA-262) 和 ECMAScript 2015 (6th Edition, ECMA-262) 标准中的方法。</p>
+<p>或者下面这个方法。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> is_array = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.apply(value) === <span class="string">&#x27;[object Array]&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is_array(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>数组的方法被存储在<code>Array.prototype</code>中的函数。</p>
+<p>数组是对象，因此<code>Array.prototype</code>也是可扩充的。</p>
+<h3 id="指定初始值"><a href="#指定初始值" class="headerlink" title="指定初始值"></a>指定初始值</h3><p>JavaScript 的数组不会预制值。</p>
+<p>JavaScript 没有多维数组，单项大多数类 C 语言一样，支持元素为数组的数组。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> matrix = [</span><br><span class="line">    [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span><br><span class="line">    [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</span><br><span class="line">    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">]</span><br><span class="line"><span class="built_in">console</span>.log(matrix[<span class="number">1</span>][<span class="number">2</span>]) <span class="comment">//6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>关于正则表达式，以前的博文写的比较多了，详情见：</p>
+<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-10">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分1</a></p>
+<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-12">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分2</a></p>
+<p><a href="http://gaohaoyang.github.io/2016/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>继承 对象 原型 Array 正则</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JavaScript 语言精粹笔记1-语法、对象、函数</title>
     <url>/2021/05/08/JavaScript-good-parts-note1/</url>
     <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为第一部分包含书中前三章内容：语法、对象和函数。</p>
@@ -963,75 +1032,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>JavaScript 语言精粹笔记2-继承、数组、正则表达式</title>
-    <url>/2021/05/08/JavaScript-good-parts-note2/</url>
-    <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中以下章节的笔记：继承、数组和正则表达式。</p>
-<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承的两大好处：代码重用，引入一套类型系统的规范。</p>
-<span id="more"></span>
-<h3 id="伪类"><a href="#伪类" class="headerlink" title="伪类"></a>伪类</h3><p>JavaScript 通过构造器函数产生对象。</p>
-<p>构造器调用模式，即用<code>new</code>前缀去调用一个函数。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Mammal = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Mammal.prototype.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = <span class="keyword">new</span> Mammal(<span class="string">&#x27;Herb&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br></pre></td></tr></table></figure>
-
-<p>书中不推荐这样的写法。有很多风险。若忘记添加<code>new</code>前缀，<code>this</code>无法绑定到新的对象上。而是绑定到了全局对象上，破坏了全局变量环境。</p>
-<h3 id="对象说明符"><a href="#对象说明符" class="headerlink" title="对象说明符"></a>对象说明符</h3><p>上一节中的构造器可能要接受一大串参数。我们可以这样写：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = Maker(&#123;</span><br><span class="line">    first: f,</span><br><span class="line">    middle: m,</span><br><span class="line">    last: l,</span><br><span class="line">    state: s,</span><br><span class="line">    city: c</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>将JSON对象传递给构造器，而它返回一个构造完全的对象。</p>
-<h3 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h3><p>在一个纯粹的原型模式中，我们将摒弃类，转而专注于对象。一个新对象可以继承一个就对象的属性。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myMammal = &#123;</span><br><span class="line">    name: <span class="string">&#x27;MM&#x27;</span>,</span><br><span class="line">    getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">    &#125;,</span><br><span class="line">    says: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myCat = <span class="built_in">Object</span>.create(myMammal)</span><br><span class="line">myCat.name = <span class="string">&#x27;Kitty&#x27;</span></span><br><span class="line">myCat.saying = <span class="string">&#x27;meow&#x27;</span></span><br><span class="line">myCat.run = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Kitty is running&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">myCat.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.says + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.name + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.says</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是一种差异化继承。</p>
-<h3 id="函数化"><a href="#函数化" class="headerlink" title="函数化"></a>函数化</h3><p>前文看到的继承模式没法保护隐私。对象的所有属性都是可见的。无法得到私有变量和私有函数。为了解决这一问题，我们有模块模式。</p>
-<p>构造一个生成对象的函数需要4步骤：</p>
-<ol>
-<li>创建一个新对象。</li>
-<li>有选择的定义私有变量和方法。</li>
-<li>给这个新对象扩充方法。</li>
-<li>返回那个新对象。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mammal = <span class="function"><span class="keyword">function</span>(<span class="params">spec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> that = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    that.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.name</span><br><span class="line">    &#125;</span><br><span class="line">    that.says = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> spec.saying || <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myMammal = mammal(&#123;</span><br><span class="line">    name: <span class="string">&#x27;Herb&#x27;</span>,</span><br><span class="line">    saying: <span class="string">&#x27;Cheers!&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.getName()) <span class="comment">//Herb</span></span><br><span class="line"><span class="built_in">console</span>.log(myMammal.says()) <span class="comment">//Cheers!</span></span><br></pre></td></tr></table></figure>
-
-<p>也可以参考上一篇文章，<a href="http://gaohaoyang.github.io/2016/06/07/JavaScript-good-parts-note1/#section-34">JavaScript 语言精粹笔记1-语法、对象、函数 之模块部分</a>。</p>
-<h3 id="部件"><a href="#部件" class="headerlink" title="部件"></a>部件</h3><p>这一部分看的不是特别懂，我想等我学完ES2015中的类和模块部分后再看看吧。</p>
-<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="数组字面量"><a href="#数组字面量" class="headerlink" title="数组字面量"></a>数组字面量</h3><p>一个数组字面量是在一对方括号中包围零个或多个用逗号分隔的值的表达式。</p>
-<p>再大多数语言中，一个数组的多有元素都要求是相同的类型。JavaScript 允许数组包含任意混合类型的值。</p>
-<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>JavaScript 数组的<code>length</code>属性是没有上界的。如果用大于或等于当前<code>length</code>的数字作为下标来存储一个元素，那么<code>length</code>值会被增大以容纳新元素，不会发生数组越界错误。</p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>数组也是对象，可以用<code>delete</code>来删除元素</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="number">3</span>, <span class="string">&#x27;four&#x27;</span>, <span class="string">&#x27;wu&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> numbers[<span class="number">0</span>]</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
-
-<p>可以使用<code>splice</code>方法，进行删除和修改操作。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">numbers.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="built_in">console</span>.log(numbers[<span class="number">0</span>]) <span class="comment">//two</span></span><br><span class="line"><span class="built_in">console</span>.log(numbers.length) <span class="comment">//4</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><p>使用常规<code>for</code>循环即可，可以保证数组的顺序。</p>
-<h3 id="容易混淆的地方"><a href="#容易混淆的地方" class="headerlink" title="容易混淆的地方"></a>容易混淆的地方</h3><p>当属性名是小而连续的整数时，应该使用数组，否则使用对象。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> [<span class="number">1</span>, <span class="number">2</span>]) <span class="comment">//object</span></span><br></pre></td></tr></table></figure>
-
-<p>返回数组的类型是<code>object</code>，没有任何意义。</p>
-<p>判断数组类型的方法</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Array</span>.isArray(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>ECMAScript 5.1 (ECMA-262) 和 ECMAScript 2015 (6th Edition, ECMA-262) 标准中的方法。</p>
-<p>或者下面这个方法。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> is_array = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.apply(value) === <span class="string">&#x27;[object Array]&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(is_array(numbers)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>数组的方法被存储在<code>Array.prototype</code>中的函数。</p>
-<p>数组是对象，因此<code>Array.prototype</code>也是可扩充的。</p>
-<h3 id="指定初始值"><a href="#指定初始值" class="headerlink" title="指定初始值"></a>指定初始值</h3><p>JavaScript 的数组不会预制值。</p>
-<p>JavaScript 没有多维数组，单项大多数类 C 语言一样，支持元素为数组的数组。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> matrix = [</span><br><span class="line">    [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span><br><span class="line">    [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</span><br><span class="line">    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">]</span><br><span class="line"><span class="built_in">console</span>.log(matrix[<span class="number">1</span>][<span class="number">2</span>]) <span class="comment">//6</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>关于正则表达式，以前的博文写的比较多了，详情见：</p>
-<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-10">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分1</a></p>
-<p><a href="http://gaohaoyang.github.io/2015/04/22/baidu-ife-2-javascript/#section-12">百度Web前端技术学院(2)-JavaScript 基础 之正则表达式部分2</a></p>
-<p><a href="http://gaohaoyang.github.io/2016/05/06/regular-expression-group/">浅谈正则表达式中的分组和引用</a></p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>继承 对象 原型 Array 正则</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JavaScript 语言精粹笔记3-方法、毒瘤等</title>
     <url>/2021/05/08/JavaScript-good-parts-note3/</url>
     <content><![CDATA[<p>记录一下阅读蝴蝶书的笔记，本篇为书中最后一部分：方法、代码风格、优美的特性、毒瘤、糟粕等。</p>
@@ -1092,22 +1092,6 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </tags>
   </entry>
   <entry>
-    <title>NGINX禁止解析IP访问</title>
-    <url>/2021/05/20/NGINX-Prohibit-IP-access/</url>
-    <content><![CDATA[<p>nginx配置禁止ip访问，只能域名访问，这样可以增加一定的安全性，并且在nginx内配置80跳转443，或者在公有云负载均衡配置。</p>
-<span id="more"></span>
-
-
-<h1 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a>配置如下</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server&#123; </span><br><span class="line">listen 80 default; </span><br><span class="line">server_name _; </span><br><span class="line">return 404; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 80;</span><br><span class="line">server_name xxx;</span><br><span class="line">rewrite ^(.*)$ https:&#x2F;&#x2F;$&#123;server_name&#125;$1 permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 443;</span><br><span class="line">server_name xxx;</span><br><span class="line">    #ssl_certificate ;</span><br><span class="line">    #ssl_certificate_key ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>nginx</category>
-      </categories>
-      <tags>
-        <tag>nginx</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JavaScript 中的 this</title>
     <url>/2015/06/12/JavaScript-this/</url>
     <content><![CDATA[<h2 id="全局的-this"><a href="#全局的-this" class="headerlink" title="全局的 this"></a>全局的 this</h2><p>全局 this 一般指向全局对象，浏览器中的全局对象就是 <code>window</code>。</p>
@@ -1152,6 +1136,22 @@ console.log(converter); //Uncaught ReferenceError: converter is not defined
       </categories>
       <tags>
         <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NGINX禁止解析IP访问</title>
+    <url>/2021/05/20/NGINX-Prohibit-IP-access/</url>
+    <content><![CDATA[<p>nginx配置禁止ip访问，只能域名访问，这样可以增加一定的安全性，并且在nginx内配置80跳转443，或者在公有云负载均衡配置。</p>
+<span id="more"></span>
+
+
+<h1 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a>配置如下</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server&#123; </span><br><span class="line">listen 80 default; </span><br><span class="line">server_name _; </span><br><span class="line">return 404; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 80;</span><br><span class="line">server_name xxx;</span><br><span class="line">rewrite ^(.*)$ https:&#x2F;&#x2F;$&#123;server_name&#125;$1 permanent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 443;</span><br><span class="line">server_name xxx;</span><br><span class="line">    #ssl_certificate ;</span><br><span class="line">    #ssl_certificate_key ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
