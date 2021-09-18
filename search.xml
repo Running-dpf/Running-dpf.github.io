@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>du</title>
-      <link href="2021/09/18/du-md/"/>
-      <url>2021/09/18/du-md/</url>
-      
-        <content type="html"><![CDATA[<h1 id="du"><a href="#du" class="headerlink" title="du"></a>du</h1><p>du(Disk Usage) - 报告磁盘空间使用情况</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">-a, --all</span><br><span class="line">    显示对所有文件的统计，而不只是包含子目录。</span><br><span class="line">-b, --bytes</span><br><span class="line">    输出以字节为单位的大小，替代缺省时1024字节的计数单位。</span><br><span class="line">--block-size&#x3D;size</span><br><span class="line">    输出以块为单位的大小，块的大小为 size 字节。( file- utils-4.0 的新选项)</span><br><span class="line">-c, --total</span><br><span class="line">    在处理完所有参数后给出所有这些参数的总计。这个选项被 用给出指定的一组文件或目录使用的空间的总和。</span><br><span class="line">-D, --dereference-args</span><br><span class="line">    引用命令行参数的符号连接。但不影响其他的符号连接。 这对找出象 &#x2F;usr&#x2F;tmp 这样的目录的磁盘使用量有用， &#x2F;usr&#x2F;tmp 等通常是符号连接。 译住：例如在 &#x2F;var&#x2F;tmp 下建立一个目录test, 而&#x2F;usr&#x2F;tmp 是指向 &#x2F;var&#x2F;tmp 的符号连接。du &#x2F;usr&#x2F;tmp 返回一项 &#x2F;usr&#x2F;tmp , 而 du - D &#x2F;usr&#x2F;tmp 返回两项 &#x2F;usr&#x2F;tmp，&#x2F;usr&#x2F;tmp&#x2F;test。</span><br><span class="line">--exclude&#x3D;pattern</span><br><span class="line">    在递归时，忽略与指定模式相匹配的文件或子目录。模式 可以是任何 Bourne shell 的文件 glob 模式。( file- utils-4.0 的新选项)</span><br><span class="line">-h, --human-readable</span><br><span class="line">    为每个数附加一个表示大小单位的字母，象用M表示二进制 的兆字节。</span><br><span class="line">-H, --si</span><br><span class="line">    与 -h 参数起同样的作用，只是使用法定的 SI 单位( 用 1000的幂而不是 1024 的幂，这样 M 代表的就是1000000 而不是 1048576)。(fileutils-4.0 的新选项)</span><br><span class="line">-k, --kilobytes</span><br><span class="line">    输出以1024字节为计数单位的大小。</span><br><span class="line">-l, --count-links</span><br><span class="line">    统计所有文件的大小，包括已经被统计过的(作为一个硬连接)。</span><br><span class="line">-L, --dereference</span><br><span class="line">    引用符号连接(不是显示连接点本身而是连接指向的文件或 目录所使用的磁盘空间)。</span><br><span class="line">-m, --megabytes</span><br><span class="line">    输出以兆字节的块为计数单位的大小(就是 1,048,576 字节)。</span><br><span class="line">--max-depth&#x3D;n</span><br><span class="line">    只输出命令行参数的小于等于第 n 层的目录的总计。 --max-depth&#x3D;0的作用同于-s选项。(fileutils-4.0的新选项)</span><br><span class="line">-s, --summarize</span><br><span class="line">    对每个参数只显示总和。</span><br><span class="line">-S, --separate-dirs</span><br><span class="line">    单独报告每一个目录的大小，不包括子目录的大小。</span><br><span class="line">-x, --one-file-system</span><br><span class="line">    忽略与被处理的参数不在同一个文件系统的目录。</span><br><span class="line">-X file, --exclude-from&#x3D;file</span><br><span class="line">    除了从指定的文件中得到模式之外与 --exclude 一样。 模式以行的形式列出。如果指定的文件是&#39;-&#39;,那么从标准输 入中读出模式。(fileutils-4.0 的新选项) GNU 标准选项</span><br><span class="line">--help</span><br><span class="line">    在标准输出上输出帮助信息后正常退出。</span><br><span class="line">--version</span><br><span class="line">    在标准输出上输出版本信息后正常退出。</span><br></pre></td></tr></table></figure><p>###常用命令</p><ul><li>统计当前目录下，第一层的文件大小</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -ah --max-depth&#x3D;1 .&#x2F;cdn</span><br></pre></td></tr></table></figure><ul><li>统计当前目录大小，并安大小排序</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sm * | sort -n</span><br></pre></td></tr></table></figure><ul><li>按大小排序目录(查看文件目录大小)</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -h --time --max-depth&#x3D;1 | sort -hr</span><br></pre></td></tr></table></figure><ul><li>列出当前目录中的目录名不包括xyz字符串的目录的大小</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -h --exclude&#x3D;&#39;*xyz*&#39;</span><br></pre></td></tr></table></figure><ul><li>显示几个文件或目录各自占用磁盘空间的大小，并统计它们的总和</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -c log30.tar.gz log31.tar.gz</span><br></pre></td></tr></table></figure><ul><li>查看各文件夹大小命令</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -h --max-depth&#x3D;1</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
+<search>
+  <entry>
+    <title>du</title>
+    <url>/2021/09/18/du-md/</url>
+    <content><![CDATA[<h1 id="du"><a href="#du" class="headerlink" title="du"></a>du</h1><p>du(Disk Usage) - 报告磁盘空间使用情况</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-a, --all</span><br><span class="line">    显示对所有文件的统计，而不只是包含子目录。</span><br><span class="line">-b, --bytes</span><br><span class="line">    输出以字节为单位的大小，替代缺省时1024字节的计数单位。</span><br><span class="line">--block-size&#x3D;size</span><br><span class="line">    输出以块为单位的大小，块的大小为 size 字节。( file- utils-4.0 的新选项)</span><br><span class="line">-c, --total</span><br><span class="line">    在处理完所有参数后给出所有这些参数的总计。这个选项被 用给出指定的一组文件或目录使用的空间的总和。</span><br><span class="line">-D, --dereference-args</span><br><span class="line">    引用命令行参数的符号连接。但不影响其他的符号连接。 这对找出象 &#x2F;usr&#x2F;tmp 这样的目录的磁盘使用量有用， &#x2F;usr&#x2F;tmp 等通常是符号连接。 译住：例如在 &#x2F;var&#x2F;tmp 下建立一个目录test, 而&#x2F;usr&#x2F;tmp 是指向 &#x2F;var&#x2F;tmp 的符号连接。du &#x2F;usr&#x2F;tmp 返回一项 &#x2F;usr&#x2F;tmp , 而 du - D &#x2F;usr&#x2F;tmp 返回两项 &#x2F;usr&#x2F;tmp，&#x2F;usr&#x2F;tmp&#x2F;test。</span><br><span class="line">--exclude&#x3D;pattern</span><br><span class="line">    在递归时，忽略与指定模式相匹配的文件或子目录。模式 可以是任何 Bourne shell 的文件 glob 模式。( file- utils-4.0 的新选项)</span><br><span class="line">-h, --human-readable</span><br><span class="line">    为每个数附加一个表示大小单位的字母，象用M表示二进制 的兆字节。</span><br><span class="line">-H, --si</span><br><span class="line">    与 -h 参数起同样的作用，只是使用法定的 SI 单位( 用 1000的幂而不是 1024 的幂，这样 M 代表的就是1000000 而不是 1048576)。(fileutils-4.0 的新选项)</span><br><span class="line">-k, --kilobytes</span><br><span class="line">    输出以1024字节为计数单位的大小。</span><br><span class="line">-l, --count-links</span><br><span class="line">    统计所有文件的大小，包括已经被统计过的(作为一个硬连接)。</span><br><span class="line">-L, --dereference</span><br><span class="line">    引用符号连接(不是显示连接点本身而是连接指向的文件或 目录所使用的磁盘空间)。</span><br><span class="line">-m, --megabytes</span><br><span class="line">    输出以兆字节的块为计数单位的大小(就是 1,048,576 字节)。</span><br><span class="line">--max-depth&#x3D;n</span><br><span class="line">    只输出命令行参数的小于等于第 n 层的目录的总计。 --max-depth&#x3D;0的作用同于-s选项。(fileutils-4.0的新选项)</span><br><span class="line">-s, --summarize</span><br><span class="line">    对每个参数只显示总和。</span><br><span class="line">-S, --separate-dirs</span><br><span class="line">    单独报告每一个目录的大小，不包括子目录的大小。</span><br><span class="line">-x, --one-file-system</span><br><span class="line">    忽略与被处理的参数不在同一个文件系统的目录。</span><br><span class="line">-X file, --exclude-from&#x3D;file</span><br><span class="line">    除了从指定的文件中得到模式之外与 --exclude 一样。 模式以行的形式列出。如果指定的文件是&#39;-&#39;,那么从标准输 入中读出模式。(fileutils-4.0 的新选项) GNU 标准选项</span><br><span class="line">--help</span><br><span class="line">    在标准输出上输出帮助信息后正常退出。</span><br><span class="line">--version</span><br><span class="line">    在标准输出上输出版本信息后正常退出。</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
+<li>统计当前目录下，第一层的文件大小</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -ah --max-depth&#x3D;1 .&#x2F;cdn</span><br></pre></td></tr></table></figure>
+<ul>
+<li>统计当前目录大小，并安大小排序</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -sm * | sort -n</span><br></pre></td></tr></table></figure>
+<ul>
+<li>按大小排序目录(查看文件目录大小)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -h --time --max-depth&#x3D;1 | sort -hr</span><br></pre></td></tr></table></figure>
+<ul>
+<li>列出当前目录中的目录名不包括xyz字符串的目录的大小</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -h --exclude&#x3D;&#39;*xyz*&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>显示几个文件或目录各自占用磁盘空间的大小，并统计它们的总和</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -c log30.tar.gz log31.tar.gz</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看各文件夹大小命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">du -h --max-depth&#x3D;1</span><br></pre></td></tr></table></figure>
+]]></content>
       <categories>
-          
-          <category> linux </category>
-          
+        <category>linux</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> linux </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
 </search>
