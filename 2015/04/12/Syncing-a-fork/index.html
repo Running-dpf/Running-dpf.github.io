@@ -73,6 +73,8 @@
 
 
 
+  <link rel="alternate" href="/atom.xml" title="Nayaur's blog" type="application/atom+xml" />
+
 
 
 
@@ -82,12 +84,12 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="同步一个fork">
 <meta property="og:url" content="https://running-dpf.github.io/2015/04/12/Syncing-a-fork/index.html">
-<meta property="og:site_name" content="私人运维知识">
+<meta property="og:site_name" content="Nayaur&#39;s blog">
 <meta property="og:description" content="fork 了别人的仓库后，原作者又更新了仓库，如何将自己的代码和原仓库保持一致？本文将给你解答。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2015-04-12T07:14:54.000Z">
 <meta property="article:modified_time" content="2021-05-20T05:32:27.000Z">
-<meta property="article:author" content="Dong ops">
+<meta property="article:author" content="岩羊">
 <meta property="article:tag" content="GitHub">
 <meta name="twitter:card" content="summary">
 
@@ -125,7 +127,7 @@
 
 
 
-  <title>同步一个fork | 私人运维知识</title>
+  <title>同步一个fork | Nayaur's blog</title>
   
 
 
@@ -146,6 +148,7 @@
 
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
+    <a target="_blank" rel="noopener" href="https://github.com/Running-dpf" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
@@ -155,7 +158,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">私人运维知识</span>
+        <span class="site-title">Nayaur's blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -331,7 +334,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="私人运维知识">
+      <meta itemprop="name" content="Nayaur's blog">
     </span>
 
     
@@ -426,33 +429,53 @@
 <li><p>主要使用 <code>git remote -v</code> 查看远程状态。   </p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br><span class="line"># origin  https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (fetch)</span><br><span class="line"># origin  https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (push)</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git remote -v
+# origin  https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (fetch)
+# origin  https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (push)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li>添加一个将被同步给 fork 远程的上游仓库      </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git remote add upstream https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 
 <ul>
 <li>再次查看状态确认是否配置成功。   </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br><span class="line"># origin    https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (fetch)</span><br><span class="line"># origin    https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (push)</span><br><span class="line"># upstream  https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git (fetch)</span><br><span class="line"># upstream  https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git (push)</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git remote -v
+# origin    https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (fetch)
+# origin    https:&#x2F;&#x2F;github.com&#x2F;YOUR_USERNAME&#x2F;YOUR_FORK.git (push)
+# upstream  https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git (fetch)
+# upstream  https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY.git (push)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="Syncing-a-fork"><a href="#Syncing-a-fork" class="headerlink" title="Syncing a fork"></a>Syncing a fork</h3><ul>
 <li>从上游仓库 fetch 分支和提交点，传送到本地，并会被存储在一个本地分支 upstream/master<br><code>git fetch upstream</code>    </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git fetch upstream</span><br><span class="line"># remote: Counting objects: 75, done.</span><br><span class="line"># remote: Compressing objects: 100% (53&#x2F;53), done.</span><br><span class="line"># remote: Total 62 (delta 27), reused 44 (delta 9)</span><br><span class="line"># Unpacking objects: 100% (62&#x2F;62), done.</span><br><span class="line"># From https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY</span><br><span class="line">#  * [new branch]      master     -&gt; upstream&#x2F;master</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git fetch upstream
+# remote: Counting objects: 75, done.
+# remote: Compressing objects: 100% (53&#x2F;53), done.
+# remote: Total 62 (delta 27), reused 44 (delta 9)
+# Unpacking objects: 100% (62&#x2F;62), done.
+# From https:&#x2F;&#x2F;github.com&#x2F;ORIGINAL_OWNER&#x2F;ORIGINAL_REPOSITORY
+#  * [new branch]      master     -&gt; upstream&#x2F;master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li>切换到本地主分支(如果不在的话)<br><code>git checkout master</code>    </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line"># Switched to branch &#39;master&#39;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git checkout master
+# Switched to branch &#39;master&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <ul>
 <li>把 upstream/master 分支合并到本地 master 上，这样就完成了同步，并且不会丢掉本地修改的内容。<br><code>git merge upstream/master</code>      </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git merge upstream&#x2F;master</span><br><span class="line"># Updating a422352..5fdff0f</span><br><span class="line"># Fast-forward</span><br><span class="line">#  README                    |    9 -------</span><br><span class="line">#  README.md                 |    7 ++++++</span><br><span class="line">#  2 files changed, 7 insertions(+), 9 deletions(-)</span><br><span class="line">#  delete mode 100644 README</span><br><span class="line">#  create mode 100644 README.md</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-none"><code class="language-none">git merge upstream&#x2F;master
+# Updating a422352..5fdff0f
+# Fast-forward
+#  README                    |    9 -------
+#  README.md                 |    7 ++++++
+#  2 files changed, 7 insertions(+), 9 deletions(-)
+#  delete mode 100644 README
+#  create mode 100644 README.md<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li>如果想更新到 GitHub 的 fork 上，直接 <code>git push origin master</code> 就好了。</li>
@@ -463,7 +486,16 @@
     
     
     
+      <div>
+  		
+    	<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  		
+	  </div>
     
 
     
@@ -474,7 +506,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+            <a href="/tags/GitHub/" rel="tag"><i class="fa fa-tag"></i>  GitHub</a>
           
         </div>
       
@@ -612,6 +644,13 @@
           </nav>
 
           
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
 
           
 
@@ -656,15 +695,16 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Dong ops</span>
+  <span class="author" itemprop="copyrightHolder">岩羊</span>
 
   
 </div>
-
+<!--
 
   <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
@@ -676,25 +716,24 @@
 
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
-
+-->
 
 <!-- 新增访客统计代码 -->
-
 <div class="busuanzi-count">
     <script async="" src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="site-uv">
+    <span class="site-pv">
       <i class="fa fa-user"></i>
-      访问用户： <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+      访问用户： <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 人
     </span>
-    <div class="powered-by"></div>
-    <span class="site-uv">
+	<div class="powered-by"></div>
+    <span class="site-pv">
       <i class="fa fa-eye"></i>
       访问次数： <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
     </span>
     <!-- 博客字数统计 -->
     <span class="site-pv">
       <i class="fa fa-pencil"></i>
-      博客全站共： <span class="post-count"></span> 字
+      博客全站共： <span class="post-count">41.1k</span> 字
     </span>
 </div>
 <!-- 新增访客统计代码 END-->
@@ -1187,3 +1226,6 @@
 
 </body>
 </html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
